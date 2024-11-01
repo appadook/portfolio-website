@@ -1,264 +1,304 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { GithubIcon, LinkedinIcon, MailIcon, FileText, Code, Cpu, Database, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { Github, Linkedin, Mail, ChevronLeft, ChevronRight } from "lucide-react"
 import * as THREE from 'three'
 
-export default function Portfolio() {
-  const [activeSection, setActiveSection] = useState('home')
+export default function Component() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [currentProject, setCurrentProject] = useState(0)
+  const [direction, setDirection] = useState(0)
+
   const projects = [
-    { title: "Project 1", description: "A brief description of project 1", tech: "React, Node.js, MongoDB" },
-    { title: "Project 2", description: "A brief description of project 2", tech: "Vue.js, Express, PostgreSQL" },
-    { title: "Project 3", description: "A brief description of project 3", tech: "Angular, Django, MySQL" },
-    { title: "Project 4", description: "A brief description of project 4", tech: "React Native, Firebase" },
+    {
+      title: "AI-Powered Chess Engine",
+      description: "Developed a chess engine using minimax algorithm with alpha-beta pruning. Implemented in Python with a PyQt5 GUI.",
+      image: "/placeholder.svg?height=400&width=600",
+      techStack: ["Python", "PyQt5", "AI Algorithms"]
+    },
+    {
+      title: "Distributed File System",
+      description: "Built a distributed file system in Go, featuring data replication, fault tolerance, and a simple client API.",
+      image: "/placeholder.svg?height=400&width=600",
+      techStack: ["Go", "Distributed Systems", "Network Programming"]
+    },
+    {
+      title: "Real-time Collaboration Tool",
+      description: "Created a web-based real-time collaboration tool using React, Node.js, and WebSockets, allowing multiple users to edit documents simultaneously.",
+      image: "/placeholder.svg?height=400&width=600",
+      techStack: ["React", "Node.js", "WebSockets", "MongoDB"]
+    }
   ]
 
-  const scrollTo = (id: string) => {
-    const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
-      setActiveSection(id)
+  useEffect(() => {
+    if (!canvasRef.current) return
+
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, alpha: true })
+
+    renderer.setSize(window.innerWidth, window.innerHeight)
+
+    const geometry = new THREE.TorusGeometry(10, 3, 16, 100)
+    const material = new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true })
+    const torus = new THREE.Mesh(geometry, material)
+
+    scene.add(torus)
+
+    camera.position.z = 30
+
+    const animate = () => {
+      requestAnimationFrame(animate)
+
+      torus.rotation.x += 0.01
+      torus.rotation.y += 0.005
+
+      renderer.render(scene, camera)
     }
-  }
+
+    animate()
+
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   const nextProject = () => {
+    setDirection(1)
     setCurrentProject((prev) => (prev + 1) % projects.length)
   }
 
   const prevProject = () => {
+    setDirection(-1)
     setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length)
   }
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      const scene = new THREE.Scene()
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-      const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current, alpha: true })
-      renderer.setSize(window.innerWidth, window.innerHeight)
-
-      const geometry = new THREE.TorusGeometry(5, 2, 16, 100)
-      const material = new THREE.MeshBasicMaterial({ color: 0x9333ea, wireframe: true })
-      const torus = new THREE.Mesh(geometry, material)
-      scene.add(torus)
-
-      camera.position.z = 20
-
-      const animate = () => {
-        requestAnimationFrame(animate)
-        torus.rotation.x += 0.005
-        torus.rotation.y += 0.005
-        renderer.render(scene, camera)
-      }
-
-      animate()
-
-      const handleResize = () => {
-        const width = window.innerWidth
-        const height = window.innerHeight
-        camera.aspect = width / height
-        camera.updateProjectionMatrix()
-        renderer.setSize(width, height)
-      }
-
-      window.addEventListener('resize', handleResize)
-
-      return () => {
-        window.removeEventListener('resize', handleResize)
-      }
-    }
-  }, [])
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    // Here you would typically handle the form submission,
+    // e.g., sending the data to a server or API
+    console.log('Form submitted')
+  }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-10 bg-black/80 backdrop-blur-sm">
-        <nav className="container mx-auto px-4 py-2">
-          <ul className="flex justify-center space-x-4">
-            {['home', 'projects', 'skills', 'resume', 'contact'].map((item) => (
-              <li key={item}>
-                <Button
-                  variant={activeSection === item ? 'secondary' : 'ghost'}
-                  onClick={() => scrollTo(item)}
-                  className="transition-all duration-300 hover:scale-110 hover:bg-purple-700 hover:text-white"
-                >
-                  {item.charAt(0).toUpperCase() + item.slice(1)}
-                </Button>
-              </li>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Enhanced Navbar */}
+      <nav className="fixed top-0 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 border-b">
+        <div className="container flex h-16 items-center">
+          <Link className="font-bold text-lg text-primary" href="#">
+            CS Portfolio
+          </Link>
+          <div className="ml-auto flex gap-1">
+            {["About", "Projects", "Languages", "Technologies", "Contact"].map((item) => (
+              <Link
+                key={item}
+                className="px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground rounded-md"
+                href={`#${item.toLowerCase()}`}
+              >
+                {item}
+              </Link>
             ))}
-          </ul>
-        </nav>
-      </header>
-
-      {/* Main Content */}
-      <main>
-        {/* Hero Section with 3D Background */}
-        <section id="home" className="relative h-screen flex flex-col items-center justify-center pt-16">
-          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
-          <div className="relative z-10 text-center">
-            <h1 className="text-5xl font-bold mb-4 text-purple-500">Kurtik Appadoo</h1>
-            <p className="text-xl mb-8 text-gold-500">Computer Science & Economics student | Aspiring Software Developer</p>
           </div>
-          <div className="relative z-10 mt-auto mb-8">
-            <div className="flex justify-center space-x-4">
-              <Button variant="outline" size="icon" className="bg-gold-500 hover:bg-purple-700 hover:text-white transition-colors duration-300">
-                <GithubIcon className="h-5 w-5 text-black" />
-              </Button>
-              <Button variant="outline" size="icon" className="bg-gold-500 hover:bg-purple-700 hover:text-white transition-colors duration-300">
-                <LinkedinIcon className="h-5 w-5 text-black" />
-              </Button>
-              <Button variant="outline" size="icon" className="bg-gold-500 hover:bg-purple-700 hover:text-white transition-colors duration-300">
-                <MailIcon className="h-5 w-5 text-black" />
-              </Button>
-            </div>
-          </div>
-        </section>
+        </div>
+      </nav>
 
-        {/* Projects Section */}
-        <section id="projects" className="py-20 bg-gray-900">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center text-purple-500">My Projects</h2>
-            <div className="relative">
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-purple-700 text-white"
-                onClick={prevProject}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <div className="overflow-hidden">
-                <div 
-                  className="flex transition-transform duration-300 ease-in-out"
-                  style={{ transform: `translateX(-${currentProject * 100}%)` }}
-                >
-                  {projects.map((project, index) => (
-                    <Card key={index} className="w-full flex-shrink-0 mx-4 bg-black border-purple-500">
+      {/* Hero Section with Three.js Animation */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+        <div className="relative z-10 text-center">
+          <h1 className="text-5xl font-bold tracking-tighter sm:text-6xl md:text-7xl mb-4">John Doe</h1>
+          <p className="text-xl max-w-[700px] text-muted-foreground">
+            Aspiring computer scientist passionate about creating innovative solutions through code.
+          </p>
+        </div>
+      </section>
+
+      {/* About Me Section */}
+      <section id="about" className="py-16 md:py-24">
+        <div className="container">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">About Me</h2>
+          <p className="max-w-[700px] text-muted-foreground text-lg">
+            I'm a Computer Science student at [University Name], with a focus on [Your Focus Areas, e.g., artificial intelligence and web development]. I'm passionate about leveraging technology to solve real-world problems and constantly expanding my skillset. My journey in computer science has led me to explore various domains, from low-level systems programming to high-level web development and machine learning applications.
+          </p>
+        </div>
+      </section>
+
+      {/* Projects Section with Improved Slider and Tech Stack */}
+      <section id="projects" className="py-16 md:py-24 bg-muted/50">
+        <div className="container">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">Projects</h2>
+          <div className="relative overflow-hidden">
+            <div 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentProject * 100}%)` }}
+            >
+              {projects.map((project, index) => (
+                <div key={index} className="w-full flex-shrink-0">
+                  <Card className="overflow-hidden">
+                    <div className="flex flex-col md:flex-row">
                       <Image
-                        src={`/placeholder.svg?height=200&width=400&text=${project.title}`}
+                        src={project.image}
                         alt={project.title}
-                        width={400}
-                        height={200}
-                        className="w-full h-48 object-cover"
+                        width={600}
+                        height={400}
+                        className="object-cover md:w-1/2"
                       />
-                      <CardHeader>
-                        <CardTitle className="text-purple-500">{project.title}</CardTitle>
-                        <CardDescription className="text-gold-500">{project.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-white">Technologies used: {project.tech}</p>
+                      <CardContent className="p-6 md:w-1/2">
+                        <CardTitle className="text-2xl mb-2">{project.title}</CardTitle>
+                        <p className="text-muted-foreground mb-4">{project.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          {project.techStack.map((tech) => (
+                            <span 
+                              key={tech} 
+                              className="px-2 py-1 bg-primary/10 text-primary rounded-full text-sm transition-colors duration-200 ease-in-out hover:bg-primary hover:text-primary-foreground cursor-default"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
                       </CardContent>
-                      <CardFooter>
-                        <Button variant="secondary" className="bg-gold-500 text-black hover:bg-purple-600 hover:text-white">View Project</Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
+                    </div>
+                  </Card>
                 </div>
-              </div>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-purple-700 text-white"
-                onClick={nextProject}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Skills Section */}
-        <section id="skills" className="py-20 bg-black">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center text-purple-500">Skills & Technologies</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[
-                { icon: <Code className="h-8 w-8 mb-2 text-white" />, name: 'Programming Languages', skills: ['Java', 'Python', 'JavaScript'] },
-                { icon: <Globe className="h-8 w-8 mb-2 text-white" />, name: 'Web Technologies', skills: ['HTML', 'CSS', 'React'] },
-                { icon: <Database className="h-8 w-8 mb-2 text-white" />, name: 'Databases', skills: ['MySQL', 'MongoDB'] },
-                { icon: <Cpu className="h-8 w-8 mb-2 text-white" />, name: 'Other', skills: ['Git', 'Docker', 'AWS'] },
-              ].map((category, index) => (
-                <Card key={index} className="text-center bg-gray-900 border-purple-500">
-                  <CardHeader>
-                    {category.icon}
-                    <CardTitle className="text-purple-500">{category.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="text-gold-500">
-                      {category.skills.map((skill, skillIndex) => (
-                        <li key={skillIndex}>{skill}</li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
               ))}
             </div>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute left-4 top-1/2 -translate-y-1/2"
+              onClick={prevProject}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Previous project</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute right-4 top-1/2 -translate-y-1/2"
+              onClick={nextProject}
+            >
+              <ChevronRight className="h-4 w-4" />
+              <span className="sr-only">Next project</span>
+            </Button>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Resume Section */}
-        <section id="resume" className="py-20 bg-gray-900">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center text-purple-500">Resume</h2>
-            <div className="max-w-2xl mx-auto">
-              <Card className="bg-black border-purple-500">
-                <CardHeader>
-                  <CardTitle className="text-purple-500">Education</CardTitle>
-                </CardHeader>
-                <CardContent className="text-white">
-                  <p>Bachelor of Science in Computer Science</p>
-                  <p>University Name, Expected Graduation: May 2024</p>
-                </CardContent>
-              </Card>
-              <Card className="mt-6 bg-black border-purple-500">
-                <CardHeader>
-                  <CardTitle className="text-purple-500">Experience</CardTitle>
-                </CardHeader>
-                <CardContent className="text-white">
-                  <p>Software Development Intern</p>
-                  <p>Company Name, Summer 2023</p>
-                  <ul className="list-disc list-inside mt-2">
-                    <li>Developed features for web applications</li>
-                    <li>Collaborated with team members using Agile methodologies</li>
-                  </ul>
-                </CardContent>
-              </Card>
-              <div className="mt-6 text-center">
-                <Button className="bg-gold-500 text-black hover:bg-purple-600 hover:text-white">
-                  <FileText className="mr-2 h-4 w-4" /> Download Full Resume
+      {/* Programming Languages Section */}
+      <section id="languages" className="py-16 md:py-24">
+        <div className="container">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">Programming Languages</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            {[
+              { name: 'Python', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
+              { name: 'JavaScript', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+              { name: 'Java', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
+              { name: 'C++', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
+              { name: 'Go', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg' },
+            ].map((lang) => (
+              <div key={lang.name} className="flex flex-col items-center justify-center group">
+                <div className="relative w-20 h-20 mb-2">
+                  <Image
+                    src={lang.logo}
+                    alt={`${lang.name} logo`}
+                    layout="fill"
+                    objectFit="contain"
+                    className="transition-opacity duration-300 group-hover:opacity-10"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="text-sm font-medium">{lang.name}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Technologies Section */}
+      <section id="technologies" className="py-16 md:py-24 bg-muted/50">
+        <div className="container">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">Technologies</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            {[
+              { name: 'React', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+              { name: 'Node.js', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+              { name: 'Docker', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
+              { name: 'PostgreSQL', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg' },
+              { name: 'AWS', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg' },
+              { name: 'TensorFlow', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg' },
+              { name: 'Git', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
+              { name: 'MongoDB', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
+              { name: 'Kubernetes', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg' },
+              { name: 'GraphQL', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg' },
+            ].map((tech) => (
+              <div key={tech.name} className="flex flex-col items-center justify-center group">
+                <div className="relative w-20 h-20 mb-2">
+                  <Image
+                    src={tech.logo}
+                    alt={`${tech.name} logo`}
+                    layout="fill"
+                    objectFit="contain"
+                    className="transition-opacity duration-300 group-hover:opacity-10"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="text-sm font-medium">{tech.name}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Contact Section with Form */}
+      <section id="contact" className="py-16 md:py-24">
+        <div className="container">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">Get In Touch</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <p className="text-muted-foreground text-lg mb-4">
+                I'm always open to new opportunities and collaborations. Whether you have a question or just want to say hi, feel free to reach out!
+              </p>
+              <div className="flex gap-4">
+                <Button variant="outline" size="icon">
+                  <Mail className="h-5 w-5" />
+                  <span className="sr-only">Email</span>
+                </Button>
+                <Button variant="outline" size="icon">
+                  <Github className="h-5 w-5" />
+                  <span className="sr-only">GitHub</span>
+                </Button>
+                <Button variant="outline" size="icon">
+                  <Linkedin className="h-5 w-5" />
+                  <span className="sr-only">LinkedIn</span>
                 </Button>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="py-20 bg-black">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center text-purple-500">Contact Me</h2>
-            <form className="max-w-md mx-auto">
-              <div className="space-y-4">
-                <Input placeholder="Your Name" className="bg-gray-900 text-white border-purple-500 focus:border-gold-500" />
-                <Input type="email" placeholder="Your Email" className="bg-gray-900 text-white border-purple-500 focus:border-gold-500" />
-                <Textarea placeholder="Your Message" className="bg-gray-900 text-white border-purple-500 focus:border-gold-500" />
-                <Button type="submit" className="w-full bg-gold-500 text-black hover:bg-purple-600 hover:text-white">Send Message</Button>
-              </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              
+              <Input type="text" placeholder="Your Name" required />
+              <Input type="email" placeholder="Your Email" required />
+              <Textarea placeholder="Your Message" required />
+              <Button type="submit">Send Message</Button>
             </form>
           </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 py-6 text-center text-gold-500">
-        <p>&copy; 2024 John Doe. All rights reserved.</p>
-      </footer>
+        </div>
+      </section>
     </div>
   )
 }
