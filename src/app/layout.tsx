@@ -7,10 +7,17 @@ const geistSans = localFont({
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+});
+
+const kanitFont = localFont({
+  src: "/fonts/Kanit-Regular.ttf", // Assuming it's in the public/fonts directory
+  variable: "--font-kanit",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${kanitFont.variable} antialiased`}
       >
         {children}
       </body>
