@@ -1,37 +1,48 @@
-// components/Skills.tsx
+import { useRef } from "react";
+
 const skills = [
-    { name: "Python", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
-    { name: "JavaScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
-    { name: "Java", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
-    { name: "C++", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" },
-    { name: "Go", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg" },
-  ];
-  
-  const Skills = () => {
-    return (
-      <section id="languages" className="py-16 md:py-24">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">Programming Languages</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-            {skills.map((skill) => (
-              <div key={skill.name} className="flex flex-col items-center justify-center group">
-                <div className="relative w-20 h-20 mb-2">
-                  <img
-                    src={skill.logo}
-                    alt={`${skill.name} logo`}
-                    className="transition-opacity duration-300 group-hover:opacity-10"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span className="text-sm font-medium">{skill.name}</span>
-                  </div>
-                </div>
+  { name: "Python", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
+  { name: "JavaScript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+  { name: "Java", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" },
+  { name: "Typecript", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+  { name: "SQL", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" },
+  { name: "R", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/r/r-original.svg" },
+  { name: "OCaml", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ocaml/ocaml-original.svg" },
+];
+
+const Skills = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <section id="languages" className="py-16 md:py-24 relative">
+      <div className="container mx-auto flex flex-col items-center">
+        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">
+          Programming Languages
+        </h2>
+        <div
+          ref={containerRef}
+          className="flex justify-center items-center gap-8 relative"
+        >
+          {skills.map((skill) => (
+            <div
+              key={skill.name}
+              className="floating-icon w-16 h-16 group transition-opacity duration-300 hover:opacity-80"
+              style={{ animation: "synchronizedFloat 5s ease-in-out infinite" }} // Apply the synchronized animation
+            >
+              <img
+                src={skill.logo}
+                alt={`${skill.name} logo`}
+                className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition duration-300"
+              />
+              <div className="text-center mt-2 text-gray-500 group-hover:text-gray-800 transition font-medium">
+                {skill.name}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </section>
-    );
-  };
-  
-  export default Skills;
-  
+      </div>
+    </section>
+  );
+};
+
+export default Skills;

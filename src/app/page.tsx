@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import ProjectSlider from "@/components/ProjectSlider";
 import HeroSection from "@/components/HeroSection";
 import Skills from "@/components/Skills";
-import ProgrammingLanguages from "@/components/ProgrammingLanguages"; 
+import Technologies from "@/components/Technologies"; 
 import ContactForm from "@/components/ContactForm"; // Assuming you've added the contact form as well
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
         <HeroSection />
         <ProjectSlider />
         <Skills />
-        <ProgrammingLanguages />
+        <Technologies />
         <ContactForm />
       </main>
     </div>
