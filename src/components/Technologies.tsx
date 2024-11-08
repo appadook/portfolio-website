@@ -22,7 +22,7 @@ const technologies = [
 
 const Technologies = () => {
   return (
-    <section id="technologies" className="py-16 md:py-24 bg-muted/50">
+    <section id="technologies" className="py-16 md:py-24 bg-muted/85">
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">Technologies</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">

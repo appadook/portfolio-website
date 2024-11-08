@@ -14,7 +14,7 @@ const Skills = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section id="languages" className="py-16 md:py-24 relative">
+    <section id="languages" className="py-16 md:py-24 relative bg-muted/85" >
       <div className="container mx-auto flex flex-col items-center">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">
           Programming Languages
