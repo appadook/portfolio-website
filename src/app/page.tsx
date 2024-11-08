@@ -8,7 +8,7 @@ import ContactForm from "@/components/ContactForm"; // Assuming you've added the
 
 export default function Home() {
   return (
-    <div>
+    <div className="min-h-screen">
       <Navbar />
       <main className="pt-20">
         <HeroSection />

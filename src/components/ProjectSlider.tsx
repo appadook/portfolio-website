@@ -13,7 +13,7 @@ export default function ProjectSlider() {
 
   return (
     <div id="projects" className="relative flex flex-col items-center justify-center w-[90vw] max-w-[1200px] mx-auto overflow-hidden">
-      <h2 className="text-3xl font-bold mb-6">Personal Projects</h2>
+      <h2 className="text-3xl font-bold mb-6 text-white">Personal Projects</h2>
       <Button
         variant="outline"
         size="icon"
