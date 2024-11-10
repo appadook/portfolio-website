@@ -1,6 +1,7 @@
 // components/HeroSection.tsx
 import { useRef, useEffect } from "react";
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export default function HeroSection() {
   const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -51,7 +52,7 @@ export default function HeroSection() {
     const particlesMaterial = new THREE.PointsMaterial({
       size: 3,                    // Adjusted base size
       sizeAttenuation: false,       // Disabled size attenuation so all particles are same size
-      color: 0x6366f1,
+      color: 0x8A7CFF,             // Changed to a softer purple/blue shade
       blending: THREE.AdditiveBlending,
       transparent: true,
       opacity: 0.8                  // Increased opacity
@@ -93,7 +94,7 @@ export default function HeroSection() {
     return () => window.removeEventListener('resize', handleBackgroundResize);
   }, []);
 
-  // Right side animation (using TorusKnot as example)
+  // Right side animation (Floating Spaceman)
   useEffect(() => {
     if (!rightSideCanvasRef.current) return;
 
@@ -102,51 +103,58 @@ export default function HeroSection() {
     const renderer = new THREE.WebGLRenderer({ 
       canvas: rightSideCanvasRef.current, 
       alpha: true,
-      antialias: true  // Added for smoother edges
+      antialias: true
     });
     renderer.setSize(window.innerWidth / 2, window.innerHeight);
 
-    // Enhanced lighting setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);  // Increased ambient light
+    // Enhanced lighting for the spaceman
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
-    // Main front light
-    const frontLight = new THREE.DirectionalLight(0x6366f1, 1.5);
-    frontLight.position.set(0, 0, 30);
+    const frontLight = new THREE.DirectionalLight(0xffffff, 2);
+    frontLight.position.set(0, 2, 5);
     scene.add(frontLight);
 
-    // Top light for better surface detail
-    const topLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    topLight.position.set(0, 30, 0);
-    scene.add(topLight);
+    const backLight = new THREE.DirectionalLight(0x6366f1, 1);
+    backLight.position.set(0, 2, -5);
+    scene.add(backLight);
 
-    // Side lights for depth
-    const leftLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    leftLight.position.set(-20, 0, 10);
-    scene.add(leftLight);
+    let spaceman: THREE.Object3D;
+    const loader = new GLTFLoader();
+    
+    // Load the spaceman model
+    loader.load(
+      '/spaceman.glb', // Make sure to add this model to your public folder
+      (gltf) => {
+        spaceman = gltf.scene;
+        spaceman.scale.set(0.008,0.008,0.008);  // Reduced from 1.5 to 0.008
+        spaceman.rotation.y = Math.PI / 4;
+        scene.add(spaceman);
+      },
+      undefined,
+      (error) => {
+        console.error('Error loading model:', error);
+      }
+    );
 
-    const rightLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    rightLight.position.set(20, 0, 10);
-    scene.add(rightLight);
+    camera.position.z = 15;
+    camera.position.y = 2;
 
-    // Adjusted material for better visibility
-    const geometry = new THREE.TorusKnotGeometry(8, 3, 100, 16);
-    const material = new THREE.MeshPhongMaterial({ 
-      color: 0x6366f1,
-      shininess: 50,          // Increased shininess
-      flatShading: false,
-      specular: 0x6366f1,    // Changed specular to match base color
-      emissive: 0x1a1a1a     // Added slight emissive for better visibility
-    });
-    const torusKnot = new THREE.Mesh(geometry, material);
-
-    scene.add(torusKnot);
-    camera.position.z = 30;
-
+    let time = 0;
     const animateRight = () => {
       requestAnimationFrame(animateRight);
-      torusKnot.rotation.x += 0.01;
-      torusKnot.rotation.y += 0.005;
+      time += 0.01;
+
+      if (spaceman) {
+        // Floating animation
+        spaceman.position.y = Math.sin(time) * 0.5 + 1;
+        spaceman.rotation.y = Math.sin(time * 0.5) * 0.2 + Math.PI / 4;
+        
+        // Subtle tilting
+        spaceman.rotation.x = Math.sin(time * 0.7) * 0.1;
+        spaceman.rotation.z = Math.cos(time * 0.8) * 0.1;
+      }
+
       renderer.render(scene, camera);
     };
     animateRight();
