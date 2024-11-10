@@ -14,9 +14,9 @@ const Skills = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section id="languages" className="py-16 md:py-24 relative bg-muted/85" >
+    <section id="languages" className="py-16 md:py-24 relative bg-white/2 backdrop-blur-sm" >
       <div className="container mx-auto flex flex-col items-center">
-        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">
+        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center text-white">
           Programming Languages
         </h2>
         <div
@@ -34,7 +34,7 @@ const Skills = () => {
                 alt={`${skill.name} logo`}
                 className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition duration-300"
               />
-              <div className="text-center mt-2 text-gray-500 group-hover:text-gray-800 transition font-medium">
+              <div className="text-center mt-2 text-white/70 group-hover:text-white transition font-medium">
                 {skill.name}
               </div>
             </div>

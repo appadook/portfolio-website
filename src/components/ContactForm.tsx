@@ -35,12 +35,12 @@ export default function ContactForm() {
   };
 
   return (
-    <section id="contact" className="py-16 md:py-24">
+    <section id="contact" className="py-16 md:py-24 relative bg-white/2 backdrop-blur-sm">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">Get In Touch</h2>
+        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-white">Get In Touch</h2>
         <div className="grid md:grid-cols-2 gap-8">
           <div>
-            <p className="text-muted-foreground text-lg mb-4">
+            <p className="text-lg mb-4 text-white">
               I'm always open to new opportunities and collaborations. Whether you have a question or just want to say hi, feel free to reach out!
             </p>
           </div>
@@ -55,7 +55,7 @@ export default function ContactForm() {
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full"
+              className="w-full text-white"
             />
             <Input
               type="email"
@@ -64,7 +64,7 @@ export default function ContactForm() {
               value={formData.email}
               onChange={handleChange}
               required
-              className="w-full"
+              className="w-full text-white"
             />
             <Textarea
               name="message"
@@ -72,9 +72,9 @@ export default function ContactForm() {
               value={formData.message}
               onChange={handleChange}
               required
-              className="w-full"
+              className="w-full text-white"
             />
-            <Button type="submit" disabled={isSubmitting} className="w-full">
+            <Button type="submit" disabled={isSubmitting} className="w-full text-white">
               {isSubmitting ? "Sending..." : "Send Message"}
             </Button>
           </form>
