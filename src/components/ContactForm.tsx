@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
+import Resume from "./Resume";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
@@ -39,11 +40,13 @@ export default function ContactForm() {
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-white">Get In Touch</h2>
         <div className="grid md:grid-cols-2 gap-8">
-          <div>
-            <p className="text-lg mb-4 text-white">
+          <div className="space-y-6">
+            <p className="text-lg text-white">
               I'm always open to new opportunities and collaborations. Whether you have a question or just want to say hi, feel free to reach out!
             </p>
+            <Resume />
           </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && <p className="text-red-500">{error}</p>}
             {success && <p className="text-green-500">{success}</p>}

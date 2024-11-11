@@ -4,7 +4,8 @@ import ProjectSlider from "@/components/ProjectSlider";
 import HeroSection from "@/components/HeroSection";
 import Skills from "@/components/Skills";
 import Technologies from "@/components/Technologies"; 
-import ContactForm from "@/components/ContactForm"; // Assuming you've added the contact form as well
+import ContactForm from "@/components/ContactForm"; 
+
 
 export default function Home() {
   return (
