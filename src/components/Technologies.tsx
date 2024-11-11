@@ -22,25 +22,23 @@ const technologies = [
 
 const Technologies = () => {
   return (
-    <section id="technologies" className="py-16 md:py-24 relative bg-white/2 backdrop-blur-sm">
-      <div className="container mx-auto">
-        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-white text-center">Technologies</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-          {technologies.map((tech) => (
-            <div key={tech.name} className="flex flex-col items-center justify-center group">
-              <div className="w-20 h-20 mb-2 bg-white rounded-full p-4 flex items-center justify-center">
-                <img
-                  src={tech.logo}
-                  alt={`${tech.name} logo`}
-                  className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                />
-              </div>
-              <span className="text-sm font-medium text-white text-center transition-all duration-300 group-hover:font-bold">{tech.name}</span>
+    <div className="flex flex-col items-center w-full">
+      <h3 className="text-2xl font-bold text-white mb-8">Technologies</h3>
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4 w-[95vw] max-w-[1400px]">
+        {technologies.map((tech) => (
+          <div key={tech.name} className="flex flex-col items-center justify-center group">
+            <div className="w-16 h-16 mb-2 bg-white rounded-full p-4 flex items-center justify-center">
+              <img
+                src={tech.logo}
+                alt={`${tech.name} logo`}
+                className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+              />
             </div>
-          ))}
-        </div>
+            <span className="text-sm font-medium text-white text-center transition-all duration-300 group-hover:font-bold">{tech.name}</span>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -2,9 +2,10 @@
 import Navbar from "@/components/Navbar";
 import ProjectSlider from "@/components/ProjectSlider";
 import HeroSection from "@/components/HeroSection";
-import Skills from "@/components/Skills";
+import ProgrammingLanguages from "@/components/ProgrammingLanguages";
 import Technologies from "@/components/Technologies"; 
 import ContactForm from "@/components/ContactForm"; 
+import Skills from "@/components/Skills";
 
 
 export default function Home() {
@@ -15,7 +16,6 @@ export default function Home() {
         <HeroSection />
         <ProjectSlider />
         <Skills />
-        <Technologies />
         <ContactForm />
       </main>
     </div>
