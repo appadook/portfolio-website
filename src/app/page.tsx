@@ -2,10 +2,9 @@
 import Navbar from "@/components/Navbar";
 import ProjectSlider from "@/components/ProjectSlider";
 import HeroSection from "@/components/HeroSection";
-import ProgrammingLanguages from "@/components/ProgrammingLanguages";
-import Technologies from "@/components/Technologies"; 
 import ContactForm from "@/components/ContactForm"; 
 import Skills from "@/components/Skills";
+import SlideRight from "@/components/ui/SlideRight";
 
 
 export default function Home() {
@@ -15,7 +14,9 @@ export default function Home() {
       <main className="pt-20">
         <HeroSection />
         <ProjectSlider />
+        <SlideRight />
         <Skills />
+        <SlideRight />
         <ContactForm />
       </main>
     </div>

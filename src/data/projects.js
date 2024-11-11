@@ -2,7 +2,7 @@ const projects = [
   {
     title: "Fitness Tracker Web App",
     description: "A comprehensive fitness tracker web application that enables users to plan their workout routines and monitor their progress. Users can log personal records, track their progress in various units, and review their workout history.",
-    image: "/project_images/fitness_web_app.png",
+    image: "/project_images/fitness_web_app.png?height=400&width=600",
     techStack: ["express.js", "PostgreSQL", "React.js", "Node.js", "Tailwind CSS", "Postman", "Supabase | Auth"]
   },
   {
@@ -14,7 +14,7 @@ const projects = [
   {
     title: "not-gradescope Web App",
     description: "A project aimed at providing an alternative to the popular grading platform, Gradescope. It focuses on offering similar functionalities with some additonal ones for a better experience for teaching putting students into groups and a very user-friendly interface. This project although incomplete was a collaboative effort with a group of students in short time frame",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/project_images/not-gradescope.png?height=400&width=600",
     techStack: ["Supabase", "PostgreSQL", "Next.js", "Node.js", "Tailwind CSS", "BootStrapCSS", "Supabase| Auth"]
   },
   {
@@ -25,14 +25,14 @@ const projects = [
   },
   {
     title: "Loops Programming Language Project",
-    description: "A custom programming language project named 'Loops', developed using OCaml. It includes features such as an interpreter for most basic programming languuage features such as itertive stataments, block statements, variable assignmenet and return semantics.",
-    image: "/placeholder.svg?height=400&width=600",
+    description: "A custom programming language project named 'Loops', developed using OCaml, a funtional programming language. It includes features such as an interpreter for most basic programming languuage features such as itertive stataments, block statements, variable assignmenet and return semantics.",
+    image: "/project_images/loops.webp?height=300&width=400",
     techStack: ["OCaml", "Dune", "Menhir", "OUnit", "OCamllex"]
   },
   {
     title: "Tournament Bracket Manager",
     description: "COMING SOON.",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/ComingSoon.jpg?height=400&width=600",
     techStack: []
   },
 ];

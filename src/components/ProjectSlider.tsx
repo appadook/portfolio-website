@@ -12,12 +12,12 @@ export default function ProjectSlider() {
   const prevProject = () => setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length);
 
   return (
-    <div id="projects" className="relative flex flex-col items-center justify-center w-[95vw] max-w-[1500px] mx-auto overflow-hidden">
+    <div id="projects" className="relative flex flex-col items-center justify-center w-[95vw] max-w-[1500px] mx-auto overflow-hidden px-16">
       <h2 className="text-3xl font-bold mb-6 text-white">Personal Projects</h2>
       <Button
         variant="outline"
         size="icon"
-        className="absolute left-4 z-10 bg-white/10 backdrop-blur-sm border-gray-200/20 hover:bg-white/20 transition-colors"
+        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/10 backdrop-blur-sm border-gray-200/20 hover:bg-white/20 transition-colors"
         onClick={prevProject}
       >
         <ChevronLeft className="h-6 w-6 text-white" />
@@ -64,7 +64,7 @@ export default function ProjectSlider() {
       <Button
         variant="outline"
         size="icon"
-        className="absolute right-4 z-10 bg-white/10 backdrop-blur-sm border-gray-200/20 hover:bg-white/20 transition-colors"
+        className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/10 backdrop-blur-sm border-gray-200/20 hover:bg-white/20 transition-colors"
         onClick={nextProject}
       >
         <ChevronRight className="h-6 w-6 text-white" />
