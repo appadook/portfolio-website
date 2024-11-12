@@ -1,7 +1,7 @@
 // components/Navbar.tsx
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useState } from "react";
+
 
 const Navbar = () => {
   const { scrollY } = useScroll();
