@@ -1,4 +1,3 @@
-
 import { useEffect, RefObject } from 'react';
 import * as THREE from 'three';
 
@@ -87,5 +86,5 @@ export const useParticleBackground = (canvasRef: RefObject<HTMLCanvasElement>) =
 
     window.addEventListener('resize', handleBackgroundResize);
     return () => window.removeEventListener('resize', handleBackgroundResize);
-  }, []);
+  }, [canvasRef]);
 };

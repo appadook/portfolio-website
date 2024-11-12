@@ -1,4 +1,5 @@
 // components/ContactForm.tsx
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,7 +29,7 @@ export default function ContactForm() {
       // Reset form data
       setFormData({ name: "", email: "", message: "" });
       setSuccess("Thank you! Your message has been sent.");
-    } catch (err) {
+    } catch (_error) { // renamed to _error since we're not using it
       setError("Oops! Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -42,7 +43,7 @@ export default function ContactForm() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-6">
             <p className="text-lg text-white">
-              I'm always open to new opportunities and collaborations. Whether you have a question or just want to say hi, feel free to reach out!
+              I&apos;m always open to new opportunities and collaborations. Whether you have a question or just want to say hi, feel free to reach out!
             </p>
             <Resume />
           </div>

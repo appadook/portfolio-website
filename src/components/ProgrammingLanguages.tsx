@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import Image from 'next/image';
 
 const skills = [
   { name: "Python", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" },
@@ -50,9 +51,11 @@ const ProgrammingLanguages = () => {
             onMouseEnter={() => setHoveredSkill(skill.name)}
             onMouseLeave={() => setHoveredSkill(null)}
           >
-            <img
+            <Image
               src={skill.logo}
               alt={`${skill.name} logo`}
+              width={64}
+              height={64}
               className="w-full h-full object-contain grayscale group-hover:grayscale-0 transition duration-300"
             />
             <motion.div 

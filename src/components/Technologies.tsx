@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 // components/ProgrammingLanguages.tsx
 const technologies = [
   { name: "Node.js", logo: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
@@ -28,9 +30,11 @@ const Technologies = () => {
         {technologies.map((tech) => (
           <div key={tech.name} className="flex flex-col items-center justify-center group">
             <div className="w-16 h-16 mb-2 bg-white rounded-full p-4 flex items-center justify-center">
-              <img
+              <Image
                 src={tech.logo}
                 alt={`${tech.name} logo`}
+                width={64}
+                height={64}
                 className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
               />
             </div>

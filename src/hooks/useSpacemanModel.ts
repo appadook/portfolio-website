@@ -1,4 +1,3 @@
-
 import { useEffect, RefObject } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -76,5 +75,5 @@ export const useSpacemanModel = (canvasRef: RefObject<HTMLCanvasElement>) => {
 
     window.addEventListener('resize', handleRightResize);
     return () => window.removeEventListener('resize', handleRightResize);
-  }, []);
+  }, [canvasRef]);
 };

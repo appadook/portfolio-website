@@ -38,6 +38,11 @@ const jobs: Job[] = [
 export default function WorkExperience() {
   const jobRefs = useRef<(HTMLDivElement | null)[]>([])
 
+  const setJobRef = (index: number) => (el: HTMLDivElement | null) => {
+    jobRefs.current[index] = el;
+    return undefined; // Explicitly return undefined to satisfy the type requirement
+  };
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -65,7 +70,7 @@ export default function WorkExperience() {
         {jobs.map((job, index) => (
           <div
             key={index}
-            ref={(el) => (jobRefs.current[index] = el)}
+            ref={setJobRef(index)}
             className="opacity-0 translate-y-10 transition-all duration-1000 ease-out"
           >
             <Card className="hover:shadow-lg transition-shadow duration-300">
