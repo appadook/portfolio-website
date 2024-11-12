@@ -5,6 +5,7 @@ import HeroSection from "@/components/HeroSection";
 import ContactForm from "@/components/ContactForm"; 
 import Skills from "@/components/Skills";
 import SlideRight from "@/components/ui/SlideRight";
+import WorkExperience from "@/components/WorkExperience";
 
 
 export default function Home() {
@@ -16,6 +17,8 @@ export default function Home() {
         <ProjectSlider />
         <SlideRight />
         <Skills />
+        <SlideRight />
+        <WorkExperience />
         <SlideRight />
         <ContactForm />
       </main>
