@@ -1,6 +1,6 @@
 import { useEffect, RefObject } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; // Note the .js extension
 
 export const useSpacemanModel = (canvasRef: RefObject<HTMLCanvasElement>) => {
   useEffect(() => {
