@@ -1,14 +1,10 @@
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { useParticleBackground } from "../hooks/useParticleBackground";
 import { useSpacemanModel } from "../hooks/useSpacemanModel";
 import { ProfileSection } from "./ProfileSection";
 
 export default function HeroSection() {
-  const backgroundCanvasRef = useRef<HTMLCanvasElement>(null);
   const rightSideCanvasRef = useRef<HTMLCanvasElement>(null);
-
-  useParticleBackground(backgroundCanvasRef);
   useSpacemanModel(rightSideCanvasRef);
 
   const containerVariants = {
@@ -25,28 +21,11 @@ export default function HeroSection() {
   return (
     <motion.section 
       id="about" 
-      className="relative h-screen flex overflow-hidden"
+      className="relative h-screen flex overflow-hidden backdrop-blur-sm"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      <motion.div 
-        className="fixed inset-0 w-full h-full bg-[url('/galaxy-bg.webp')] bg-cover bg-center bg-no-repeat"
-        style={{ zIndex: -2 }}
-        initial={{ scale: 1.1 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.2 }}
-      />
-      
-      <motion.canvas 
-        ref={backgroundCanvasRef} 
-        className="fixed inset-0 w-full h-full"
-        style={{ opacity: 0.8, zIndex: -1, pointerEvents: 'none' }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.8 }}
-        transition={{ duration: 1.5 }}
-      />
-      
       <motion.div
         variants={containerVariants}
         initial="hidden"

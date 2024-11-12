@@ -64,9 +64,9 @@ export default function WorkExperience() {
   }, [])
 
   return (
-    <section className="max-w-3xl mx-auto py-12 px-4">
+    <section className="w-screen py-12 backdrop-blur-sm">
       <h2 className="text-3xl font-bold mb-8 text-center text-white">Work Experience</h2>
-      <div className="space-y-8">
+      <div className="space-y-8 max-w-3xl mx-auto px-4">
         {jobs.map((job, index) => (
           <div
             key={index}

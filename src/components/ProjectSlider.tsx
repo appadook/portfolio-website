@@ -12,64 +12,75 @@ export default function ProjectSlider() {
   const prevProject = () => setCurrentProject((prev) => (prev - 1 + projects.length) % projects.length);
 
   return (
-    <div id="projects" className="relative flex flex-col items-center justify-center w-[95vw] max-w-[1500px] mx-auto overflow-hidden px-16">
+    <div id="projects" className="relative flex flex-col items-center justify-center w-screen backdrop-blur-sm py-12">
       <h2 className="text-3xl font-bold mb-6 text-white">Personal Projects</h2>
-      <Button
-        variant="outline"
-        size="icon"
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/10 backdrop-blur-sm border-gray-200/20 hover:bg-white/20 transition-colors"
-        onClick={prevProject}
-      >
-        <ChevronLeft className="h-6 w-6 text-white" />
-        <span className="sr-only">Previous project</span>
-      </Button>
+      
+      <div className="flex items-center w-full max-w-[1800px] px-4">
+        <Button
+          variant="outline"
+          size="icon"
+          className="z-10 mr-4 bg-white/10 backdrop-blur-sm border-gray-200/20 hover:bg-white/20 transition-colors"
+          onClick={prevProject}
+        >
+          <ChevronLeft className="h-6 w-6 text-white" />
+          <span className="sr-only">Previous project</span>
+        </Button>
 
-      <div
-        className="flex transition-transform duration-500 ease-in-out w-full"
-        style={{ transform: `translateX(-${currentProject * 100}%)` }}
-      >
-        {projects.map((project, index) => (
-          <div key={index} className="w-full flex-shrink-0 px-4">
-            <div className="rounded-lg overflow-hidden border border-gray-200/20 h-[300px] flex bg-white/10 backdrop-blur-md backdrop-filter">
-              {/* Image Section */}
-              <div className="relative w-1/2 h-full">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="w-full h-full"
-                />
-              </div>
-              {/* Text Content Section */}
-              <div className="p-6 flex flex-col justify-between w-1/2">
-                <h3 className="text-2xl font-bold mb-2 text-white">{project.title}</h3>
-                <p className="text-gray-300 mb-4">{project.description}</p>
-                <div className="flex gap-2 flex-wrap">
-                  {project.techStack.map((tech, techIndex) => (
-                    <span
-                      key={techIndex}
-                      className="bg-primary text-white px-2 py-1 rounded text-sm"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+        <div className="overflow-hidden flex-1">
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${currentProject * 100}%)` }}
+          >
+            {projects.map((project, index) => (
+              <div 
+                key={index} 
+                className="w-full flex-shrink-0 px-8"
+                style={{ transform: 'scale(0.95)', transition: 'transform 0.5s' }}
+              >
+                <div className="rounded-lg overflow-hidden border border-gray-200/20 flex flex-col md:flex-row bg-white/10 backdrop-blur-md backdrop-filter max-w-[1200px] mx-auto">
+                  {/* Image Section - Made responsive */}
+                  <div className="relative md:w-auto md:flex-1 aspect-[16/9]">
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      layout="fill"
+                      objectFit="contain"
+                      className="w-full h-full bg-black/30"
+                    />
+                  </div>
+                  {/* Text Content Section */}
+                  <div className="p-8 flex flex-col justify-between md:w-[600px] shrink-0">
+                    <div>
+                      <h3 className="text-3xl font-bold mb-4 text-white">{project.title}</h3>
+                      <p className="text-gray-300 mb-6 text-lg">{project.description}</p>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      {project.techStack.map((tech, techIndex) => (
+                        <span
+                          key={techIndex}
+                          className="bg-primary text-white px-3 py-1.5 rounded text-sm"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
 
-      <Button
-        variant="outline"
-        size="icon"
-        className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/10 backdrop-blur-sm border-gray-200/20 hover:bg-white/20 transition-colors"
-        onClick={nextProject}
-      >
-        <ChevronRight className="h-6 w-6 text-white" />
-        <span className="sr-only">Next project</span>
-      </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="z-10 ml-4 bg-white/10 backdrop-blur-sm border-gray-200/20 hover:bg-white/20 transition-colors"
+          onClick={nextProject}
+        >
+          <ChevronRight className="h-6 w-6 text-white" />
+          <span className="sr-only">Next project</span>
+        </Button>
+      </div>
     </div>
   );
 }

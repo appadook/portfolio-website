@@ -33,8 +33,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${kanitFont.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${kanitFont.variable} antialiased relative`}
       >
+        <div className="fixed inset-0 w-full h-full bg-[url('/galaxy-bg.webp')] bg-cover bg-center bg-no-repeat" style={{ zIndex: -2 }} />
         {children}
       </body>
     </html>

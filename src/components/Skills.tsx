@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import ProgrammingLanguages from './ProgrammingLanguages'
 import Technologies from './Technologies'
@@ -9,7 +9,7 @@ const Skills = () => {
   const [activeTab, setActiveTab] = useState('languages')
 
   return (
-    <section id="skills" className="py-16 md:py-24 relative  flex items-center">
+    <section id="skills" className="py-16 md:py-24 relative flex items-center backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -57,15 +57,17 @@ const Skills = () => {
           </motion.div>
         </div>
 
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-        >
-          {activeTab === 'languages' ? <ProgrammingLanguages /> : <Technologies />}
-        </motion.div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activeTab === 'languages' ? <ProgrammingLanguages /> : <Technologies />}
+          </motion.div>
+        </AnimatePresence>
       </motion.div>
     </section>
   )
