@@ -1,10 +1,22 @@
-
 // components/ProfileSection.tsx
 
+import { motion } from "framer-motion";
+
 export const ProfileSection = () => {
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    show: { 
+      opacity: 1, 
+      x: 0,
+      transition: {
+        duration: 0.8
+      }
+    }
+  };
+
   return (
     <div className="w-1/2 flex items-center justify-center px-8 z-10">
-      <div className="flex flex-col items-center text-center text-white">
+      <motion.div variants={itemVariants} initial="hidden" animate="show" className="flex flex-col items-center text-center text-white">
         <div className="w-48 h-48 rounded-full bg-gray-300 mb-8">
           <img src="/kurtik-appadoo.jpeg" alt="Profile" className="w-full h-full rounded-full object-cover" />
         </div>
@@ -16,7 +28,7 @@ export const ProfileSection = () => {
             Computer Science and Economics Double Major student at Union College with a passion for software development. 
           </p>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
