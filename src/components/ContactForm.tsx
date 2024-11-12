@@ -23,13 +23,22 @@ export default function ContactForm() {
     setError(null);
     setSuccess(null);
 
-    // Placeholder for form submission (API integration, etc.)
     try {
-      console.log("Form submitted", formData);
-      // Reset form data
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+
       setFormData({ name: "", email: "", message: "" });
       setSuccess("Thank you! Your message has been sent.");
-    } catch (_error) { // renamed to _error since we're not using it
+    } catch (error) {
       setError("Oops! Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
