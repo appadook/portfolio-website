@@ -20,7 +20,7 @@ const projects = [
   {
     title: "Maximum Matching Project Repo",
     description: "A project that explores algorithms for finding maximum matching in d-partite graphs, implemented in Python. It includes algorithms for both bipartite and d-partite graphs, all heavily tested with our extended test suite and evaluated in different courses for analysis. The project was a collaborative effort with a group of students and was done towards the final goal of a book containing a whole 10 weeks of research and implementation.",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/project_images/maximum_matching.png?height=400&width=600",
     techStack: ["Python"]
   },
   {
@@ -28,6 +28,12 @@ const projects = [
     description: "A custom programming language project named 'Loops', developed using OCaml, a funtional programming language. It includes features such as an interpreter for most basic programming languuage features such as itertive stataments, block statements, variable assignmenet and return semantics.",
     image: "/project_images/loops.webp?height=300&width=400",
     techStack: ["OCaml", "Dune", "Menhir", "OUnit", "OCamllex"]
+  },
+  {
+    title: "Forecasting Inflation ",
+    description: "A collaborative project done in R to build and use economic models to predict the inflation rate of the next quarter using predictors aswell as determinants and training data to construct relibale TSLM and ARIMA models.",
+    image: "/project_images/inflation.webp?height=300&width=400",
+    techStack: ["R", "RStudio"]
   },
   {
     title: "Tournament Bracket Manager",
