@@ -4,7 +4,8 @@ import {
   SiMongodb, SiMysql, SiRedis, SiGit, SiDocker, SiGithubactions,
   SiJsonwebtokens, SiPassport, SiAuth0, SiGraphql, SiR,
   SiOcaml, SiElectron, SiTailwindcss, SiSupabase, SiFirebase,
-  SiPostman, SiTableau, SiRstudio, SiLatex, SiApacheMaven, SiGradle
+  SiPostman, SiTableau, SiRstudio, SiLatex, SiApacheMaven, SiGradle,
+  SiFlask
 } from 'react-icons/si';
 import { FaAws, FaDatabase, FaJava, FaKey, FaPlug } from 'react-icons/fa';
 import { AiOutlineApi } from 'react-icons/ai';
@@ -50,6 +51,7 @@ export const skillIcons: { [key: string]: React.ComponentType } = {
   'RStudio': SiRstudio,
   LATEX: SiLatex,
   Maven: SiApacheMaven,
-  Gradle: SiGradle
+  Gradle: SiGradle,
+  Flask: SiFlask
 };
 

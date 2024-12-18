@@ -18,6 +18,7 @@ const Resume: React.FC = () => {
           onClick={handleDownload}
           variant="default"
           size="default"
+          className="bg-[#00E5FF] hover:bg-[#00E5FF] text-black font-semibold"
         >
           Download Resume
         </Button>

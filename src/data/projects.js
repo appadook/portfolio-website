@@ -7,9 +7,9 @@ const projects = [
   },
 
   {
-    title: "Maximum Matching Project Repo",
+    title: "Maximum Matching Research Project Repo",
     description: "A project that explores algorithms for finding maximum matching in d-partite graphs, implemented in Python. It includes algorithms for both bipartite and d-partite graphs, all heavily tested with our extended test suite and evaluated in different courses for analysis. The project was a collaborative effort with a group of students and was done towards the final goal of a book containing a whole 10 weeks of research and implementation.",
-    image: "/project_images/maximum_matching.png?height=400&width=600",
+    image: "/Union College Computer Science Logo.png?height=400&width=600",
     technologies: ["Python"]
   },
   {
@@ -27,7 +27,7 @@ const projects = [
   {
     title: "Z-manager Web App",
     description: "A user-friendly web application designed to help users manage their tasks and projects efficiently. It features a drag-and-drop interface for organizing tasks within a calendar view, allowing users to plan their workdays effectively.",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/project_images/z-logo.jpg?height=400&width=600",
     technologies: ["Springboot", "PostgreSQL", "Next.js", "Node.js", "Tailwind CSS", "Postman", "Supabase | Auth", "Shadcn"]
   },
   {

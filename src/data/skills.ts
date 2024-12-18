@@ -12,6 +12,7 @@ const skills = {
     { name: 'React.js' },
     { name: 'Next.js' },
     { name: 'Node.js' },
+    { name: 'Flask' },
     { name: 'Express.js' },
     { name: 'Spring Boot' },
     { name: 'Electron.js' },

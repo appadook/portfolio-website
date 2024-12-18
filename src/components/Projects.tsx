@@ -24,7 +24,7 @@ function ProjectCard({ project }: { project: typeof projects[0] }) {
         style={{ transformStyle: 'preserve-3d' }}
       >
         {/* Front of the card */}
-        <div className="w-full h-full absolute backface-hidden">
+        <div className="w-full h-full absolute backface-hidden rounded-lg overflow-hidden border-2 border-[#FF4081]">
           <Image
             src={project.image}
             alt={project.title}
@@ -35,7 +35,7 @@ function ProjectCard({ project }: { project: typeof projects[0] }) {
         </div>
 
         {/* Back of the card */}
-        <div className="w-full h-full absolute backface-hidden bg-[#1E1E1E] p-6 rounded-lg flex flex-col justify-between overflow-y-auto"
+        <div className="w-full h-full absolute backface-hidden bg-[#1E1E1E] p-6 rounded-lg flex flex-col justify-between overflow-y-auto border-2 border-[#00E5FF]"
              style={{ transform: 'rotateY(180deg)' }}>
           <div>
             <h3 className="text-2xl font-semibold mb-4 text-[#FF4081]">{project.title}</h3>
