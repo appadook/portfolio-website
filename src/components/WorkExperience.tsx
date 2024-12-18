@@ -10,7 +10,7 @@ type Job = {
   description: string[]
 }
 
-const jobs: Job[] = [
+export const jobs: Job[] = [
   {
     title: "Python Intern",
     company: "Truefort Inc, Weehawken, NJ",
@@ -34,6 +34,7 @@ const jobs: Job[] = [
     ]
   },
 ]
+
 
 export default function WorkExperience() {
   const jobRefs = useRef<(HTMLDivElement | null)[]>([])

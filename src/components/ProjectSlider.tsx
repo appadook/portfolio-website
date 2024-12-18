@@ -55,7 +55,7 @@ export default function ProjectSlider() {
                       <p className="text-gray-300 mb-6 text-lg">{project.description}</p>
                     </div>
                     <div className="flex gap-2 flex-wrap">
-                      {project.techStack.map((tech, techIndex) => (
+                      {project.technologies.map((tech, techIndex) => (
                         <span
                           key={techIndex}
                           className="bg-primary text-white px-3 py-1.5 rounded text-sm"
