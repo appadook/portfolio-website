@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useState } from 'react'
-import { Github } from 'lucide-react'
 import {projects} from '@/data/projects'
 
 

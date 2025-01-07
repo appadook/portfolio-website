@@ -2,12 +2,12 @@ import {
   SiJavascript, SiTypescript, SiPython, SiCplusplus, SiPostgresql,
   SiReact, SiNextdotjs, SiNodedotjs, SiExpress, SiDjango, SiSpring,
   SiMongodb, SiMysql, SiRedis, SiGit, SiDocker, SiGithubactions,
-  SiJsonwebtokens, SiPassport, SiAuth0, SiGraphql, SiR,
+  SiJsonwebtokens, SiPassport, SiAuth0, SiGraphql,
   SiOcaml, SiElectron, SiTailwindcss, SiSupabase, SiFirebase,
-  SiPostman, SiTableau, SiRstudio, SiLatex, SiApacheMaven, SiGradle,
+  SiPostman, SiTableau, SiLatex, SiGradle,
   SiFlask
 } from 'react-icons/si';
-import { FaAws, FaDatabase, FaJava, FaKey, FaPlug } from 'react-icons/fa';
+import { FaAws, FaJava, FaKey, FaPlug } from 'react-icons/fa';
 import { AiOutlineApi } from 'react-icons/ai';
 import { MdStorage } from 'react-icons/md';
 
@@ -40,7 +40,6 @@ export const skillIcons: { [key: string]: React.ComponentType } = {
   'REST API': AiOutlineApi,
   WebSockets: FaPlug,
   Microservices: MdStorage,
-  R: SiR,
   OCaml: SiOcaml,
   'Electron.js': SiElectron,
   TailwindCSS: SiTailwindcss,
@@ -48,9 +47,8 @@ export const skillIcons: { [key: string]: React.ComponentType } = {
   Firebase: SiFirebase,
   Postman: SiPostman,
   Tableau: SiTableau,
-  'RStudio': SiRstudio,
   LATEX: SiLatex,
-  Maven: SiApacheMaven,
+  Maven: SiGradle,
   Gradle: SiGradle,
   Flask: SiFlask
 };

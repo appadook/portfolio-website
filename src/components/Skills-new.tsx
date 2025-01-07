@@ -3,6 +3,12 @@
 import { motion } from 'framer-motion'
 import { skillIcons } from '@/components/ui/skills-icons'
 import skills from '@/data/skills'
+import { IconType } from 'react-icons'
+
+interface SkillItem {
+  name: string;
+  link?: string;
+}
 
 export default function Skills() {
   return (
@@ -24,27 +30,25 @@ export default function Skills() {
         >
           <h3 className="text-xl font-semibold mb-4 text-[#00E5FF]">Programming Languages</h3>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
-            {skills['Programming Languages'].map((item, itemIndex) => {
-              const Icon = skillIcons[item.name];
+            {skills['Programming Languages'].map((item: SkillItem, index: number) => {
+              const Icon = skillIcons[item.name] as IconType;
               return (
-                <motion.a
-                  key={itemIndex}
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <motion.div
+                  key={index}
                   className="group flex flex-col items-center justify-center p-3 rounded-lg bg-[#2A2A2A] hover:bg-[#3A3A3A] transition-colors duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   {Icon && (
                     <Icon 
-                      className="w-10 h-10 mb-2 text-[#FF4081] group-hover:text-[#00E5FF] transition-colors duration-300"
+                      size={40}
+                      className="mb-2 text-[#FF4081] group-hover:text-[#00E5FF] transition-colors duration-300"
                     />
                   )}
                   <span className="text-sm text-center text-[#FF4081] font-semibold group-hover:text-[#00E5FF] transition-colors duration-300">
                     {item.name}
                   </span>
-                </motion.a>
+                </motion.div>
               );
             })}
           </div>
@@ -62,8 +66,8 @@ export default function Skills() {
             >
               <h3 className="text-xl font-semibold mb-4 text-[#00E5FF]">{category}</h3>
               <div className="grid grid-cols-2 gap-4">
-                {items.map((item, itemIndex) => {
-                  const Icon = skillIcons[item.name];
+                {items.map((item: SkillItem, itemIndex: number) => {
+                  const Icon = skillIcons[item.name] as IconType;
                   return (
                     <motion.a
                       key={itemIndex}
@@ -76,7 +80,8 @@ export default function Skills() {
                     >
                       {Icon && (
                         <Icon 
-                          className="w-8 h-8 mb-1 text-[#00E5FF] group-hover:text-[#FF4081] transition-colors duration-300"
+                          size={32}
+                          className="mb-1 text-[#00E5FF] group-hover:text-[#FF4081] transition-colors duration-300"
                         />
                       )}
                       <span className="text-xs text-center text-[#E0E0E0] group-hover:text-[#FF4081] transition-colors duration-300">

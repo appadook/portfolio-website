@@ -3,11 +3,7 @@
 import { motion } from 'framer-motion'
 import { Card, CardHeader, CardTitle, CardContent } from './ui/card'
 
-interface LeadershipSectionProps {
-  isVisible: boolean;
-}
-
-export default function LeadershipSection({ isVisible }: LeadershipSectionProps) {
+export default function LeadershipSection() {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -63,7 +59,7 @@ export default function LeadershipSection({ isVisible }: LeadershipSectionProps)
           <div className="space-y-4">
             <div>
               <h4 className="text-[#FF4081] font-semibold mb-2">Academic Excellence</h4>
-              <p>Dean's List student</p>
+              <p>Dean&apos;s List student</p>
               <p>Omicron Delta Epsilon Alpha Beta (Economics Honor Society)</p>
             </div>
             <div>

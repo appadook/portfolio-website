@@ -24,9 +24,9 @@ export default function About() {
           className="bg-[#1E1E1E] p-8 rounded-lg mb-8 max-w-[90%] mx-auto"
         >
           <p className="text-center mb-4">
-            I'm a senior Computer Science student passionate about creating innovative solutions through code. 
+            I&apos;m a senior Computer Science student passionate about creating innovative solutions through code. 
             With a strong foundation in algorithms, data structures, and software engineering principles, 
-            I'm eager to apply my skills to real-world challenges and contribute to cutting-edge projects.
+            I&apos;m eager to apply my skills to real-world challenges and contribute to cutting-edge projects.
           </p>
           <p className="text-center">
             My academic journey has equipped me with a diverse skill set, ranging from low-level systems programming 
@@ -48,7 +48,7 @@ export default function About() {
             {showLeadership ? 'Hide Leadership Experience' : 'Show Leadership Experience'}
           </button>
 
-          {showLeadership && <LeadershipSection isVisible={showLeadership} />}
+          {showLeadership && <LeadershipSection />}
         </motion.div>
       </div>
     </motion.section>
