@@ -29,4 +29,14 @@ type Job = {
           
       ]
     },
+    {
+      title: "Guided Research Student",
+      company: "Union College CSC489, Schenectady, NY",
+      period: "September 2024 - December 2024",
+      description: [
+        "Directed comprehensive testing initiatives for a Python-driven research project, orchestrating the creation of thousands of tests to enhance algorithmic performance and precision.",
+        "Pioneered the research and deployment of advanced algorithms for optimal matching in d-partite graphs, significantly contributing to both the coding and theoretical advancements.",
+        "Co-authored a research publication, meticulously documenting methodologies and discoveries, while exemplifying leadership and proactive collaboration within the research team"
+      ]
+    },
   ]
