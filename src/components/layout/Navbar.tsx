@@ -50,7 +50,7 @@ const Navbar = () => {
             handleNavClick('hero');
           }}
         >
-          JD
+          Kurtik Appadoo
         </a>
         
         {/* Desktop Navigation */}

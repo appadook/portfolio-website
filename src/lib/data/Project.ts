@@ -6,7 +6,7 @@ export interface Project {
   image: string;
   link?: string;
   github?: string;
-category?: Array<"Software Engineering" | "Quantitative analysis" | "Machine Learning" | "Natural Language Processing" | "Algorithms" | "Research" | "Web Development" | "Data Science" | "Systems Engineering" | "Other">;
+  category?: Array<"Software Engineering" | "Quantitative analysis" | "Machine Learning" | "Natural Language Processing" | "Algorithms" | "Research" | "Web Development" | "Data Science" | "Systems Engineering" | "Other">;
 }
 
 export const projects: Project[] = [
@@ -14,7 +14,7 @@ export const projects: Project[] = [
     id: 1,
     title: "Crypto-Arbitrage Tracker",
     description: "A full stack application that makes use of websockets through multiple APIs to showcase the arbitrage opportunities in the cryptocurrency market for certain coins. The backend allows us to receive the data through a websocket integration and do the necessary calulations to evaluate the presence of arbitrage opportunities either through the fiat currencies or across exchanges",
-    image: "/project_images/crypto-project.png?height=400&width=600",
+    image: "/project_images/crypto-app.jpg?height=400&width=600",
     technologies: ["Flask", "Next.js", "Node.js", "Tailwind CSS", "Postman", "Firebase Auth"],
     category: ["Software Engineering", "Quantitative analysis", "Research"]
   },
@@ -64,5 +64,23 @@ export const projects: Project[] = [
     description: "A custom programming language project named 'Loops', developed using OCaml, a funtional programming language. It includes features such as an interpreter for most basic programming languuage features such as itertive stataments, block statements, variable assignmenet and return semantics.",
     image: "/project_images/loops.webp?height=300&width=400",
     technologies: ["OCaml", "Dune", "Menhir", "OUnit", "OCamllex"]
+  },
+  {
+    id: 8,
+    title: "16-bit CPU Design",
+    description: "A project that involves the design and implementation of a 16-bit CPU using Logisim, a digital logic simulator. The CPU is capable of executing a set of instructions and performing basic arithmetic, branch and pseudo-branch instructions, jumping, functions and logical operations.",
+    image: "/project_images/16-bit-cpu.png?height=300&width=400",
+    technologies: ["Logisim", "MIPS Assembly", "Python"],
+    category: ["Systems Engineering"]
+  },
+  {
+    id: 9,
+    title: "NLP for QA over Tabular Data",
+    description: "This project explores different LLM prompting strategies for answering questions about tabular data, evaluating approaches like zero-shot learning, chain of thought, and code-based methods using DataBench's evaluation framework",
+    image: "/project_images/llm.jpg?height=300&width=400",
+    technologies: ["Python"],
+    category: ["Natural Language Processing", "Machine Learning"]
   }
+  
+
 ];

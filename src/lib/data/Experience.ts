@@ -12,8 +12,8 @@ export const experiences: Experience[] = [
   {
     id: 1,
     title: "Software Engineer",
-    company: "Foppiani Shipping and Logistics US inc, Jamaica, NY",
-    duration: "July 2024 - September 2024",
+    company: "Scan Gloabl Shipping and Logistics US inc, Jamaica, NY",
+    duration: "Novemeber 2024 - Present",
     description: [
       "Engineered a dynamic web platform using JavaScript, HTML, CSS, and the Google Maps API to visualize 1.5 million consignees on an interactive map. Optimized API calls to retrieve unique data efficiently, minimizing redundancy and enhancing performance.",
       "Processed and cleaned large datasets using Python and R, ensuring data accuracy and readiness for web integration, while optimizing workflows to manage millions of shipping records.",

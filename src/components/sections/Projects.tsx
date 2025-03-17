@@ -11,10 +11,9 @@ const Projects = () => {
   projects.forEach(project => {
     if (project.category && project.category.length > 0) {
       project.category.forEach(cat => categoriesSet.add(cat));
-    } else {
-      categoriesSet.add('Other');
-    }
+    } 
   });
+  categoriesSet.add('Other');
   const categories = Array.from(categoriesSet);
   
   // State for active filter
