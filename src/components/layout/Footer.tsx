@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Github, Linkedin, Mail, Twitter } from 'lucide-react';
 import { scrollToSection } from '@/lib/animations';
@@ -24,9 +25,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and description */}
           <div className="md:col-span-2">
-            <div className="text-xl font-bold mb-4">John Doe</div>
+            <div className="text-xl font-bold mb-4">Kurtik Appadoo</div>
             <p className="text-muted-foreground mb-4 max-w-md">
-              Economics & Computer Science student passionate about building software that makes a difference. Connect with me to discuss opportunities or collaborations.
+              Economics & Computer Science student Double Major passionate about building software and data analysis that makes a difference. Connect with me to discuss opportunities or collaborations.
             </p>
             <div className="flex space-x-4">
               <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
@@ -38,7 +39,7 @@ const Footer = () => {
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
                 <Twitter size={20} />
               </a>
-              <a href="mailto:john.doe@example.com" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="mailto:appadook@union.edu" className="text-muted-foreground hover:text-foreground transition-colors">
                 <Mail size={20} />
               </a>
             </div>
@@ -73,17 +74,17 @@ const Footer = () => {
               Contact
             </h3>
             <ul className="space-y-2 text-muted-foreground">
-              <li>State University</li>
-              <li>College Town, State</li>
+              <li>Union College</li>
+              <li>Schenectady, NY</li>
               <li className="hover:text-foreground transition-colors">
-                <a href="mailto:john.doe@example.com">john.doe@example.com</a>
+                <a href="mailto:appadook@union.edu">appadook@union.edu</a>
               </li>
             </ul>
           </div>
         </div>
         
         <div className="border-t border-border mt-12 pt-8 text-center text-muted-foreground">
-          <p>© {currentYear} John Doe. All rights reserved.</p>
+          <p>© {currentYear} Kurtik Appadoo. All rights reserved.</p>
         </div>
       </div>
     </footer>

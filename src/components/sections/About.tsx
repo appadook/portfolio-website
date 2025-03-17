@@ -1,57 +1,115 @@
-'use client'
+import React from 'react';
+import { useInView } from '@/lib/animations';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { about } from '@/lib/data';
+import { FileDown } from 'lucide-react';
 
-import { motion } from 'framer-motion'
-import { useState } from 'react'
-import LeadershipSection from '../LeadershipSection'
 
-export default function About() {
-  const [showLeadership, setShowLeadership] = useState(false)
-
+const About = () => {
+  const [ref, isInView] = useInView<HTMLDivElement>();
+  
   return (
-    <motion.section
-      id="about"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="py-20 w-full"
-    >
-      <h2 className="text-3xl font-bold mb-8 text-center">About Me</h2>
-      <div className="w-11/12 mx-auto">
-        <motion.div
-          initial={{ y: 50 }}
-          whileInView={{ y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-[#1E1E1E] p-8 rounded-lg mb-8 max-w-[90%] mx-auto"
+    <section id="about" className="py-24 bg-secondary/30">
+      <div className="container mx-auto px-6">
+        <SectionHeader
+          title="About Me"
+          subtitle="Background"
+        />
+        
+        <div 
+          ref={ref}
+          className={`flex flex-col lg:flex-row gap-12 transition-all duration-700 ${
+            isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
         >
-          <p className="text-center mb-4">
-            I&apos;m a senior Computer Science student passionate about creating innovative solutions through code. 
-            With a strong foundation in algorithms, data structures, and software engineering principles, 
-            I&apos;m eager to apply my skills to real-world challenges and contribute to cutting-edge projects.
-          </p>
-          <p className="text-center">
-            My academic journey has equipped me with a diverse skill set, ranging from low-level systems programming 
-            to high-level web and mobile application development. I thrive in collaborative environments and am always 
-            excited to learn new technologies and methodologies.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          transition={{ duration: 0.5 }}
-          className="overflow-hidden w-full"
-        >
-          <button
-            onClick={() => setShowLeadership(!showLeadership)}
-            className="w-full bg-[#2A2A2A] text-[#00E5FF] py-2 rounded-lg mb-4 hover:bg-[#3A3A3A] transition-colors"
-          >
-            {showLeadership ? 'Hide Leadership Experience' : 'Show Leadership Experience'}
-          </button>
-
-          {showLeadership && <LeadershipSection />}
-        </motion.div>
+          {/* Image */}
+          <div className="lg:w-1/3 relative">
+            <div className="bg-foreground/5 rounded-2xl p-8 h-full">
+              <div className="relative aspect-square overflow-hidden rounded-lg shadow-lg mt-4">
+                <img 
+                  src="/headhsot.jpg"
+                  alt="Kurtik Appadoo"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              <div className="mt-6 p-4 bg-card rounded-lg border border-border">
+                <h3 className="text-lg font-semibold mb-1">Education</h3>
+                <p className="text-muted-foreground mb-3">{about.education}</p>
+                
+                <a 
+                  href={about.resumeLink} 
+                  className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                >
+                  <FileDown size={16} />
+                  <span>Download Resume</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          {/* Content */}
+          <div className="lg:w-2/3">
+            <h3 className="text-2xl font-bold mb-6">
+              Economics & Computer Science Student
+            </h3>
+            
+            <div className="prose prose-sm md:prose-base lg:prose-lg max-w-none">
+              <p className="text-muted-foreground mb-4">
+                {about.longDescription}
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <div className="bg-card p-6 rounded-lg border border-border">
+                  <h4 className="text-lg font-semibold mb-4">My Approach</h4>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
+                      <span>Data-driven problem solver</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
+                      <span>Collaborative team player</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
+                      <span>Continuous learner</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
+                      <span>Detail-oriented developer</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="bg-card p-6 rounded-lg border border-border">
+                  <h4 className="text-lg font-semibold mb-4">Interests</h4>
+                  <ul className="space-y-2">
+                    <li className="flex items-start">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
+                      <span>Financial technology</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
+                      <span>Data analytics</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
+                      <span>UI/UX design</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
+                      <span>Open source development</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </motion.section>
-  )
-}
+    </section>
+  );
+};
 
+export default About;

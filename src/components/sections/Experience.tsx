@@ -1,156 +1,201 @@
-"use client";
+import React, { useState } from 'react';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { experiences } from '@/lib/data/Experience';
+import { Card, CardContent } from '@/components/ui/card';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { CalendarDays, Building } from 'lucide-react';
+import { useInView } from '@/lib/animations';
+import { cn } from '@/lib/utils';
 
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { Calendar, MapPin, Building2 } from "lucide-react";
-
-const experiences = [
-  {
-    title: "Software Engineering Intern",
-    company: "Tech Corp",
-    location: "San Francisco, CA",
-    period: "Summer 2023",
-    description: "Developed and maintained full-stack applications using React and Node.js. Collaborated with senior developers on critical projects. Implemented new features that improved user engagement by 40%.",
-    logo: "https://images.unsplash.com/photo-1549924231-f129b911e442?w=128&h=128&fit=crop&q=80",
-    skills: ["React", "Node.js", "TypeScript", "AWS"],
-    side: "right",
-  },
-  {
-    title: "Research Assistant",
-    company: "University Economics Department",
-    location: "Boston, MA",
-    period: "2022 - Present",
-    description: "Led research initiatives in market dynamics and behavioral economics. Developed predictive models using Python and R. Published findings in two peer-reviewed journals.",
-    logo: "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=128&h=128&fit=crop&q=80",
-    skills: ["Python", "R", "Data Analysis", "Research"],
-    side: "left",
-  },
-  {
-    title: "Teaching Assistant",
-    company: "Computer Science Department",
-    location: "Boston, MA",
-    period: "2022 - 2023",
-    description: "Mentored 100+ students in advanced programming concepts. Created comprehensive learning materials and conducted weekly code reviews. Improved class average performance by 15%.",
-    logo: "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=128&h=128&fit=crop&q=80",
-    skills: ["Java", "Python", "Mentoring", "Education"],
-    side: "right",
-  },
-];
-
-export default function Experience() {
-  const [ref, inView] = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  });
-
+const Experience = () => {
   return (
-    <section id="experience" ref={ref} className="py-20">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8 }}
-        className="max-w-6xl mx-auto px-4"
-      >
-        <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-          Experience
-        </h2>
+    <section id="experience" className="py-24 bg-background">
+      <div className="container mx-auto px-4">
+        <SectionHeader
+          title="My Experience"
+          subtitle="Career Path"
+        />
         
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-purple-600 to-blue-500" />
+        <div className="max-w-6xl mx-auto">
+          <div className="relative">
+            {/* Timeline Line */}
+            <div className="absolute top-0 bottom-0 left-1/2 w-1 bg-purple-600/30 transform -translate-x-1/2 hidden md:block"></div>
+            
+            {/* Timeline Dots */}
+            <div className="absolute top-0 bottom-0 left-1/2 transform -translate-x-1/2 hidden md:flex flex-col justify-around items-center">
+              {experiences.map((_, index) => (
+                <div key={index} className="w-4 h-4 bg-purple-600 rounded-full z-10 shadow-[0_0_10px_rgba(139,92,246,0.6)]"></div>
+              ))}
+            </div>
+            
+            <div className="space-y-16 md:space-y-28">
+              {experiences.map((experience, index) => {
+                const isLeft = index % 2 === 0;
+                const companyInitial = experience.company.charAt(0);
+                const [ref, isInView] = useInView<HTMLDivElement>();
+                const [isHovering, setIsHovering] = useState(false);
+                
+                return (
+                  <div 
+                    key={experience.id}
+                    ref={ref}
+                    className="relative md:grid md:grid-cols-[1fr_60px_1fr] items-start"
+                  >
+                    {/* LEFT COLUMN */}
+                    <div className="w-full">
+                      {/* Experience Card on Left side (for even indexes) */}
+                      <div 
+                        className={cn(
+                          "transition-all duration-700 transform mb-6 md:mb-0 relative",
+                          isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
+                          isLeft ? "block" : "hidden"
+                        )}
+                        style={{ transitionDelay: `${index * 150}ms` }}
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                      >
+                        <Card className="border border-border hover:border-primary/20 hover:shadow-md transition-all duration-300 md:mr-6 w-full">
+                          <CardContent className="p-6">
+                            <div className="flex items-start gap-4">
+                              <Avatar className="w-16 h-16 border-2 border-primary/20">
+                                {experience.Image ? (
+                                  <AvatarImage src={experience.Image} alt={experience.company} />
+                                ) : (
+                                  <AvatarFallback className="bg-primary/10 text-primary text-xl font-bold">
+                                    {companyInitial}
+                                  </AvatarFallback>
+                                )}
+                              </Avatar>
+                              
+                              <div className="flex-1">
+                                <h3 className="text-xl font-bold mb-1">{experience.title}</h3>
+                                
+                                <div className="flex items-center text-primary">
+                                  <Building size={16} className="mr-1" />
+                                  <span>{experience.company}</span>
+                                </div>
+                                
+                                <div className="flex items-center text-muted-foreground mt-2">
+                                  <CalendarDays size={16} className="mr-1" />
+                                  <span>{experience.duration}</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {experience.technologies && (
+                              <div className="flex flex-wrap gap-2 mt-4">
+                                {experience.technologies.map((tech, i) => (
+                                  <span
+                                    key={i}
+                                    className="px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {/* Description appears on hover */}
+                            <div className={cn(
+                              "mt-4 transition-all duration-300 overflow-hidden", 
+                              isHovering ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                            )}>
+                              <ul className="space-y-2 list-disc pl-6 mt-2">
+                                {experience.description.map((item, i) => (
+                                  <li key={i} className="text-muted-foreground">{item}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
 
-          {experiences.map((exp, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: exp.side === "left" ? -50 : 50 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="relative mb-16"
-            >
-              {/* Timeline dot with year label */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-                <div className="w-4 h-4 rounded-full bg-white dark:bg-gray-800 border-2 border-purple-600 dark:border-purple-400" />
-                <div className="mt-2 px-2 py-1 bg-purple-100 dark:bg-purple-900/50 rounded-full">
-                  <span className="text-sm font-medium text-purple-600 dark:text-purple-300">
-                    {exp.period.split(" ")[0]} {/* Show just the year */}
-                  </span>
-                </div>
-              </div>
-
-              {/* Content container with grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Left side content */}
-                <div className={`${exp.side === "left" ? "md:block" : "md:hidden"}`}>
-                  {exp.side === "left" && (
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:mr-8">
-                      <TimelineContent experience={exp} align="right" />
+                      {/* Hidden the separate description card for left side when not hovering */}
                     </div>
-                  )}
-                </div>
-
-                {/* Right side content */}
-                <div className={`${exp.side === "right" ? "md:block md:col-start-2" : "md:hidden"}`}>
-                  {exp.side === "right" && (
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:ml-8">
-                      <TimelineContent experience={exp} align="left" />
+                    
+                    {/* CENTER COLUMN (Timeline) */}
+                    <div className="hidden md:block"></div>
+                    
+                    {/* RIGHT COLUMN */}
+                    <div className="w-full">
+                      {/* Hidden the separate description card for right side when not hovering */}
+                      
+                      {/* Experience Card on Right side (for odd indexes) */}
+                      <div 
+                        className={cn(
+                          "transition-all duration-700 transform relative",
+                          isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
+                          !isLeft ? "block" : "hidden"
+                        )}
+                        style={{ transitionDelay: `${index * 150}ms` }}
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                      >
+                        <Card className="border border-border hover:border-primary/20 hover:shadow-md transition-all duration-300 md:ml-6 w-full">
+                          <CardContent className="p-6">
+                            <div className="flex items-start gap-4">
+                              <Avatar className="w-16 h-16 border-2 border-primary/20">
+                                {experience.Image ? (
+                                  <AvatarImage src={experience.Image} alt={experience.company} />
+                                ) : (
+                                  <AvatarFallback className="bg-primary/10 text-primary text-xl font-bold">
+                                    {companyInitial}
+                                  </AvatarFallback>
+                                )}
+                              </Avatar>
+                              
+                              <div className="flex-1">
+                                <h3 className="text-xl font-bold mb-1">{experience.title}</h3>
+                                
+                                <div className="flex items-center text-primary">
+                                  <Building size={16} className="mr-1" />
+                                  <span>{experience.company}</span>
+                                </div>
+                                
+                                <div className="flex items-center text-muted-foreground mt-2">
+                                  <CalendarDays size={16} className="mr-1" />
+                                  <span>{experience.duration}</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {experience.technologies && (
+                              <div className="flex flex-wrap gap-2 mt-4">
+                                {experience.technologies.map((tech, i) => (
+                                  <span
+                                    key={i}
+                                    className="px-2 py-1 text-xs rounded-full bg-secondary text-secondary-foreground"
+                                  >
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {/* Description appears on hover */}
+                            <div className={cn(
+                              "mt-4 transition-all duration-300 overflow-hidden", 
+                              isHovering ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                            )}>
+                              <ul className="space-y-2 list-disc pl-6 mt-2">
+                                {experience.description.map((item, i) => (
+                                  <li key={i} className="text-muted-foreground">{item}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
-}
+};
 
-// Extracted TimelineContent component for better organization
-const TimelineContent = ({ experience, align }: { experience: typeof experiences[0], align: "left" | "right" }) => (
-  <>
-    <div className={`flex items-center gap-4 mb-4 ${align === "right" ? "flex-row-reverse" : "flex-row"}`}>
-      <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-purple-100 dark:bg-purple-900">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={experience.logo}
-          alt={experience.company}
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div className={`flex-grow ${align === "right" ? "text-right" : "text-left"}`}>
-        <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-          {experience.title}
-        </h3>
-        <p className="text-purple-600 dark:text-purple-400 font-medium">
-          {experience.company}
-        </p>
-      </div>
-    </div>
-
-    <div className="space-y-3">
-      <div className={`flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm ${
-        align === "right" ? "justify-end" : "justify-start"
-      }`}>
-        <Calendar className="w-4 h-4" />
-        <span>{experience.period}</span>
-        <MapPin className="w-4 h-4 ml-2" />
-        <span>{experience.location}</span>
-      </div>
-
-      <p className={`text-gray-600 dark:text-gray-300 ${align === "right" ? "text-right" : "text-left"}`}>
-        {experience.description}
-      </p>
-
-      <div className={`flex flex-wrap gap-2 mt-4 ${align === "right" ? "justify-end" : "justify-start"}`}>
-        {experience.skills.map((skill, skillIndex) => (
-          <span
-            key={skillIndex}
-            className="px-3 py-1 bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300 rounded-full text-sm"
-          >
-            {skill}
-          </span>
-        ))}
-      </div>
-    </div>
-  </>
-);
+export default Experience;

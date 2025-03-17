@@ -1,8 +1,6 @@
-'use client'
-
 import { motion } from 'framer-motion'
 import { skillIcons } from '@/components/ui/skills-icons'
-import skills from '@/data/skills'
+import skills from '@/lib/data/Skill'
 import { IconType } from 'react-icons'
 
 interface SkillItem {
