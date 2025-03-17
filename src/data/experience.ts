@@ -4,6 +4,9 @@ type Job = {
     company: string
     period: string
     description: string[]
+    logo?: string
+    skills?: string[]
+    side?: "left" | "right"
   }
   
   export const jobs: Job[] = [
@@ -19,7 +22,7 @@ type Job = {
       ]
     },
     {
-      title: "Freelance Software Engineer & Data Analyst",
+      title: "Software & IT Engineer ",
       company: "Foppiani Shipping and Logistics US inc, Jamaica, NY",
       period: "July 2024 - September 2024",
       description: [
@@ -30,7 +33,7 @@ type Job = {
       ]
     },
     {
-      title: "Guided Research Student",
+      title: "Research Testing Engineer",
       company: "Union College CSC489, Schenectady, NY",
       period: "September 2024 - December 2024",
       description: [

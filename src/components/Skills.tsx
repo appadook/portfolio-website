@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import ProgrammingLanguages from './ProgrammingLanguages'
-import Technologies from './Technologies'
+import Technologies from './sections/Technologies'
 
 const Skills = () => {
   const [activeTab, setActiveTab] = useState('languages')

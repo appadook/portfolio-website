@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import LeadershipSection from './LeadershipSection'
+import LeadershipSection from '../LeadershipSection'
 
 export default function About() {
   const [showLeadership, setShowLeadership] = useState(false)

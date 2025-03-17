@@ -3,11 +3,11 @@
 import { motion } from 'framer-motion'
 import Header from '@/components/Header'
 import Hero from '@/components/Hero'
-import About from '@/components/About'
-import Projects from '@/components/Projects'
-import Experience from '@/components/Experience'
+import About from '@/components/sections/About'
+import Projects from '@/components/sections/Projects'
+import Experience from '@/components/sections/Experience'
 import Academics from '@/components/Academics'
-import Skills from '@/components/Skills-new'
+import Skills from '@/components/sections/Skills'
 import Contact from '@/components/ContactForm'
 
 export default function Home() {
