@@ -5,6 +5,9 @@ import { projects } from '@/lib/data/Project';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Filter } from 'lucide-react';
 
+// Define the category type to match the one in Project.ts
+type ProjectCategory = "SWE" | "Quant" | "ML" | "NLP" | "Algorithms" | "Research" | "Web Development" | "Data Science" | "Systems Engineering" | "Other";
+
 const Projects = () => {
   // Extract unique categories from projects (now handling arrays)
   const categoriesSet = new Set<string>(['All']);
@@ -16,14 +19,14 @@ const Projects = () => {
   categoriesSet.add('Other');
   const categories = Array.from(categoriesSet);
   
-  // State for active filter
-  const [activeFilter, setActiveFilter] = useState('All');
+  // State for active filter with proper typing
+  const [activeFilter, setActiveFilter] = useState<'All' | ProjectCategory>('All');
   
   // Filter projects based on active filter
   const filteredProjects = activeFilter === 'All' 
     ? projects 
     : projects.filter(project => 
-        project.category && project.category.includes(activeFilter)
+        project.category && project.category.includes(activeFilter as ProjectCategory)
       );
 
   return (
@@ -38,7 +41,7 @@ const Projects = () => {
         <div className="mb-10 flex justify-center">
           <div className="flex items-center gap-2 bg-secondary/30 p-2 rounded-lg">
             <Filter size={18} className="text-muted-foreground" />
-            <ToggleGroup type="single" value={activeFilter} onValueChange={(value) => value && setActiveFilter(value)}>
+            <ToggleGroup type="single" value={activeFilter} onValueChange={(value) => value && setActiveFilter(value as 'All' | ProjectCategory)}>
               {categories.map((category) => (
                 <ToggleGroupItem key={category} value={category} aria-label={`Filter by ${category}`} className="text-sm">
                   {category}
