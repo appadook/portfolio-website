@@ -20,18 +20,18 @@ const AcademicJourneySlide = () => {
       <div className="md:pl-4 md:ml-4 md:border-l border-border">
         <div className="space-y-5 text-white">
           <p>
-            Pursuing a double major in Economics and Computer Science with a current GPA of 3.8/4.0. 
+            Pursuing a double major in Economics and Computer Science with a current GPA of 3.5/4.0. 
             My unique combination of studies allows me to approach problems with both analytical and technical perspectives.
           </p>
           <h4 className="font-semibold text-lg text-white">Highlights</h4>
           <ul className="space-y-2">
             <li className="flex items-start">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
-              <span>Dean's List: 2021-2023</span>
+              <span>Dean's List Student</span>
             </li>
             <li className="flex items-start">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
-              <span>Advanced Algorithms Research Assistant</span>
+              <span>Honors in both CS & Economics</span>
             </li>
             <li className="flex items-start">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
@@ -39,7 +39,7 @@ const AcademicJourneySlide = () => {
             </li>
             <li className="flex items-start">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
-              <span>Undergraduate Research Symposium Presenter</span>
+              <span>Undergraduate Research Symposium Presenter x2</span>
             </li>
           </ul>
         </div>

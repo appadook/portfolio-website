@@ -3,7 +3,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { experiences } from '@/lib/data/Experience';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { CalendarDays, Building } from 'lucide-react';
+import { CalendarDays, Building, MousePointer } from 'lucide-react';
 import { useInView } from '@/lib/animations';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +15,13 @@ const Experience = () => {
           title="My Experience"
           subtitle="Career Path"
         />
+        
+        <div className="text-center mb-8 animate-pulse">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/30 shadow-sm">
+            <MousePointer size={18} className="text-primary" />
+            <span className="text-primary font-medium">Hover over experience for full description</span>
+          </div>
+        </div>
         
         <div className="max-w-6xl mx-auto">
           <div className="relative">

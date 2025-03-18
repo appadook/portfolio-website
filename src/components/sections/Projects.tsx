@@ -48,8 +48,8 @@ const Projects = () => {
           </div>
         </div>
         
-        {/* Project Grid - 2 columns on medium screens and above */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Project Grid - 1 column on small screens, 2 columns on medium screens, 3 columns on large screens */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredProjects.map((project, index) => (
             <ProjectCard 
               key={project.id}

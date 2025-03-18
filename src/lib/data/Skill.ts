@@ -13,7 +13,11 @@ const skills = {
     { name: 'TypeScript' },
     { name: 'SQL' },
     { name: 'R' },
-    { name: 'OCaml' }
+    { name: 'OCaml' },
+    { name: 'C' },
+    { name: 'C++' },
+    { name: 'Assmebly' }
+
   ],
   'Frameworks': [
     { name: 'React.js' },
@@ -23,7 +27,9 @@ const skills = {
     { name: 'Express.js' },
     { name: 'Spring Boot' },
     { name: 'Electron.js' },
-    { name: 'TailwindCSS' }
+    { name: 'TailwindCSS' },
+    { name: 'Expo' },
+    { name: 'React Native' },
   ],
   'Databases': [
     { name: 'PostgreSQL' },
@@ -33,14 +39,15 @@ const skills = {
   ],
   'Cloud Services': [
     { name: 'Supabase' },
-    { name: 'Firebase' }
+    { name: 'Firebase' },
+    { name: 'Google Cloud' }
   ],
   'Tools': [
     { name: 'Git' },
     { name: 'Postman' },
     { name: 'Tableau' },
     { name: 'Rstudio' },
-    { name: 'LATEX' },
+    { name: 'LateX' },
     { name: 'GraphQL' }
   ],
   'Build Tools': [
