@@ -1,9 +1,9 @@
-
 import React, { useEffect, useRef } from 'react';
 import { ArrowDown } from 'lucide-react';
 import AnimatedText from '@/components/ui/AnimatedText';
 import { scrollToSection } from '@/lib/animations';
 import { about } from '@/lib/data';
+import ThreeScene from '../ThreeScene';
 
 const Hero = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -26,7 +26,7 @@ const Hero = () => {
       size: Math.random() * 2 + 0.5,
       speedX: (Math.random() - 0.5) * 0.3,
       speedY: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.5 + 0.2
+      opacity: Math.random() * 0.3 + 0.1 // Reduced opacity
     }));
     
     const resize = () => {
@@ -70,7 +70,7 @@ const Hero = () => {
           
           if (distance < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(100, 100, 100, ${0.1 * (1 - distance / 100)})`;
+            ctx.strokeStyle = `rgba(100, 100, 100, ${0.05 * (1 - distance / 100)})`; // Reduced opacity
             ctx.lineWidth = 0.5;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -90,25 +90,31 @@ const Hero = () => {
   }, []);
   
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <canvas 
+    <section
+      id="hero"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
+      {/* Render the Three.js scene component with higher z-index */}
+      <div className="absolute inset-0 z-0">
+        <ThreeScene />
+      </div>
+
+      {/* Semi-transparent overlay with reduced opacity */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/50 to-background/40 z-[1]"></div>
+      
+      {/* Particle canvas with reduced opacity */}
+      <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full"
+        className="absolute inset-0 w-full h-full z-[2] opacity-40"
       />
-      
-      <div className="absolute inset-0 bg-gradient-to-b from-background/95 to-background/95"></div>
-      
-      <div className="container mx-auto px-6 py-24 z-10 text-center">
+
+      <div className="container mx-auto px-6 py-16 z-10 text-center relative mt-[-300px]">
         <div className="flex flex-col items-center page-transition">
-          <div className="mb-4 inline-block px-3 py-1 text-xs font-medium tracking-wider text-primary uppercase bg-secondary rounded-full">
-            <AnimatedText
-              text="Hello, I'm"
-              animation="fade-in"
-              delay={200}
-            />
+          <div className="mb-4 inline-block px-3 py-1 text-xs font-medium tracking-wider text-primary uppercase bg-secondary/80 backdrop-blur-sm rounded-full">
+            <AnimatedText text="Hello, I'm" animation="fade-in" delay={200} />
           </div>
-          
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
+
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-5 tracking-tight">
             <AnimatedText
               text={about.name}
               tag="span"
@@ -118,31 +124,30 @@ const Hero = () => {
               className="block"
             />
           </h1>
-          
-          <h2 className="text-xl sm:text-2xl md:text-3xl text-muted-foreground mb-8">
-            <AnimatedText
-              text={about.title}
-              animation="fade-in"
-              delay={1500}
-            />
+
+          <h2 className="text-xl sm:text-2xl md:text-3xl text-muted-foreground mb-6">
+            <AnimatedText text={about.title} animation="fade-in" delay={1500} />
           </h2>
-          
-          <div className="max-w-2xl text-muted-foreground mb-10">
+
+          <div className="max-w-2xl text-muted-foreground mb-8 bg-background/50 backdrop-blur-sm p-4 rounded-lg">
             <AnimatedText
               text={about.description}
               animation="fade-in"
               delay={2000}
             />
           </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 mt-4 opacity-0 animate-fade-in" style={{ animationDelay: '2.5s', animationFillMode: 'forwards' }}>
+
+          <div
+            className="flex flex-col sm:flex-row gap-4 mt-2 opacity-0 animate-fade-in"
+            style={{ animationDelay: '2.5s', animationFillMode: 'forwards' }}
+          >
             <button
               className="px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
               onClick={() => scrollToSection('projects')}
             >
               View My Projects
             </button>
-            
+
             <button
               className="px-6 py-3 border border-border rounded-md hover:bg-secondary transition-colors"
               onClick={() => scrollToSection('contact')}
@@ -151,8 +156,8 @@ const Hero = () => {
             </button>
           </div>
         </div>
-        
-        <div 
+
+        <div
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer animate-bounce"
           onClick={() => scrollToSection('about')}
         >
