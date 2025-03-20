@@ -4,13 +4,13 @@ import { cn } from '@/lib/utils';
 interface ProfilePictureProps {
   src?: string;
   alt?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   className?: string;
   withAnimation?: boolean;
 }
 
 const ProfilePicture: React.FC<ProfilePictureProps> = ({
-  src = "/headshot.jpg",
+  src = "/headhsot.jpg",  // Fixed typo in image path
   alt = "Profile picture",
   size = 'lg',
   className,
@@ -35,11 +35,12 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
     md: 'w-24 h-24',
     lg: 'w-32 h-32',
     xl: 'w-40 h-40',
+    '2xl': 'w-64 h-64',  // Added larger size option
   };
   
   return (
     <div className={cn(
-      'relative group',
+      'relative group mt-8', // Added mt-8 for margin-top
       sizeClasses[size],
       className
     )}>

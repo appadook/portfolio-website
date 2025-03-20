@@ -30,10 +30,10 @@ const Footer = () => {
               Economics & Computer Science student Double Major passionate about building software and data analysis that makes a difference. Connect with me to discuss opportunities or collaborations.
             </p>
             <div className="flex space-x-4">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="http://github.com/appadook" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
                 <Github size={20} />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+              <a href="https://www.linkedin.com/in/kurtik-appadoo-863019244/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
                 <Linkedin size={20} />
               </a>
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
