@@ -47,15 +47,15 @@ const PersonalSideSlide = () => {
               <ul className="space-y-2 mt-2">
                 <li className="flex items-start">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
-                  <span>Rock climbing</span>
+                  <span>Tennis</span>
                 </li>
                 <li className="flex items-start">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
-                  <span>Chess (1800+ ELO)</span>
+                  <span>Health & Fitness</span>
                 </li>
                 <li className="flex items-start">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary mt-2 mr-2"></span>
-                  <span>Open-source contribution</span>
+                  <span>Building and sharing meaningful projects</span>
                 </li>
               </ul>
             </div>

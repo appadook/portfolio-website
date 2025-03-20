@@ -21,20 +21,20 @@ const LeadershipSlide = () => {
         <div className="space-y-5 text-white">
           <div className="space-y-4">
             <div>
-              <h4 className="font-semibold text-lg text-white">Computer Science Society President</h4>
-              <p>Led a team of 10 officers, organized 20+ technical workshops, and grew membership by 150%.</p>
+              <h4 className="font-semibold text-lg text-white">Vice President of Order of Omega</h4>
+              <p></p>
             </div>
             <div>
-              <h4 className="font-semibold text-lg text-white">Hackathon Winner</h4>
-              <p>First place in University Hackathon 2023 for developing an AI-powered educational platform.</p>
+              <h4 className="font-semibold text-lg text-white">Chi Psi Fraternity Member</h4>
+              <p></p>
             </div>
             <div>
-              <h4 className="font-semibold text-lg text-white">Peer Mentorship Program</h4>
-              <p>Mentored 15 freshman students in their academic and professional development.</p>
+              <h4 className="font-semibold text-lg text-white">Alpha Pi Omega Service Fraternity</h4>
+              <p></p>
             </div>
             <div>
-              <h4 className="font-semibold text-lg text-white">Research Publication</h4>
-              <p>Co-authored paper on economic impacts of AI in the undergraduate research journal.</p>
+              <h4 className="font-semibold text-lg text-white">Tennis Varisty player & SAAC representative</h4>
+              <p></p>
             </div>
           </div>
         </div>
