@@ -109,7 +109,7 @@ const Hero = () => {
         className="absolute inset-0 w-full h-full z-[2] opacity-40"
       />
 
-      <div className="container mx-auto px-6 py-16 z-10 relative mt-[-400px]">
+      <div className="container mx-auto px-6 py-16 z-10 relative mt-[-300px]">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 page-transition">
           <div className="flex flex-col items-center md:items-start text-center md:text-left flex-1">
             <div className="mb-4 inline-block px-3 py-1 text-xs font-medium tracking-wider text-primary uppercase bg-secondary/80 backdrop-blur-sm rounded-full">
