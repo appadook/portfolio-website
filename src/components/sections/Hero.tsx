@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, Download } from 'lucide-react';
 import AnimatedText from '@/components/ui/AnimatedText';
 import { scrollToSection } from '@/lib/animations';
 import { about } from '@/lib/data';
@@ -108,7 +108,7 @@ const Hero = () => {
         className="absolute inset-0 w-full h-full z-[2] opacity-40"
       />
 
-      <div className="container mx-auto px-6 py-16 z-10 text-center relative mt-[-300px]">
+      <div className="container mx-auto px-6 py-16 z-10 text-center relative mt-[-400px]">
         <div className="flex flex-col items-center page-transition">
           <div className="mb-4 inline-block px-3 py-1 text-xs font-medium tracking-wider text-primary uppercase bg-secondary/80 backdrop-blur-sm rounded-full">
             <AnimatedText text="Hello, I'm" animation="fade-in" delay={200} />
@@ -138,7 +138,7 @@ const Hero = () => {
           </div>
 
           <div
-            className="flex flex-col sm:flex-row gap-4 mt-2 opacity-0 animate-fade-in"
+            className="flex flex-col sm:flex-row gap-4 mt-2 opacity-0 animate-fade-in w-full max-w-md mx-auto"
             style={{ animationDelay: '2.5s', animationFillMode: 'forwards' }}
           >
             <button
@@ -154,6 +154,22 @@ const Hero = () => {
             >
               Get In Touch
             </button>
+          </div>
+          
+          {/* Resume download button */}
+          <div 
+            className="mt-4 w-full max-w-md mx-auto opacity-0 animate-fade-in"
+            style={{ animationDelay: '2.7s', animationFillMode: 'forwards' }}
+          >
+            <a 
+              href={about.resumeLink} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors w-full"
+            >
+              <Download size={18} />
+              Download Resume
+            </a>
           </div>
         </div>
 

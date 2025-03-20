@@ -4,6 +4,10 @@ import { useInView } from '@/lib/animations';
 import { Github, ExternalLink } from 'lucide-react';
 import { type Project } from '@/lib/data/Project';
 import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+
+// Default GitHub profile URL
+const DEFAULT_GITHUB_URL = "https://github.com/kurtixx";  // Replace with your actual GitHub profile URL
 
 interface ProjectCardProps {
   project: Project;
@@ -68,30 +72,39 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
         </div>
       </CardContent>
       
-      <CardFooter className="flex gap-4 pt-2 border-t border-border">
-        {project.github && (
+      <CardFooter className="flex justify-between pt-4 border-t border-border">
+        <div className="flex flex-wrap gap-3">
+          {/* GitHub button that links to either project repo or default profile */}
           <a
-            href={project.github}
+            href={project.github || DEFAULT_GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-300 text-sm"
+            aria-label={project.github ? "View project on GitHub" : "Visit my GitHub profile"}
+            className="inline-flex items-center justify-center rounded-full bg-white text-gray-800 border border-gray-200 px-4 py-2 text-sm font-medium shadow-sm transition-all duration-300 hover:bg-black hover:text-white hover:border-black hover:scale-105 hover:shadow-md"
           >
-            <Github size={16} />
-            <span>Code</span>
+            <Github className="h-5 w-5 mr-2 flex-shrink-0" aria-hidden="true" />
+            <span>GitHub</span>
           </a>
-        )}
-        
-        {project.link && (
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors duration-300 text-sm"
-          >
-            <ExternalLink size={16} />
-            <span>Live Demo</span>
-          </a>
-        )}
+          
+          {project.link && (
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="gap-2 hover:bg-primary/10 hover:text-primary transition-colors duration-300"
+            >
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View live demo"
+              >
+                <ExternalLink size={16} className="text-muted-foreground mr-1" />
+                <span>Live Demo</span>
+              </a>
+            </Button>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

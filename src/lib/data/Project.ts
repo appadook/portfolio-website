@@ -32,7 +32,9 @@ const projectslist: Project[] = [
     description: "A comprehensive fitness tracker web application that enables users to plan their workout routines and monitor their progress. Users can log personal records, track their progress in various units, and review their workout history.",
     image: "/project_images/fitness_web_app.png?height=400&width=600",
     technologies: ["express.js", "PostgreSQL", "React.js", "Node.js", "Tailwind CSS", "Postman", "Supabase | Auth"],
-    category: ["SWE", "Web Development"]
+    category: ["SWE", "Web Development"],
+    github: "",
+    link: ""
   },
   {
     id: 4,
