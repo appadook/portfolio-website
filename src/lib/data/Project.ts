@@ -27,14 +27,20 @@ const projectslist: Project[] = [
     category: ["Algorithms", "Research"]
   },
   {
+    id: 3,
+    title: "Portfolio Website",
+    description: "My personal portfolio website built using Next.js, Tailwind CSS, and TypeScript. The website showcases my projects, skills, and experiences in a clean and responsive design.",
+    image: "/project_images/portfolio-web.png?height=400&width=600",
+    technologies: ["Next.js", "Node.js", "Tailwind CSS", "Vercel"],
+    category: ["SWE", "Web Development"]
+  },
+  {
     id: 12,
     title: "Fitness Tracker Web App",
     description: "A comprehensive fitness tracker web application that enables users to plan their workout routines and monitor their progress. Users can log personal records, track their progress in various units, and review their workout history.",
     image: "/project_images/fitness_web_app.png?height=400&width=600",
     technologies: ["express.js", "PostgreSQL", "React.js", "Node.js", "Tailwind CSS", "Postman", "Supabase | Auth"],
-    category: ["SWE", "Web Development"],
-    github: "",
-    link: ""
+    category: ["SWE", "Web Development"]
   },
   {
     id: 4,
