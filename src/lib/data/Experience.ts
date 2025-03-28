@@ -24,7 +24,7 @@ export const experiences: Experience[] = [
   },
   {
     id: 2,
-    title: "IT Engineer",
+    title: "Data Engineering",
     company: "Foppiani Shipping and Logistics US inc, Jamaica, NY",
     duration: "July 2024 - September 2024",
     description: [
