@@ -6,7 +6,7 @@ export interface Project {
   image: string;
   link?: string;
   github?: string;
-  category?: Array<"SWE" | "Quant" | "ML" | "NLP" | "Algorithms" | "Research" | "Web Development" | "Data Science" | "Systems Engineering" | "Other">;
+  category?: Array<"SWE" | "Quant" | "AI/ML" | "Algorithms" | "Research" | "Web Development" | "Data Science" | "Systems Engineering" | "Other">;
 }
 
 const projectslist: Project[] = [
@@ -48,7 +48,7 @@ const projectslist: Project[] = [
     description: "A collaborative project done in R to build and use economic models to predict the inflation rate of the next quarter using predictors aswell as determinants and training data to construct relibale TSLM and ARIMA models.",
     image: "/project_images/inflation.webp?height=300&width=400",
     technologies: ["R", "RStudio"],
-    category: ["Quant", "ML"]
+    category: ["Quant", "AI/ML"]
   },
   {
     id: 13,
@@ -87,7 +87,7 @@ const projectslist: Project[] = [
     description: "This project explores different LLM prompting strategies for answering questions about tabular data, evaluating approaches like zero-shot learning, chain of thought, and code-based methods using DataBench's evaluation framework",
     image: "/project_images/llm.jpg?height=300&width=400",
     technologies: ["Python"],
-    category: ["NLP"]
+    category: ["AI/ML"]
   },
   {
     id: 10,
@@ -95,7 +95,7 @@ const projectslist: Project[] = [
     description: "Develop a chatbot using an LLM API to engage users in controversial discussions, improving responses through retrieval-augmented generation, prompt engineering, and model evaluation.",
     image: "/project_images/chatbot.jpg?height=300&width=400",
     technologies: ["Python"],
-    category: ["NLP"]
+    category: ["AI/ML"]
   },
   {
     id: 11,
@@ -103,7 +103,7 @@ const projectslist: Project[] = [
     description: "Develop a chatbot using an LLM API to engage users in controversial discussions, improving responses through retrieval-augmented generation, prompt engineering, and model evaluation.",
     image: "/project_images/TextClassification.png?height=300&width=400",
     technologies: ["Python"],
-    category: ["NLP"]
+    category: ["AI/ML"]
   }
 ];
 

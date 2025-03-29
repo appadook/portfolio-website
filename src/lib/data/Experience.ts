@@ -24,7 +24,7 @@ export const experiences: Experience[] = [
   },
   {
     id: 2,
-    title: "Data Engineering",
+    title: "Data Engineer",
     company: "Foppiani Shipping and Logistics US inc, Jamaica, NY",
     duration: "July 2024 - September 2024",
     description: [
@@ -37,7 +37,7 @@ export const experiences: Experience[] = [
   },
   {
     id: 3,
-    title: "Research Testing Engineer",
+    title: "Undergraduate Student Researcher",
     company: "Union College CSC489, Schenectady, NY",
     duration: "September 2024 - December 2024",
     description: [
