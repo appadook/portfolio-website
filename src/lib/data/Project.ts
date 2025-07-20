@@ -104,6 +104,14 @@ const projectslist: Project[] = [
     image: "/project_images/TextClassification.png?height=300&width=400",
     technologies: ["Python"],
     category: ["AI/ML"]
+  },
+  {
+    id: 14,
+    title: "Crypto Arbitrage Prediction Engine",
+    description: "Built a predictive modeling system to forecast cryptocurrency arbitrage opportunities using historical BTC/USD trade data. Implemented real-time ETL pipelines, engineered volatility-based features, and deployed machine learning models including Random Forest, SVM, and Gradient Boosting to simulate high-frequency arbitrage trades with over 86% accuracy.",
+    image: "/project_images/crypto-app.jpg?height=400&width=600",
+    technologies: ["Python", "Pandas", "NumPy", "scikit-learn", "Backtesting", "Jupyter Notebooks"],
+    category: ["AI/ML"]
   }
 ];
 
