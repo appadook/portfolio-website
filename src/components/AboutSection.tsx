@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 
 interface AboutItem {
   id: string;
-  category: "education" | "awards" | "hobbies";
+  category: "education" | "awards & Leadership" | "hobbies";
   title: string;
   subtitle?: string;
   description?: string;
@@ -31,15 +31,15 @@ const aboutData: AboutItem[] = [
     date: "2021 - 2025",
     details: [
       "GPA: 3.6/4.0",
-      "Honor student in both Computer Science and Economics",
+      "Computer Science & Economics Honor Student",
       'Thesis: "Arbitrage in the Crypto Currency Market"',
       "Cum Laude",
-      "Dean's List student-athlete"
+      "Dean's List student-athlete",
     ],
     icon: <GraduationCap className="w-6 h-6" />,
   },
   {
-    id: "1",
+    id: "2",
     category: "education",
     title: "A-level CIE",
     subtitle: "Northfields Internation High School",
@@ -47,13 +47,13 @@ const aboutData: AboutItem[] = [
     details: [
       "Grades: A+ in Physics, A+ in Mathematics, A in Economics and A in French",
       "Ranked 3rd Overall in class",
-      "Ranked best in Math for A-level"
+      "Ranked best in Math for A-level",
     ],
     icon: <GraduationCap className="w-6 h-6" />,
   },
   {
     id: "3",
-    category: "awards",
+    category: "awards & Leadership",
     title: "Presenter at the PIERS 2025 Conference",
     subtitle: "Williams College.",
     description:
@@ -67,7 +67,67 @@ const aboutData: AboutItem[] = [
     icon: <Trophy className="w-6 h-6" />,
   },
   {
+    id: "7",
+    category: "awards & Leadership",
+    title: "SparkLab - Entrepreneurship Program",
+    subtitle: "Union College",
+    description:
+      "Selected participant in Union College's premier entrepreneurship incubator program, developing innovative business solutions and startup concepts.",
+    date: "2024 - 2025",
+    details: [
+      "Secured second place with my team's startup concept, earning $12,500 in startup capital",
+      "Completed an intensive 20-week program focused on entrepreneurship fundamentals and business launch strategies",
+      "Created a professional pitch deck and presented to potential investors and judges in the final competition",
+    ],
+    icon: <Trophy className="w-6 h-6" />,
+  },
+  {
+    id: "4",
+    category: "awards & Leadership",
+    title: "Omicron Delta Epsilon - Economics Honor Society",
+    subtitle: "Union College",
+    description:
+      "Recognized for academic excellence in the field of Economics and inducted into this prestigious international honor society.",
+    date: "2024",
+    details: [
+      "Upheld the highest standard of academic excellence in the field of Economics",
+      "Participated in economic research initiatives",
+      "Attended exclusive seminars with industry professionals",
+    ],
+    icon: <Trophy className="w-6 h-6" />,
+  },
+  {
     id: "5",
+    category: "awards & Leadership",
+    title: "Order of Omega - Greek Life Honor Society",
+    subtitle: "Union College",
+    description:
+      "Selected for membership in this prestigious honor society recognizing excellence in Greek leadership, academics, and campus involvement.",
+    date: "2024",
+    details: [
+      "Served as Vice-President of the Executive Board - upholding the highest values and promoting excellence across campus through events and workshops",
+      "Top 3% of Greek organization members",
+      "Recognized for leadership contributions to campus community",
+    ],
+    icon: <Trophy className="w-6 h-6" />,
+  },
+  {
+    id: "6",
+    category: "awards & Leadership",
+    title: "Alpha Phi Omega",
+    subtitle: "Union College",
+    description:
+      "Active member of this national co-ed service fraternity dedicated to developing leadership, promoting friendship, and providing service to the community.",
+    date: "2024",
+    details: [
+      "Completed over 100 hours of community service",
+      "Organized campus-wide fundraising events",
+      "Led volunteer initiatives with local non-profit organizations",
+    ],
+    icon: <Trophy className="w-6 h-6" />,
+  },
+  {
+    id: "8",
     category: "hobbies",
     title: "Tennis",
     description:
@@ -77,12 +137,12 @@ const aboutData: AboutItem[] = [
       "Nationally ranked Player U18 in Mauritius",
       "Competed in NCAA Division III tournaments",
       "Maintain rigorous training schedule year-round",
-      "Ranked player in both the U.S and France"
+      "Ranked player in both the U.S and France",
     ],
     icon: <Heart className="w-6 h-6" />,
   },
   {
-    id: "6",
+    id: "9",
     category: "hobbies",
     title: "Fitness",
     description:
@@ -91,16 +151,18 @@ const aboutData: AboutItem[] = [
       "Implement periodized training programs for strength and conditioning",
       "Track metrics and analyze performance data for continuous improvement",
       "Practice evidence-based nutrition strategies to support training goals",
-      "Mentor fellow students in effective training methodologies"
+      "Mentor fellow students in effective training methodologies",
     ],
     icon: <Heart className="w-6 h-6" />,
   },
-  
 ];
 
 const categoryConfig = {
   education: { label: "Academic Journey", color: "from-blue-500 to-cyan-500" },
-  awards: { label: "Awards & Honors", color: "from-yellow-500 to-orange-500" },
+  "awards & Leadership": {
+    label: "Awards & Honors",
+    color: "from-yellow-500 to-orange-500",
+  },
   hobbies: {
     label: "Personal Interests",
     color: "from-purple-500 to-pink-500",
