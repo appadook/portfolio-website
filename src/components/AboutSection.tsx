@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
@@ -10,6 +11,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import AnimatedSection from "./AnimatedSection";
 
 interface AboutItem {
   id: string;
@@ -186,133 +188,257 @@ const AboutSection = () => {
   const scrollNext = () => emblaApi && emblaApi.scrollNext();
 
   return (
-    <section id="about" className="py-20 relative">
+    <AnimatedSection id="about" className="py-20 relative">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.3 }}
+        >
+          <motion.h2 
+            className="text-4xl md:text-5xl font-bold mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
             <span className="gradient-text">About Me</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          </motion.h2>
+          <motion.p 
+            className="text-xl text-muted-foreground max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
             My journey through academics, achievements, and the passions that
             drive me
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
-          <Button
-            variant={selectedCategory === "all" ? "default" : "outline"}
-            onClick={() => setSelectedCategory("all")}
-            className={`transition-all duration-300 ${
-              selectedCategory === "all"
-                ? "bg-gradient-to-r from-primary to-accent text-white glow-effect"
-                : "hover:border-primary hover:text-primary"
-            }`}
+        <motion.div 
+          className="flex flex-wrap justify-center gap-2 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          viewport={{ once: true }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            All
-          </Button>
-          {Object.entries(categoryConfig).map(([key, config]) => (
             <Button
-              key={key}
-              variant={selectedCategory === key ? "default" : "outline"}
-              onClick={() => setSelectedCategory(key)}
+              variant={selectedCategory === "all" ? "default" : "outline"}
+              onClick={() => setSelectedCategory("all")}
               className={`transition-all duration-300 ${
-                selectedCategory === key
+                selectedCategory === "all"
                   ? "bg-gradient-to-r from-primary to-accent text-white glow-effect"
                   : "hover:border-primary hover:text-primary"
               }`}
             >
-              {config.label}
+              All
             </Button>
+          </motion.div>
+          {Object.entries(categoryConfig).map(([key, config], index) => (
+            <motion.div
+              key={key}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 * index }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              viewport={{ once: true }}
+            >
+              <Button
+                variant={selectedCategory === key ? "default" : "outline"}
+                onClick={() => setSelectedCategory(key)}
+                className={`transition-all duration-300 ${
+                  selectedCategory === key
+                    ? "bg-gradient-to-r from-primary to-accent text-white glow-effect"
+                    : "hover:border-primary hover:text-primary"
+                }`}
+              >
+                {config.label}
+              </Button>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Carousel Navigation */}
-        <div className="flex justify-center items-center gap-4 mb-8">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={scrollPrev}
-            className="hover:border-primary hover:text-primary transition-colors"
+        <motion.div 
+          className="flex justify-center items-center gap-4 mb-8"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          viewport={{ once: true }}
+        >
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={scrollPrev}
+              className="hover:border-primary hover:text-primary transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+          </motion.div>
+          <motion.span 
+            className="text-muted-foreground"
+            key={filteredData.length}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <span className="text-muted-foreground">
             {filteredData.length} {filteredData.length === 1 ? "item" : "items"}
-          </span>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={scrollNext}
-            className="hover:border-primary hover:text-primary transition-colors"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
+          </motion.span>
+          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={scrollNext}
+              className="hover:border-primary hover:text-primary transition-colors"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </motion.div>
+        </motion.div>
 
         {/* Carousel */}
-        <div className="embla overflow-hidden" ref={emblaRef}>
+        <motion.div 
+          className="embla overflow-hidden" 
+          ref={emblaRef}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          viewport={{ once: true, amount: 0.1 }}
+        >
           <div className="embla__container flex">
-            {filteredData.map((item, index) => (
-              <div
-                key={item.id}
-                className="embla__slide flex-[0_0_90%] md:flex-[0_0_45%] lg:flex-[0_0_33.333%] pl-4"
-              >
-                <Card
-                  className="h-full glass-effect hover:scale-105 transition-all duration-500 animate-fade-in group"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+            <AnimatePresence mode="wait">
+              {filteredData.map((item, index) => (
+                <motion.div
+                  key={item.id}
+                  className="embla__slide flex-[0_0_90%] md:flex-[0_0_45%] lg:flex-[0_0_33.333%] pl-4"
+                  initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                  whileInView={{ 
+                    opacity: 1, 
+                    y: 0, 
+                    scale: 1,
+                    transition: {
+                      duration: 0.6,
+                      delay: index * 0.1,
+                      ease: [0.25, 0.25, 0.25, 0.75]
+                    }
+                  }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  whileHover={{ 
+                    y: -8,
+                    transition: { duration: 0.3, ease: "easeOut" }
+                  }}
                 >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div
-                        className={`p-3 rounded-lg bg-gradient-to-r ${
-                          categoryConfig[item.category].color
-                        } mr-4 text-white group-hover:scale-110 transition-transform duration-300`}
-                      >
-                        {item.icon}
-                      </div>
-                      <Badge variant="secondary" className="text-xs">
-                        {categoryConfig[item.category].label}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                      {item.title}
-                    </CardTitle>
-                    {item.subtitle && (
-                      <p className="text-accent font-medium">{item.subtitle}</p>
-                    )}
-                    {item.date && (
-                      <p className="text-sm text-muted-foreground">
-                        {item.date}
-                      </p>
-                    )}
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4 leading-relaxed">
-                      {item.description}
-                    </p>
-                    {item.details && (
-                      <ul className="space-y-1">
-                        {item.details.map((detail, i) => (
-                          <li
-                            key={i}
-                            className="text-sm text-muted-foreground flex items-center"
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Card className="h-full glass-effect group cursor-pointer">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <motion.div
+                            className={`p-3 rounded-lg bg-gradient-to-r ${
+                              categoryConfig[item.category].color
+                            } mr-4 text-white`}
+                            whileHover={{ 
+                              scale: 1.1, 
+                              rotate: 5,
+                              transition: { duration: 0.2 }
+                            }}
                           >
-                            <span className="w-1 h-1 bg-primary rounded-full mr-2"></span>
-                            {detail}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            ))}
+                            {item.icon}
+                          </motion.div>
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.4, delay: 0.3 }}
+                          >
+                            <Badge variant="secondary" className="text-xs">
+                              {categoryConfig[item.category].label}
+                            </Badge>
+                          </motion.div>
+                        </div>
+                        <motion.div
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.5, delay: 0.2 }}
+                        >
+                          <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                            {item.title}
+                          </CardTitle>
+                          {item.subtitle && (
+                            <p className="text-accent font-medium">{item.subtitle}</p>
+                          )}
+                          {item.date && (
+                            <p className="text-sm text-muted-foreground">
+                              {item.date}
+                            </p>
+                          )}
+                        </motion.div>
+                      </CardHeader>
+                      <CardContent>
+                        <motion.p 
+                          className="text-muted-foreground mb-4 leading-relaxed"
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          transition={{ duration: 0.6, delay: 0.3 }}
+                        >
+                          {item.description}
+                        </motion.p>
+                        {item.details && (
+                          <motion.ul 
+                            className="space-y-1"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            transition={{ duration: 0.6, delay: 0.4 }}
+                          >
+                            {item.details.map((detail, i) => (
+                              <motion.li
+                                key={i}
+                                className="text-sm text-muted-foreground flex items-center"
+                                initial={{ opacity: 0, x: -10 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                transition={{ 
+                                  duration: 0.4, 
+                                  delay: 0.5 + (i * 0.1) 
+                                }}
+                              >
+                                <motion.span 
+                                  className="w-1 h-1 bg-primary rounded-full mr-2"
+                                  initial={{ scale: 0 }}
+                                  whileInView={{ scale: 1 }}
+                                  transition={{ 
+                                    duration: 0.3, 
+                                    delay: 0.6 + (i * 0.1),
+                                    type: "spring",
+                                    stiffness: 200
+                                  }}
+                                />
+                                {detail}
+                              </motion.li>
+                            ))}
+                          </motion.ul>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 };
 
