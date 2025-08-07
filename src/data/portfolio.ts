@@ -548,6 +548,47 @@ export const projects: Project[] = [
       "Demonstrated effective use of RAG techniques",
     ],
   },
+
+  {
+    id: 13,
+    title: "Text Classification Toolkit",
+    description:
+      "A comprehensive NLP toolkit for movie review sentiment analysis and complex word identification using multiple machine learning algorithms.",
+    longDescription:
+      "An advanced text classification system implementing multiple baseline and machine learning approaches for two distinct NLP tasks: movie review sentiment classification and complex word identification for language learners. Features sophisticated feature engineering, comprehensive evaluation metrics, and comparison of various classification algorithms including Naive Bayes, Logistic Regression, Random Forest, Decision Trees, and SVM.",
+    categories: ["AI/ML"],
+    techStack: ["Python", "scikit-learn", "NLTK", "NumPy", "SciPy"],
+    imageUrl: "/project_images/text-classifier.jpg",
+    timeline: "2 Months",
+    teamSize: "Solo project",
+    features: [
+      "Binary sentiment classification for movie reviews",
+      "Complex word identification for reading assistance",
+      "Multi-feature engineering (word length, frequency, syllables, synonyms)",
+      "Comprehensive evaluation metrics (accuracy, precision, recall, F-score)",
+      "Multiple classification algorithms implementation",
+      "Google N-gram frequency analysis integration",
+      "WordNet semantic feature extraction",
+      "Sophisticated syllable counting with 14-rule algorithm",
+      "Feature normalization and preprocessing pipeline",
+      "Cross-validation with proper train/dev/test splits",
+    ],
+    challenges: [
+      "Implementing robust syllable counting algorithm with edge cases",
+      "Handling large-scale Google N-gram frequency data (118MB)",
+      "Feature engineering for optimal classification performance",
+      "Balancing precision and recall across different models",
+      "Managing diverse feature types and normalization strategies",
+    ],
+    outcomes: [
+      "Achieved ~80% F-measure on movie review classification",
+      "Successfully compared 5+ machine learning algorithms",
+      "Implemented comprehensive evaluation framework",
+      "Created reusable NLP feature extraction pipeline",
+      "Generated predictions for 201 test samples",
+      "Demonstrated effective baseline vs. ML model comparison",
+    ],
+}
 ];
 
 // Programming Languages interface matching SkillsSection component
