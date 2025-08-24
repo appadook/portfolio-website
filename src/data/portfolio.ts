@@ -10,9 +10,33 @@ interface Experience {
   logo?: string;
 }
 
+// Factory function to create experiences with auto-incrementing IDs
+let experienceIdCounter = 1;
+const createExperience = (data: Omit<Experience, 'id'>): Experience => ({
+  id: experienceIdCounter++,
+  ...data,
+});
+
 export const experiences: Experience[] = [
-  {
-    id: 1,
+  createExperience({
+    company: "Akuna Group",
+    role: "Data Engineer Intern",
+    duration: "August 2025 - Present",
+    location: "Remote",
+    description: "Incoming Internship Position",
+    technologies: [
+      "Databricks",
+      "Apache Spark",
+      "Delta Lake",
+      "Python",
+      "SQL",
+      "ETL Pipelines",
+      "Data Warehousing",
+      "Cloud Computing",  
+    ],
+    logo: "/experience/akuna_logo.jpeg",
+  }),
+  createExperience({
     company: "Scan Global Shipping and Logistics US inc",
     role: "Software Engineer Intern",
     duration: "May 2025 - July 2025",
@@ -30,11 +54,9 @@ export const experiences: Experience[] = [
       "Error Handling",
       "Pandas",
     ],
-
     logo: "/experience/scan_global.png",
-  },
-  {
-    id: 2,
+  }),
+  createExperience({
     company: "Union College – Computer Science Department",
     role: "Machine Learning Researcher – Predictive Arbitrage Modeling",
     duration: "March 2025 – June 2025",
@@ -51,9 +73,8 @@ export const experiences: Experience[] = [
       "TensorFlow",
     ],
     logo: "/experience/uc_logo.png",
-  },
-  {
-    id: 3,
+  }),
+  createExperience({
     company: "Union College – Economics Department",
     role: "Research Software Engineer – Crypto Arbitrage Systems",
     duration: "September 2024 – March 2025",
@@ -69,9 +90,8 @@ export const experiences: Experience[] = [
       "Python",
     ],
     logo: "/experience/uc_logo.png",
-  },
-  {
-    id: 4,
+  }),
+  createExperience({
     company: "Union College CSC489",
     role: "Undergraduate Student Researcher - Software Developer",
     duration: "September 2024 - December 2024",
@@ -80,9 +100,8 @@ export const experiences: Experience[] = [
       "Led the creation of 1000+ tests to validate d-partite graph matching algorithms, improving reliability and identifying edge case errors. Applied advanced algorithm design techniques to improve performance and reliability of maximum matching in d-partite graphs, achieving 99% improvement in theoretical performance.",
     technologies: ["Python", "Algorithms", "Graph Theory", "Testing", "NumPy"],
     logo: "/experience/uc_logo.png",
-  },
-  {
-    id: 5,
+  }),
+  createExperience({
     company: "Foppiani Shipping and Logistics US inc",
     role: "Data Engineer Intern - BI and Analytics",
     duration: "July 2024 - September 2024",
@@ -101,9 +120,8 @@ export const experiences: Experience[] = [
       "Google Maps API",
     ],
     logo: "/experience/foppsl.webp",
-  },
-  {
-    id: 6,
+  }),
+  createExperience({
     company: "Truefort Inc",
     role: "Software Engineer Intern",
     duration: "October 2021 - December 2021",
@@ -112,7 +130,7 @@ export const experiences: Experience[] = [
       "Developed and optimized Python scripts to automate data collection and processing workflows using Object-Oriented Programming (OOP) principles, resulting in a 30% reduction in manual processing time. Collaborated with Senior programmers to build Python-based executables, applying OOP design patterns.",
     technologies: ["Python", "OOP", "Unit Testing", "Automation", "Docker"],
     logo: "/experience/truefort.webp",
-  },
+  }),
 ];
 
 // Project interface matching ProjectsSection component
@@ -140,9 +158,15 @@ interface Project {
   teamSize?: string;
 }
 
+// Factory function to create projects with auto-incrementing IDs
+let projectIdCounter = 1;
+const createProject = (data: Omit<Project, 'id'>): Project => ({
+  id: projectIdCounter++,
+  ...data,
+});
+
 export const projects: Project[] = [
-  {
-    id: 1,
+  createProject({
     title: "Crypto-Arbitrage Tracker",
     description:
       "A full stack application that makes use of websockets through multiple APIs to showcase the arbitrage opportunities in the cryptocurrency market for certain coins.",
@@ -178,9 +202,9 @@ export const projects: Project[] = [
       "Achieved <200ms latency for real-time data processing",
       "Generated actionable insights for crypto trading strategies",
     ],
-  },
+  }),
   {
-    id: 2,
+    id: projectIdCounter++,
     title: "Maximum Matching Research",
     description:
       "A project that explores algorithms for finding maximum matching in d-partite graphs, implemented in Python with comprehensive testing.",
@@ -210,7 +234,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 3,
+    id: projectIdCounter++,
     title: "Portfolio Website",
     description:
       "My personal portfolio website built using Next.js, Tailwind CSS, and TypeScript with a clean and responsive design.",
@@ -242,7 +266,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 4,
+    id: projectIdCounter++,
     title: "Forecasting Inflation",
     description:
       "A collaborative project using R to build economic models for predicting inflation rates using TSLM and ARIMA models.",
@@ -273,7 +297,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 5,
+    id: projectIdCounter++,
     title: "Fitness Tracker Web App",
     description:
       "A comprehensive fitness tracker web application that enables users to plan workout routines and monitor their progress.",
@@ -311,7 +335,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 6,
+    id: projectIdCounter++,
     title: "Z-manager Web App",
     description:
       "A user-friendly web application for efficient task and project management with drag-and-drop calendar interface.",
@@ -349,7 +373,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 7,
+    id: projectIdCounter++,
     title: "Crypto Arbitrage Prediction Engine",
     description:
       "Built a predictive modeling system to forecast cryptocurrency arbitrage opportunities using machine learning models.",
@@ -387,7 +411,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 8,
+    id: projectIdCounter++,
     title: "not-gradescope Web App",
     description:
       "An alternative to Gradescope with enhanced features for educational institutions and improved user experience.",
@@ -425,7 +449,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 9,
+    id: projectIdCounter++,
     title: "Loops Programming Language",
     description:
       "A custom programming language developed using OCaml with interpreter for basic programming language features.",
@@ -456,7 +480,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 10,
+    id: projectIdCounter++,
     title: "16-bit CPU Design",
     description:
       "Design and implementation of a 16-bit CPU using Logisim with support for arithmetic, branch, and jump instructions.",
@@ -487,7 +511,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 11,
+    id: projectIdCounter++,
     title: "NLP for QA over Tabular Data",
     description:
       "Exploring different LLM prompting strategies for answering questions about tabular data using various evaluation approaches.",
@@ -518,7 +542,7 @@ export const projects: Project[] = [
     ],
   },
   {
-    id: 12,
+    id: projectIdCounter++,
     title: "LLM Chatbot",
     description:
       "Developed a chatbot using LLM API with retrieval-augmented generation and advanced prompt engineering techniques.",
@@ -550,7 +574,7 @@ export const projects: Project[] = [
   },
 
   {
-    id: 13,
+    id: projectIdCounter++,
     title: "Text Classification Toolkit",
     description:
       "A comprehensive NLP toolkit for movie review sentiment analysis and complex word identification using multiple machine learning algorithms.",
