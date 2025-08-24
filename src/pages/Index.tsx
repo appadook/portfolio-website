@@ -5,7 +5,8 @@ import AboutSection from '@/components/AboutSection';
 import ProjectsSection from '@/components/ProjectsSection';
 import ExperienceSection from '@/components/ExperienceSection';
 import SkillsSection from '@/components/SkillsSection';
-import TechnologiesSection from '@/components/TechnologiesSection';
+// import TechnologiesSection from '@/components/TechnologiesSection';
+import TechnologiesSectionV2 from '@/components/TechnologiesSectionV2';
 import ContactSection from '@/components/ContactSection';
 import AnimatedSection from '@/components/AnimatedSection';
 import { useSmoothScroll } from '@/hooks/useSmoothScroll';
@@ -34,7 +35,7 @@ const Index = () => {
       </AnimatedSection>
       
       <AnimatedSection className="scroll-section" delay={0.1}>
-        <TechnologiesSection />
+        <TechnologiesSectionV2 />
       </AnimatedSection>
       
       <AnimatedSection className="scroll-section" delay={0.3}>

@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Experience interface matching ExperienceSection component
 interface Experience {
   id: number;
@@ -166,6 +168,50 @@ const createProject = (data: Omit<Project, 'id'>): Project => ({
 });
 
 export const projects: Project[] = [
+  createProject({
+  title: "Formula 1 Prediction Engine",
+  description:
+    "A comprehensive machine learning platform that predicts Formula 1 race outcomes using historical data, real-time statistics, and advanced ML algorithms with a modern web interface for interactive predictions.",
+  longDescription:
+    "An end-to-end Formula 1 prediction system that combines data engineering, machine learning, and web development to forecast race results. The platform processes 75+ years of F1 historical data, implements sophisticated feature engineering for driver/constructor performance metrics, and provides real-time predictions through an intuitive React dashboard. Built with modular ML pipelines supporting multiple prediction targets (podium finishes, points scoring, DNF risks) and comprehensive model evaluation frameworks.",
+  categories: ["AI/ML"],
+  techStack: [
+    "Python",
+    "scikit-learn", 
+    "pandas",
+    "React.js",
+    "Flask",
+    "PostgreSQL",
+    "Jupyter",
+    "Kaggle API",
+  ],
+  imageUrl: "/project_images/f1_pred_engine.jpg",
+  timeline: "1 month",
+  teamSize: "Solo Project", 
+  features: [
+    "Modular ML pipeline with Random Forest and ensemble models",
+    "Advanced feature engineering with rolling statistics and temporal analysis",
+    "Multi-target prediction system (Top 3, Top 10, DNF probability)",
+    "Interactive web dashboard for race predictions and analysis",
+    "Comprehensive model evaluation with accuracy metrics and backtesting",
+    "Real-time data integration for current season results",
+    "Driver performance analysis with historical trend visualization",
+    "Automated data validation and preprocessing pipelines",
+  ],
+  challenges: [
+    "Preventing data leakage in temporal ML models with proper train/test splits",
+    "Engineering meaningful features from 75+ years of heterogeneous F1 data", 
+    "Handling driver/team changes and ensuring consistent ID mapping across seasons",
+    "Implementing robust overfitting detection and model validation frameworks",
+  ],
+  outcomes: [
+    "Achieved 70%+ accuracy on podium finish predictions",
+    "Successfully processed 26,000+ historical race results",
+    "Built scalable ML pipeline supporting multiple prediction targets",
+    "Delivered production-ready demo with CLI and web interfaces",
+  ],
+  githubUrl: "https://github.com/yourusername/f1-prediction-engine",
+}),
   createProject({
     title: "Crypto-Arbitrage Tracker",
     description:
@@ -905,3 +951,185 @@ export const technologies: Technology[] = [
     icon: "📦",
   },
 ];
+
+// Enhanced Technology interfaces for TechnologiesSectionV2
+export interface Certificate {
+  name: string;
+  image: string;
+  year: string;
+  description?: string;
+  issuer?: string;
+  credentialId?: string;
+  verificationUrl?: string;
+  skills?: string[];
+}
+
+export interface TechWithIcon {
+  name: string;
+  icon: React.ElementType;
+}
+
+export interface CloudProvider {
+  name: string;
+  certifications: Certificate[];
+}
+
+export interface TechCategory {
+  title: string;
+  icon: React.ElementType;
+  color: "primary" | "accent" | "warning" | "success";
+  technologies: TechWithIcon[];
+}
+
+// Enhanced technology categories data for TechnologiesSectionV2
+export const techCategories: Omit<TechCategory, 'icon' | 'technologies'>[] = [
+  {
+    title: "Frontend",
+    color: "primary",
+  },
+  {
+    title: "Backend", 
+    color: "accent",
+  },
+  {
+    title: "Database",
+    color: "success",
+  },
+  {
+    title: "Mobile",
+    color: "warning",
+  },
+  {
+    title: "Testing & QA",
+    color: "accent",
+  },
+  {
+    title: "DevOps",
+    color: "primary",
+  }
+];
+
+// Technology data by category for TechnologiesSectionV2
+export const technologiesByCategory = {
+  Frontend: [
+    { name: "React.js" },
+    { name: "Next.js" },
+    { name: "TypeScript" },
+    { name: "JavaScript" },
+    { name: "Tailwind CSS" },
+  ],
+  Backend: [
+    { name: "Node.js" },
+    { name: "Python" },
+    { name: "Flask" },
+    { name: "Express.js" },
+    { name: "Spring Boot" },
+    { name: "Java" },
+  ],
+  Database: [
+    { name: "PostgreSQL" },
+    { name: "MySQL" },
+    { name: "Supabase" },
+    { name: "Firebase" },
+    { name: "SQL" },
+  ],
+  Mobile: [
+    { name: "React Native" },
+    { name: "Expo" },
+    // { name: "Kotlin" },
+  ],
+  "Testing & QA": [
+    { name: "Jest" },
+    { name: "Cypress" },
+    { name: "Selenium" },
+    { name: "Unit Testing" },
+  ],
+  DevOps: [
+    { name: "Git" },
+    { name: "Docker" },
+    { name: "Gradle" },
+    { name: "Maven" },
+  ]
+};
+
+// Cloud providers data for TechnologiesSectionV2
+export const cloudProviders: Omit<CloudProvider, 'certifications'>[] = [
+  {
+    name: "AWS",
+  },
+  {
+    name: "Databricks",
+  },
+  {
+    name: "Google Cloud",
+  }
+];
+
+// Certifications data
+export const certifications: { [provider: string]: Certificate[] } = {
+  "Google Cloud": [],
+  "AWS": [
+    {
+      name: "AWS Cloud Essentials",
+      image: "/certifications/AWS/AWS-cloud-esentials-certificate.pdf",
+      year: "2025",
+      description: "Fundamental understanding of AWS cloud computing concepts, core services, and basic cloud architecture principles. This certification demonstrates knowledge of essential AWS services and their use cases.",
+      issuer: "Amazon Web Services",
+      credentialId: "AWS-CE-2024-001",
+      verificationUrl: "https://aws.amazon.com/verification",
+      skills: ["AWS Core Services", "Cloud Computing Fundamentals", "AWS Architecture", "Cost Management"]
+    },
+    {
+      name: "Introduction to AWS WAF",
+      image: "/certifications/AWS/AWS- introduction-to-aws-WAF.pdf",
+      year: "2025",
+      description: "Comprehensive understanding of AWS Web Application Firewall (WAF) for protecting web applications from common web exploits and attacks. Demonstrates ability to configure and manage WAF rules and policies.",
+      issuer: "Amazon Web Services",
+      credentialId: "AWS-WAF-2024-001",
+      verificationUrl: "https://aws.amazon.com/verification",
+      skills: ["AWS WAF", "Web Security", "Application Protection", "Security Rules Configuration"]
+    },
+    {
+      name: "AWS Cloud for Small Businesses",
+      image: "/certifications/AWS/AWS-cloud-for-small-businesses.pdf",
+      year: "2025",
+      description: "Specialized knowledge in implementing AWS cloud solutions tailored for small business environments. Focuses on cost-effective cloud strategies and scalable solutions for growing businesses.",
+      issuer: "Amazon Web Services",
+      credentialId: "AWS-SMB-2024-001",
+      verificationUrl: "https://aws.amazon.com/verification",
+      skills: ["Small Business Solutions", "Cost Optimization", "Scalable Architecture", "Business Cloud Strategy"]
+    },
+    {
+      name: "AWS Cloud Economics for Banking",
+      image: "/certifications/AWS/AWS Cloud Economics for Banking.pdf",
+      year: "2025",
+      description: "Advanced understanding of cloud economics specifically in the banking and financial services sector. Demonstrates knowledge of compliance requirements, risk management, and cost optimization in regulated environments.",
+      issuer: "Amazon Web Services",
+      credentialId: "AWS-BANK-2024-001",
+      verificationUrl: "https://aws.amazon.com/verification",
+      skills: ["Financial Services", "Cloud Economics", "Banking Compliance", "Risk Management", "Cost Analysis"]
+    }
+  ],
+  "Databricks": [
+    {
+      name: "Databricks Fundamentals",
+      image: "/certifications/Databricks/databricks fundamental badge.png",
+      year: "2025",
+      description: "Core understanding of Databricks unified analytics platform for big data and machine learning. Demonstrates proficiency in collaborative data science workflows and Apache Spark fundamentals.",
+      issuer: "Databricks",
+      credentialId: "DB-FUND-2024-001",
+      verificationUrl: "https://academy.databricks.com/verification",
+      skills: ["Apache Spark", "Data Analytics", "Machine Learning Workflows", "Collaborative Data Science", "Big Data Processing"]
+    },
+    {
+      name: "Data Engineering for Databricks",
+      image: "/certifications/Databricks/Data Engineering for Databricks.pdf",
+      year: "2025",
+      description: "Advanced data engineering skills using Databricks platform for building robust data pipelines and ETL processes. Covers Delta Lake, data ingestion, transformation, and optimization techniques.",
+      issuer: "Databricks",
+      credentialId: "DB-DE-2024-001",
+      verificationUrl: "https://academy.databricks.com/verification",
+      skills: ["Data Engineering", "ETL Pipelines", "Delta Lake", "Data Transformation", "Performance Optimization", "Data Lakehouse Architecture"]
+    }
+  ]
+};
