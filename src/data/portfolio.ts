@@ -1067,7 +1067,6 @@ export const cloudProviders: Omit<CloudProvider, 'certifications'>[] = [
 
 // Certifications data
 export const certifications: { [provider: string]: Certificate[] } = {
-  "Google Cloud": [],
   "AWS": [
     {
       name: "AWS Cloud Essentials",
