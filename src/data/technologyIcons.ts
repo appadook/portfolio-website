@@ -8,11 +8,11 @@ import {
   Cloud,
   TestTube
 } from 'lucide-react';
-import { 
-  SiReact, 
-  SiNextdotjs, 
-  SiTypescript, 
-  SiJavascript, 
+import {
+  SiReact,
+  SiNextdotjs,
+  SiTypescript,
+  SiJavascript,
   SiTailwindcss,
   SiNodedotjs,
   SiPython,
@@ -33,7 +33,10 @@ import {
   SiJest,
   SiCypress,
   SiSelenium,
-  SiDatabricks
+  SiDatabricks,
+  SiKubernetes,
+  SiGithubactions,
+  SiRedis
 } from 'react-icons/si';
 import { FaJava, FaMicrosoft } from 'react-icons/fa';
 
@@ -67,6 +70,7 @@ export const technologyIcons: { [key: string]: React.ElementType } = {
   // Database
   "PostgreSQL": SiPostgresql,
   "MySQL": SiMysql,
+  "Redis": SiRedis,
   "Supabase": SiSupabase,
   "Firebase": SiFirebase,
   "SQL": SiSqlite,
@@ -84,6 +88,8 @@ export const technologyIcons: { [key: string]: React.ElementType } = {
   // DevOps
   "Git": SiGit,
   "Docker": SiDocker,
+  "Kubernetes": SiKubernetes,
+  "GitHub Actions": SiGithubactions,
   "Gradle": SiGradle,
   "Maven": SiApache,
 };
@@ -94,6 +100,7 @@ export const cloudProviderIcons: { [key: string]: React.ElementType } = {
   "AWS": SiAmazon,
   "Azure": FaMicrosoft,
   "Databricks": SiDatabricks,
+  "Apache": SiApache,
 };
 
 // Floating animation icons for the bottom section

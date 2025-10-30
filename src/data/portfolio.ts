@@ -879,6 +879,12 @@ export const technologies: Technology[] = [
     icon: "🗄️",
   },
   {
+    name: "Redis",
+    category: "Databases",
+    description: "In-memory data store & cache",
+    icon: "🔴",
+  },
+  {
     name: "Supabase",
     category: "Databases",
     description: "Open source Firebase alternative",
@@ -905,6 +911,18 @@ export const technologies: Technology[] = [
     category: "Tools",
     description: "Version control system",
     icon: "📝",
+  },
+  {
+    name: "Kubernetes",
+    category: "Tools",
+    description: "Container orchestration platform",
+    icon: "☸️",
+  },
+  {
+    name: "GitHub Actions",
+    category: "Tools",
+    description: "CI/CD automation platform",
+    icon: "⚙️",
   },
   {
     name: "Postman",
@@ -1029,6 +1047,7 @@ export const technologiesByCategory = {
   Database: [
     { name: "PostgreSQL" },
     { name: "MySQL" },
+    { name: "Redis" },
     { name: "Supabase" },
     { name: "Firebase" },
     { name: "SQL" },
@@ -1047,6 +1066,8 @@ export const technologiesByCategory = {
   DevOps: [
     { name: "Git" },
     { name: "Docker" },
+    { name: "Kubernetes" },
+    { name: "GitHub Actions" },
     { name: "Gradle" },
     { name: "Maven" },
   ]
@@ -1061,8 +1082,12 @@ export const cloudProviders: Omit<CloudProvider, 'certifications'>[] = [
     name: "Databricks",
   },
   {
+    name: "Apache",
+  },
+  {
     name: "Google Cloud",
-  }
+  },
+  
 ];
 
 // Certifications data
