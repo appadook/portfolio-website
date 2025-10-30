@@ -1130,5 +1130,27 @@ export const certifications: { [provider: string]: Certificate[] } = {
       verificationUrl: "https://academy.databricks.com/verification",
       skills: ["Data Engineering", "ETL Pipelines", "Delta Lake", "Data Transformation", "Performance Optimization", "Data Lakehouse Architecture"]
     }
+  ],
+  "Apache": [
+    {
+      name: "Apache Kafka Fundamentals",
+      image: "/certifications/Apache/apache-kafka-fundamentals.pdf",
+      year: "2025",
+      description: "Fundamental knowledge of Apache Kafka architecture and core concepts. Covers topics, partitions, producers, consumers, consumer groups, offset management, replication, retention, basic security and monitoring, and an introduction to Kafka Streams and Connect.",
+      issuer: "Confluent Training",
+      credentialId: "",
+      verificationUrl: "",
+      skills: [
+        "Apache Kafka",
+        "Stream Processing",
+        "Producers & Consumers",
+        "Topics & Partitions",
+        "Consumer Groups & Offsets",
+        "Replication & Fault Tolerance",
+        "Kafka Streams",
+        "Kafka Connect",
+        "Basic Kafka Security & Monitoring"
+      ]
+    }
   ]
 };
