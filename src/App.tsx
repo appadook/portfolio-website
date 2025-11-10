@@ -3,7 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
+import { ClerkProvider, RedirectToSignIn, useAuth } from "@clerk/clerk-react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
@@ -20,16 +20,26 @@ if (!clerkPubKey) {
 }
 
 // Protected Admin Route Component
-const ProtectedAdmin = () => (
-  <>
-    <SignedIn>
-      <Admin />
-    </SignedIn>
-    <SignedOut>
-      <RedirectToSignIn />
-    </SignedOut>
-  </>
-);
+const ProtectedAdmin = () => {
+  const { isLoaded, isSignedIn } = useAuth();
+
+  // Wait for Clerk to load before making authentication decisions
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
+
+  // Once loaded, check if user is signed in
+  if (!isSignedIn) {
+    return <RedirectToSignIn />;
+  }
+
+  // User is authenticated, render the admin page
+  return <Admin />;
+};
 
 const App = () => {
   const appContent = (
