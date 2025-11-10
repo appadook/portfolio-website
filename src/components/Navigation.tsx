@@ -71,7 +71,7 @@ const Navigation = () => {
                 </button>
               ))}
               <Button
-                onClick={() => navigate('/admin')}
+                onClick={() => navigate('/admin/login')}
                 variant="outline"
                 size="sm"
                 className="ml-4 gap-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover:border-primary/40 hover:from-primary/20 hover:to-accent/20 transition-all duration-300"
@@ -111,7 +111,7 @@ const Navigation = () => {
               ))}
               <Button
                 onClick={() => {
-                  navigate('/admin');
+                  navigate('/admin/login');
                   setIsMobileMenuOpen(false);
                 }}
                 variant="outline"

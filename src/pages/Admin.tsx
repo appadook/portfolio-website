@@ -39,7 +39,19 @@ const AdminPage = () => {
             >
               ← Back to Portfolio
             </a>
-            <UserButton />
+            <UserButton
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: 'w-9 h-9',
+                  userButtonPopoverCard: 'bg-white border-gray-200',
+                  userButtonPopoverActionButton: 'text-gray-900 hover:bg-gray-100',
+                  userButtonPopoverActionButtonText: 'text-gray-900',
+                  userButtonPopoverActionButtonIcon: 'text-gray-700',
+                  userButtonPopoverFooter: 'hidden',
+                }
+              }}
+              afterSignOutUrl="/admin/login"
+            />
           </div>
         </div>
       </header>

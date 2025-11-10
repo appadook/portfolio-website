@@ -34,7 +34,7 @@ const ProtectedAdmin = () => {
 
   // Once loaded, check if user is signed in
   if (!isSignedIn) {
-    return <RedirectToSignIn />;
+    return <RedirectToSignIn redirectUrl="/admin/login" />;
   }
 
   // User is authenticated, render the admin page
@@ -63,7 +63,16 @@ const App = () => {
 
   // Only wrap with ClerkProvider if we have a valid key
   if (clerkPubKey && clerkPubKey.length > 10) {
-    return <ClerkProvider publishableKey={clerkPubKey}>{appContent}</ClerkProvider>;
+    return (
+      <ClerkProvider
+        publishableKey={clerkPubKey}
+        signInUrl="/admin/login"
+        signUpUrl="/admin/signup"
+        afterSignOutUrl="/admin/login"
+      >
+        {appContent}
+      </ClerkProvider>
+    );
   }
 
   // Fallback: run without Clerk if key is missing (admin features won't work)
