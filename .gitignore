@@ -22,6 +22,7 @@
 
 # misc
 .DS_Store
+**/.DS_Store
 *.pem
 
 # debug
@@ -39,9 +40,24 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Images
+public/static/
+
+# sanity cli
+sanity/
+
 .env.local
 
 bun.lockb
 dist/
 
 .vscode/
+
+.claude/
+*/CLAUDE.md
+
+sanity/.sanity/
+sanity/node_modules/
+
+# Miscellaneous IDE files
+src/components/TechnologiesSectionV2.tsx.backup

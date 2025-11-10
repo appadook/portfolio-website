@@ -1,22 +1,24 @@
 import { motion } from "framer-motion";
 import { Briefcase, Calendar, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { experiences } from "@/data/portfolio";
+import { useExperiences } from "@/hooks/useSanityData";
 import AnimatedSection from "./AnimatedSection";
 
 const ExperienceSection = () => {
+  const { data: experiences, isLoading, error } = useExperiences();
+
   return (
     <AnimatedSection id="experience" className="py-20 relative overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          <motion.h2 
+          <motion.h2
             className="text-4xl md:text-5xl font-bold mb-6"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -25,7 +27,7 @@ const ExperienceSection = () => {
           >
             <span className="gradient-text">Professional Experience</span>
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-xl text-muted-foreground max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -36,35 +38,51 @@ const ExperienceSection = () => {
           </motion.p>
         </motion.div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            <p className="mt-4 text-muted-foreground">Loading experiences...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-destructive">Failed to load experiences. Please try again later.</p>
+          </div>
+        )}
+
         {/* Timeline */}
-        <div className="max-w-5xl mx-auto">
-          <div className="relative">
-            {/* Enhanced Timeline Line with Glow */}
-            <motion.div 
-              className="absolute left-6 md:left-1/2 md:transform md:-translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-accent to-primary/20 rounded-full"
-              initial={{ scaleY: 0, opacity: 0 }}
-              whileInView={{ scaleY: 1, opacity: 1 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-              viewport={{ once: true, amount: 0.1 }}
-              style={{
-                transformOrigin: "top",
-                boxShadow: "0 0 20px hsl(var(--primary) / 0.4), 0 0 40px hsl(var(--primary) / 0.2)"
-              }}
-            />
-
-            {/* Animated Timeline Glow Effect */}
-            <motion.div 
-              className="absolute left-6 md:left-1/2 md:transform md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/60 via-accent/60 to-transparent rounded-full blur-sm"
-              initial={{ scaleY: 0, opacity: 0 }}
-              whileInView={{ scaleY: 1, opacity: 1 }}
-              transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-              viewport={{ once: true, amount: 0.1 }}
-              style={{ transformOrigin: "top" }}
-            />
-
-            {experiences.map((exp, index) => (
+        {experiences && experiences.length > 0 && (
+          <div className="max-w-5xl mx-auto">
+            <div className="relative">
+              {/* Enhanced Timeline Line with Glow */}
               <motion.div
-                key={exp.id}
+                className="absolute left-6 md:left-1/2 md:transform md:-translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-accent to-primary/20 rounded-full"
+                initial={{ scaleY: 0, opacity: 0 }}
+                whileInView={{ scaleY: 1, opacity: 1 }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.1 }}
+                style={{
+                  transformOrigin: "top",
+                  boxShadow: "0 0 20px hsl(var(--primary) / 0.4), 0 0 40px hsl(var(--primary) / 0.2)"
+                }}
+              />
+
+              {/* Animated Timeline Glow Effect */}
+              <motion.div
+                className="absolute left-6 md:left-1/2 md:transform md:-translate-x-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/60 via-accent/60 to-transparent rounded-full blur-sm"
+                initial={{ scaleY: 0, opacity: 0 }}
+                whileInView={{ scaleY: 1, opacity: 1 }}
+                transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+                viewport={{ once: true, amount: 0.1 }}
+                style={{ transformOrigin: "top" }}
+              />
+
+              {experiences.map((exp, index) => (
+              <motion.div
+                key={exp._id}
                 className={`relative flex items-center mb-16 ${
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
@@ -299,8 +317,9 @@ const ExperienceSection = () => {
                 <div className="hidden md:block w-5/12"></div>
               </motion.div>
             ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Enhanced Resume Download Button */}
         <motion.div 

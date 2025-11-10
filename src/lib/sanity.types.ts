@@ -1,0 +1,70 @@
+// TypeScript types for Sanity documents
+
+export interface Experience {
+  _id: string;
+  company: string;
+  role: string;
+  duration: string;
+  location: string;
+  description: string;
+  technologies: string[];
+  logo?: string;
+  order: number;
+}
+
+export interface Project {
+  _id: string;
+  title: string;
+  description: string;
+  longDescription?: string;
+  categories: string[];
+  techStack: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+  image?: string;
+  features?: string[];
+  challenges?: string[];
+  outcomes?: string[];
+  timeline?: string;
+  teamSize?: string;
+  order: number;
+}
+
+export interface ProgrammingLanguage {
+  _id: string;
+  name: string;
+  level: 'expert' | 'advanced' | 'intermediate';
+  description: string;
+  order: number;
+}
+
+export interface Technology {
+  _id: string;
+  name: string;
+  category: 'Frontend' | 'Backend' | 'Database' | 'Mobile' | 'Testing & QA' | 'DevOps';
+  description?: string;
+  iconName?: string;
+  order: number;
+}
+
+export interface Certificate {
+  _id: string;
+  name: string;
+  provider?: string;
+  providerId?: string;
+  image: string;
+  year: string;
+  description?: string;
+  issuer?: string;
+  credentialId?: string;
+  verificationUrl?: string;
+  skills?: string[];
+  order: number;
+}
+
+export interface CloudProvider {
+  _id: string;
+  name: string;
+  order: number;
+  certificates?: Certificate[];
+}

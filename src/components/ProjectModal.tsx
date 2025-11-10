@@ -3,23 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  longDescription?: string;
-  categories: Array<"AI/ML" | "Software Engineering" | "Web Dev" | "System Engineering" | "Quantitative Dev" | "Research">;
-  techStack: string[];
-  githubUrl?: string;
-  liveUrl?: string;
-  imageUrl?: string;
-  features?: string[];
-  challenges?: string[];
-  outcomes?: string[];
-  timeline?: string;
-  teamSize?: string;
-}
+import type { Project } from '@/lib/sanity.types';
 
 interface ProjectModalProps {
   project: Project | null;
@@ -49,9 +33,9 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
         <div className="space-y-6">
           {/* Project Image */}
           <div className="w-full h-64 rounded-lg relative overflow-hidden">
-            {project.imageUrl ? (
-              <img 
-                src={project.imageUrl} 
+            {project.image ? (
+              <img
+                src={project.image}
                 alt={`${project.title} screenshot`}
                 className="w-full h-full object-cover"
               />

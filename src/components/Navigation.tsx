@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,6 +65,15 @@ const Navigation = () => {
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all duration-300 group-hover:w-full"></span>
                 </button>
               ))}
+              <Button
+                onClick={() => navigate('/admin')}
+                variant="outline"
+                size="sm"
+                className="ml-4 gap-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover:border-primary/40 hover:from-primary/20 hover:to-accent/20 transition-all duration-300"
+              >
+                <Shield className="h-4 w-4" />
+                Admin Portal
+              </Button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -93,6 +104,17 @@ const Navigation = () => {
                   {item.label}
                 </button>
               ))}
+              <Button
+                onClick={() => {
+                  navigate('/admin');
+                  setIsMobileMenuOpen(false);
+                }}
+                variant="outline"
+                className="w-full gap-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover:border-primary/40 hover:from-primary/20 hover:to-accent/20 transition-all duration-300 mt-4"
+              >
+                <Shield className="h-4 w-4" />
+                Admin Portal
+              </Button>
             </div>
           </div>
         </div>

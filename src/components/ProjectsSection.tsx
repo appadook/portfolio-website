@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, ExternalLink, Filter, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,33 +11,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ProjectModal from "./ProjectModal";
-import { projects } from "@/data/portfolio";
+import { useProjects } from "@/hooks/useSanityData";
+import type { Project } from "@/lib/sanity.types";
 import AnimatedSection from "./AnimatedSection";
-
-// Define the Project interface to match our data structure
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  longDescription?: string;
-  categories: Array<
-    | "AI/ML"
-    | "Software Engineering"
-    | "Web Dev"
-    | "System Engineering"
-    | "Quantitative Dev"
-    | "Research"
-  >;
-  techStack: string[];
-  githubUrl?: string;
-  liveUrl?: string;
-  imageUrl?: string;
-  features?: string[];
-  challenges?: string[];
-  outcomes?: string[];
-  timeline?: string;
-  teamSize?: string;
-}
 
 const categories = [
   "All",
@@ -50,16 +26,19 @@ const categories = [
 ];
 
 const ProjectsSection = () => {
+  const { data: projects, isLoading, error } = useProjects();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const filteredProjects =
-    selectedCategory === "All"
+  const filteredProjects = useMemo(() => {
+    if (!projects) return [];
+    return selectedCategory === "All"
       ? projects
       : projects.filter((project) =>
-          project.categories.includes(selectedCategory as "AI/ML" | "Software Engineering" | "Web Dev" | "System Engineering" | "Quantitative Dev" | "Research")
+          project.categories.includes(selectedCategory)
         );
+  }, [projects, selectedCategory]);
 
   const openProjectModal = (project: Project) => {
     setSelectedProject(project);
@@ -142,18 +121,34 @@ const ProjectsSection = () => {
           ))}
         </motion.div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            <p className="mt-4 text-muted-foreground">Loading projects...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-destructive">Failed to load projects. Please try again later.</p>
+          </div>
+        )}
+
         {/* Projects Grid - Smaller Cards */}
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true, amount: 0.1 }}
-        >
-          <AnimatePresence mode="wait">
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                key={project.id}
+        {!isLoading && !error && (
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true, amount: 0.1 }}
+          >
+            <AnimatePresence mode="wait">
+              {filteredProjects.map((project, index) => (
+                <motion.div
+                  key={project._id}
                 layout
                 initial={{ opacity: 0, y: 50, scale: 0.9 }}
                 whileInView={{ 
@@ -184,9 +179,9 @@ const ProjectsSection = () => {
                 >
                   {/* Project Image */}
                   <div className="h-32 relative overflow-hidden rounded-t-lg">
-                    {project.imageUrl ? (
+                    {project.image ? (
                       <motion.img
-                        src={project.imageUrl}
+                        src={project.image}
                         alt={`${project.title} screenshot`}
                         className="w-full h-full object-cover"
                         whileHover={{ scale: 1.1 }}
@@ -324,7 +319,8 @@ const ProjectsSection = () => {
               </motion.div>
             ))}
           </AnimatePresence>
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* Show More Button */}
         <motion.div 

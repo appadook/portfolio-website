@@ -1,7 +1,7 @@
 import { Code2, Star } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { programmingLanguages } from '@/data/portfolio';
+import { useProgrammingLanguages } from '@/hooks/useSanityData';
 
 const getSkillVariant = (level: string) => {
   switch (level) {
@@ -22,15 +22,31 @@ const getSkillStars = (level: string) => {
     <Star
       key={i}
       className={`w-3 h-3 ${
-        i < starCount 
-          ? 'text-yellow-400 fill-yellow-400' 
+        i < starCount
+          ? 'text-yellow-400 fill-yellow-400'
           : 'text-muted-foreground'
       }`}
     />
   ));
 };
 
+// Icon mapping for programming languages
+const languageIcons: Record<string, string> = {
+  Python: '🐍',
+  TypeScript: '📘',
+  JavaScript: '💛',
+  Java: '☕',
+  SQL: '🗄️',
+  'C++': '⚙️',
+  C: '🔧',
+  R: '📊',
+  Go: '🐹',
+  Rust: '🦀',
+};
+
 const SkillsSection = () => {
+  const { data: programmingLanguages, isLoading, error } = useProgrammingLanguages();
+
   return (
     <section id="skills" className="py-20 relative">
       <div className="container mx-auto px-4">
@@ -44,20 +60,36 @@ const SkillsSection = () => {
           </p>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            <p className="mt-4 text-muted-foreground">Loading skills...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-destructive">Failed to load skills. Please try again later.</p>
+          </div>
+        )}
+
         {/* Programming Languages Card */}
-        <div className="max-w-4xl mx-auto">
-          <Card className="glass-effect hover:scale-105 transition-all duration-500 animate-fade-in">
-            <CardHeader>
-              <CardTitle className="flex items-center text-2xl justify-center">
-                <div className="p-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 mr-4 text-white">
-                  <Code2 className="w-6 h-6" />
-                </div>
-                Core Programming Languages
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {programmingLanguages.map((language, index) => (
+        {programmingLanguages && programmingLanguages.length > 0 && (
+          <div className="max-w-4xl mx-auto">
+            <Card className="glass-effect hover:scale-105 transition-all duration-500 animate-fade-in">
+              <CardHeader>
+                <CardTitle className="flex items-center text-2xl justify-center">
+                  <div className="p-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 mr-4 text-white">
+                    <Code2 className="w-6 h-6" />
+                  </div>
+                  Core Programming Languages
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {programmingLanguages.map((language, index) => (
                   <div
                     key={language.name}
                     className="p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-all duration-300 group animate-fade-in"
@@ -66,7 +98,7 @@ const SkillsSection = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-3">
                         <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
-                          {language.icon}
+                          {languageIcons[language.name] || '💻'}
                         </span>
                         <div>
                           <h4 className="font-medium text-foreground group-hover:text-primary transition-colors">
@@ -92,10 +124,12 @@ const SkillsSection = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+          </div>
+        )}
 
         {/* Proficiency Legend */}
-        <div className="mt-12 text-center">
+        {programmingLanguages && programmingLanguages.length > 0 && (
+          <div className="mt-12 text-center">
           <h3 className="text-lg font-semibold mb-4 text-foreground">
             Proficiency Levels
           </h3>
@@ -119,7 +153,8 @@ const SkillsSection = () => {
               <span className="text-muted-foreground">Intermediate (Learning, basic projects)</span>
             </div>
           </div>
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );

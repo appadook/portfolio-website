@@ -2,48 +2,45 @@ import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Cloud } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import CertificateModal from './CertificateModal';
 import CertificateItem from './CertificateItem';
-import { 
-  techCategories as techCategoriesData, 
-  technologiesByCategory, 
-  cloudProviders as cloudProvidersData,
-  certifications,
-  type TechCategory,
-  type CloudProvider,
-  type Certificate,
-  type TechWithIcon
-} from '@/data/portfolio';
-import { 
-  categoryIcons, 
-  technologyIcons, 
+import { useTechnologies, useCloudProvidersWithCertificates } from '@/hooks/useSanityData';
+import type { Technology, CloudProvider, Certificate } from '@/lib/sanity.types';
+import {
+  categoryIcons,
+  technologyIcons,
   cloudProviderIcons,
-  floatingAnimationIcons 
+  floatingAnimationIcons
 } from '@/data/technologyIcons';
 
-// Build complete tech categories with icons and technologies
-const techCategories: TechCategory[] = techCategoriesData.map(category => ({
-  ...category,
-  icon: categoryIcons[category.title],
-  technologies: technologiesByCategory[category.title as keyof typeof technologiesByCategory]?.map(tech => ({
-    ...tech,
-    icon: technologyIcons[tech.name] || Cloud
-  })) || []
-}));
+// Tech category configuration
+const techCategoryConfig = [
+  { title: 'Frontend', color: 'primary' },
+  { title: 'Backend', color: 'secondary' },
+  { title: 'Database', color: 'accent' },
+  { title: 'Mobile', color: 'primary' },
+  { title: 'Testing & QA', color: 'secondary' },
+  { title: 'DevOps', color: 'accent' },
+];
 
-// Build complete cloud providers with certifications
-const cloudProviders: CloudProvider[] = cloudProvidersData.map(provider => ({
-  ...provider,
-  certifications: certifications[provider.name] || []
-}));
+// Type for tech with icon
+type TechWithIcon = Technology & { icon: any };
+
+// Type for category with technologies
+type TechCategory = {
+  title: string;
+  color: string;
+  icon: any;
+  technologies: TechWithIcon[];
+};
 
 // Components
 const TechnologyBadge = ({ tech }: { tech: TechWithIcon }) => {
   const IconComponent = tech.icon;
   return (
-    <Badge 
-      variant="secondary" 
+    <Badge
+      variant="secondary"
       className="flex items-center gap-2 px-3 py-1.5 bg-gradient-card border-0 hover:scale-105 hover:bg-orange-500/20 hover:border-orange-500/30 hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-200 group"
     >
       <IconComponent className="w-4 h-4 group-hover:scale-110 group-hover:text-orange-400 transition-all duration-200" />
@@ -56,7 +53,6 @@ const CloudProviderCard = ({ provider }: { provider: CloudProvider }) => {
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Get the appropriate cloud provider icon
   const getCloudIcon = (name: string) => {
     return cloudProviderIcons[name] || Cloud;
   };
@@ -73,6 +69,8 @@ const CloudProviderCard = ({ provider }: { provider: CloudProvider }) => {
     setSelectedCertificate(null);
   };
 
+  const certCount = provider.certificates?.length || 0;
+
   return (
     <>
       <Card className="p-6 bg-gradient-card border-0 shadow-card hover:shadow-hover transition-all duration-300">
@@ -83,19 +81,16 @@ const CloudProviderCard = ({ provider }: { provider: CloudProvider }) => {
           <div>
             <h4 className="font-semibold text-lg">{provider.name}</h4>
             <p className="text-sm text-muted-foreground">
-              {provider.certifications.length > 0 
-                ? `${provider.certifications.length} certification${provider.certifications.length === 1 ? '' : 's'}`
-                : 'Learning in progress...'
-              }
+              {certCount > 0 ? `${certCount} certification${certCount === 1 ? '' : 's'}` : 'Learning in progress...'}
             </p>
           </div>
         </div>
-        
-        {provider.certifications.length > 0 ? (
+
+        {certCount > 0 ? (
           <div className="space-y-3">
-            {provider.certifications.map((cert, index) => (
+            {provider.certificates!.map((cert, index) => (
               <CertificateItem
-                key={index}
+                key={cert._id || index}
                 certificate={cert}
                 onClick={() => handleCertificateClick(cert)}
               />
@@ -106,7 +101,6 @@ const CloudProviderCard = ({ provider }: { provider: CloudProvider }) => {
         )}
       </Card>
 
-      {/* Certificate Modal */}
       <CertificateModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -117,7 +111,6 @@ const CloudProviderCard = ({ provider }: { provider: CloudProvider }) => {
   );
 };
 
-// Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -137,11 +130,57 @@ const categoryVariants = {
 };
 
 const TechnologiesSectionV2 = () => {
+  const { data: technologies, isLoading: techLoading, error: techError } = useTechnologies();
+  const { data: cloudProviders, isLoading: cloudLoading, error: cloudError } = useCloudProvidersWithCertificates();
+
+  const techCategories: TechCategory[] = useMemo(() => {
+    if (!technologies) return [];
+
+    return techCategoryConfig.map(config => {
+      const categoryTechs = technologies
+        .filter(tech => tech.category === config.title)
+        .map(tech => ({
+          ...tech,
+          icon: technologyIcons[tech.name] || Cloud
+        }));
+
+      return {
+        ...config,
+        icon: categoryIcons[config.title],
+        technologies: categoryTechs
+      };
+    }).filter(category => category.technologies.length > 0);
+  }, [technologies]);
+
+  if (techLoading || cloudLoading) {
+    return (
+      <section className="py-20 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center py-12">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            <p className="mt-4 text-muted-foreground">Loading technologies...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (techError || cloudError) {
+    return (
+      <section className="py-20 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center py-12">
+            <p className="text-destructive">Failed to load technologies. Please try again later.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-20 relative overflow-hidden">
       <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <motion.div 
+        <motion.div
           className="text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -153,27 +192,25 @@ const TechnologiesSectionV2 = () => {
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            A comprehensive overview of my technical expertise across modern development tools, 
+            A comprehensive overview of my technical expertise across modern development tools,
             frameworks, and cloud platforms
           </p>
         </motion.div>
 
-        {/* Main Grid Layout */}
-        <motion.div 
+        <motion.div
           className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Left Side: Regular Categories (2 columns) */}
           <div className="lg:col-span-2">
-            <motion.div 
+            <motion.div
               className="grid md:grid-cols-2 gap-6"
               variants={containerVariants}
             >
               {techCategories.map((category, categoryIndex) => {
                 const IconComponent = category.icon;
-                
+
                 return (
                   <motion.div
                     key={category.title}
@@ -182,7 +219,6 @@ const TechnologiesSectionV2 = () => {
                     className="group"
                   >
                     <Card className="p-6 h-full bg-gradient-card border-0 shadow-card hover:shadow-hover transition-all duration-300">
-                      {/* Category Header */}
                       <div className="flex items-center gap-3 mb-6">
                         <div className={`p-3 rounded-xl bg-gradient-${category.color} shadow-glow`}>
                           <IconComponent className="w-6 h-6 text-white" />
@@ -195,14 +231,13 @@ const TechnologiesSectionV2 = () => {
                         </div>
                       </div>
 
-                      {/* Technology Badges */}
-                      <motion.div 
+                      <motion.div
                         className="flex flex-wrap gap-2"
                         variants={containerVariants}
                       >
                         {category.technologies.map((tech, techIndex) => (
                           <motion.div
-                            key={tech.name}
+                            key={tech._id}
                             variants={itemVariants}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -218,14 +253,12 @@ const TechnologiesSectionV2 = () => {
             </motion.div>
           </div>
 
-          {/* Right Side: Cloud Providers (1 column) */}
           <div className="lg:col-span-1">
-            <motion.div 
+            <motion.div
               variants={categoryVariants}
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
               <Card className="p-6 h-full bg-gradient-card border-0 shadow-card">
-                {/* Cloud Section Header */}
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-3 rounded-xl bg-gradient-accent shadow-glow">
                     <Cloud className="w-6 h-6 text-white" />
@@ -238,14 +271,13 @@ const TechnologiesSectionV2 = () => {
                   </div>
                 </div>
 
-                {/* Cloud Provider Cards */}
-                <motion.div 
+                <motion.div
                   className="space-y-4"
                   variants={containerVariants}
                 >
-                  {cloudProviders.map((provider, index) => (
+                  {cloudProviders && cloudProviders.map((provider, index) => (
                     <motion.div
-                      key={provider.name}
+                      key={provider._id}
                       variants={itemVariants}
                     >
                       <CloudProviderCard provider={provider} />
@@ -257,16 +289,15 @@ const TechnologiesSectionV2 = () => {
           </div>
         </motion.div>
 
-        {/* Floating Tech Animation */}
         <div className="mt-16 relative h-32 overflow-hidden">
           <div className="absolute inset-0 flex items-center">
-            <motion.div 
+            <motion.div
               className="flex space-x-8 text-4xl opacity-20"
               animate={{ x: ["0%", "-50%"] }}
-              transition={{ 
-                repeat: Infinity, 
-                duration: 20, 
-                ease: "linear" 
+              transition={{
+                repeat: Infinity,
+                duration: 20,
+                ease: "linear"
               }}
             >
               {floatingAnimationIcons.map((IconComponent, index) => (
@@ -283,4 +314,3 @@ const TechnologiesSectionV2 = () => {
 };
 
 export default TechnologiesSectionV2;
-
