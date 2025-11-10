@@ -1,0 +1,119 @@
+name: Environment Variables Check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.env.example'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-env-vars:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Extract required env vars from .env.example
+        id: extract-vars
+        run: |
+          # Extract all non-comment, non-empty lines that contain '='
+          REQUIRED_VARS=$(grep -v '^#' .env.example | grep '=' | cut -d '=' -f 1 | tr '\n' ',' | sed 's/,$//')
+          echo "required_vars=$REQUIRED_VARS" >> $GITHUB_OUTPUT
+          echo "📋 Required environment variables:"
+          echo "$REQUIRED_VARS" | tr ',' '\n'
+
+      - name: Check Vercel environment variables
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          # Check if required secrets are set
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "⚠️ VERCEL_TOKEN is not set in GitHub secrets"
+            echo "Please add VERCEL_TOKEN to your repository secrets"
+            echo "Get it from: https://vercel.com/account/tokens"
+            exit 0  # Don't fail, just warn
+          fi
+
+          if [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "⚠️ VERCEL_PROJECT_ID is not set in GitHub secrets"
+            echo "Please add VERCEL_PROJECT_ID to your repository secrets"
+            echo "Get it from your Vercel project settings"
+            exit 0  # Don't fail, just warn
+          fi
+
+          # Get environment variables from Vercel
+          echo "🔍 Fetching environment variables from Vercel..."
+          VERCEL_ENV_VARS=$(vercel env ls production --token=$VERCEL_TOKEN 2>/dev/null || echo "")
+
+          if [ -z "$VERCEL_ENV_VARS" ]; then
+            echo "⚠️ Could not fetch environment variables from Vercel"
+            echo "This might be due to missing VERCEL_ORG_ID or incorrect VERCEL_TOKEN"
+            exit 0  # Don't fail, just warn
+          fi
+
+          # Parse required vars
+          IFS=',' read -ra REQUIRED_ARRAY <<< "${{ steps.extract-vars.outputs.required_vars }}"
+
+          MISSING_VARS=()
+          echo ""
+          echo "🔍 Checking environment variables in Vercel..."
+          echo ""
+
+          for VAR in "${REQUIRED_ARRAY[@]}"; do
+            VAR=$(echo $VAR | xargs) # Trim whitespace
+            if echo "$VERCEL_ENV_VARS" | grep -q "^$VAR"; then
+              echo "✅ $VAR - Found"
+            else
+              echo "❌ $VAR - Missing"
+              MISSING_VARS+=("$VAR")
+            fi
+          done
+
+          echo ""
+          if [ ${#MISSING_VARS[@]} -gt 0 ]; then
+            echo "❌ Missing environment variables in Vercel:"
+            printf '%s\n' "${MISSING_VARS[@]}"
+            echo ""
+            echo "Please add these variables to your Vercel project:"
+            echo "https://vercel.com/dashboard/*/settings/environment-variables"
+            exit 1
+          else
+            echo "✅ All required environment variables are set in Vercel!"
+          fi
+
+      - name: Comment on PR (if variables missing)
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `## ⚠️ Environment Variables Check Failed
+
+            Some required environment variables are missing in Vercel.
+
+            Please check the workflow logs for details on which variables are missing.
+
+            **Action required:**
+            1. Go to your [Vercel project settings](https://vercel.com/dashboard)
+            2. Add the missing environment variables
+            3. Re-run this workflow
+
+            **Note:** Environment variables should match those defined in \`.env.example\``;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
