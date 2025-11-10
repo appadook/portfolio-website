@@ -2,11 +2,16 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { data: siteSettings } = useSiteSettings();
+
+  // Use Sanity logo if available, fallback to public folder
+  const logoSrc = siteSettings?.logo?.asset?.url || '/Ka Logo.jpg';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,9 +51,9 @@ const Navigation = () => {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center">
-              <img 
-                src="/Ka Logo.jpg" 
-                alt="Ka Logo" 
+              <img
+                src={logoSrc}
+                alt={siteSettings?.siteName || "Ka Logo"}
                 className="h-10 w-auto rounded-md"
               />
             </div>

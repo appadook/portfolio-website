@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronDown, Github, Linkedin, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const HeroSection = () => {
   const [displayedText, setDisplayedText] = useState("");
-  const fullText = "Aspiring Software Engineer & Data Scientist";
+  const { data: siteSettings } = useSiteSettings();
+
+  // Use Sanity data with fallback to hardcoded values
+  const fullText = siteSettings?.tagline || "Aspiring Software Engineer & Data Scientist";
+  const profileImageSrc = siteSettings?.profileImage?.asset?.url || '/headhsot.jpg';
 
   useEffect(() => {
     let currentIndex = 0;
+    setDisplayedText(""); // Reset displayed text when fullText changes
     const interval = setInterval(() => {
       if (currentIndex <= fullText.length) {
         setDisplayedText(fullText.slice(0, currentIndex));
@@ -19,7 +25,7 @@ const HeroSection = () => {
     }, 100);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [fullText]); // Re-run when fullText changes (when Sanity data loads)
 
   const scrollToProjects = () => {
     document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" });
@@ -104,7 +110,7 @@ const HeroSection = () => {
               >
                 <div className="w-full h-full rounded-full bg-gradient-to-br from-muted to-card flex items-center justify-center overflow-hidden">
                   <img
-                    src="/headhsot.jpg"
+                    src={profileImageSrc}
                     alt="Kurtik Appadoo - Profile Picture"
                     className="w-full h-full object-cover rounded-full"
                   />

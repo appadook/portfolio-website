@@ -68,3 +68,27 @@ export interface CloudProvider {
   order: number;
   certificates?: Certificate[];
 }
+
+export interface SiteSettings {
+  _id: string;
+  logo?: {
+    asset: {
+      _ref: string;
+      url?: string;
+    };
+  };
+  profileImage?: {
+    asset: {
+      _ref: string;
+      url?: string;
+    };
+  };
+  resume?: {
+    asset: {
+      _ref: string;
+      url?: string;
+    };
+  };
+  siteName?: string;
+  tagline?: string;
+}

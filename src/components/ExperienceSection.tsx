@@ -2,10 +2,15 @@ import { motion } from "framer-motion";
 import { Briefcase, Calendar, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useExperiences } from "@/hooks/useSanityData";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import AnimatedSection from "./AnimatedSection";
 
 const ExperienceSection = () => {
   const { data: experiences, isLoading, error } = useExperiences();
+  const { data: siteSettings } = useSiteSettings();
+
+  // Use Sanity resume if available, fallback to public folder
+  const resumeUrl = siteSettings?.resume?.asset?.url || '/Kurtik Resume.pdf';
 
   return (
     <AnimatedSection id="experience" className="py-20 relative overflow-hidden">
@@ -330,7 +335,7 @@ const ExperienceSection = () => {
           viewport={{ once: true }}
         >
           <motion.a
-            href="/Kurtik Resume.pdf"
+            href={resumeUrl}
             download
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary to-accent text-white rounded-xl font-semibold text-lg relative overflow-hidden group"
             whileHover={{ 
