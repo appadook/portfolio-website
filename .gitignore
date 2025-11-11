@@ -56,8 +56,12 @@ dist/
 .claude/
 */CLAUDE.md
 
+# Sanity Studio
 sanity/.sanity/
 sanity/node_modules/
+
+# Scripts directory
+scripts/
 
 # Miscellaneous IDE files
 src/components/TechnologiesSectionV2.tsx.backup

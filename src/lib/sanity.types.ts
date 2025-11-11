@@ -92,3 +92,25 @@ export interface SiteSettings {
   siteName?: string;
   tagline?: string;
 }
+
+export interface AboutCategory {
+  _id: string;
+  name: string;
+  label: string;
+  color: string;
+  icon: string;
+  order: number;
+}
+
+export interface AboutItem {
+  _id: string;
+  category: AboutCategory;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  date?: string;
+  details?: string[];
+  icon: string;
+  image?: string;
+  order: number;
+}

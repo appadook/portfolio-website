@@ -8,6 +8,9 @@ import {
   technologiesQuery,
   technologiesByCategoryQuery,
   cloudProvidersWithCertificatesQuery,
+  aboutCategoriesQuery,
+  aboutItemsQuery,
+  aboutItemsByCategoryQuery,
 } from '@/lib/sanity.queries';
 import type {
   Experience,
@@ -15,6 +18,8 @@ import type {
   ProgrammingLanguage,
   Technology,
   CloudProvider,
+  AboutCategory,
+  AboutItem,
 } from '@/lib/sanity.types';
 
 // Hook to fetch all experiences
@@ -82,5 +87,33 @@ export function useCloudProvidersWithCertificates() {
     queryKey: ['cloudProviders'],
     queryFn: () => client.fetch(cloudProvidersWithCertificatesQuery),
     staleTime: 1000 * 60 * 5,
+  });
+}
+
+// Hook to fetch all about categories
+export function useAboutCategories() {
+  return useQuery<AboutCategory[]>({
+    queryKey: ['aboutCategories'],
+    queryFn: () => client.fetch(aboutCategoriesQuery),
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+// Hook to fetch all about items
+export function useAboutItems() {
+  return useQuery<AboutItem[]>({
+    queryKey: ['aboutItems'],
+    queryFn: () => client.fetch(aboutItemsQuery),
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+// Hook to fetch about items by category
+export function useAboutItemsByCategory(categoryId: string) {
+  return useQuery<AboutItem[]>({
+    queryKey: ['aboutItems', categoryId],
+    queryFn: () => client.fetch(aboutItemsByCategoryQuery, { categoryId }),
+    staleTime: 1000 * 60 * 5,
+    enabled: !!categoryId,
   });
 }

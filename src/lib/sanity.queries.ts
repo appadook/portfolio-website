@@ -163,3 +163,60 @@ export const certificatesByProviderQuery = `
     order
   }
 `;
+
+// About Category queries
+export const aboutCategoriesQuery = `
+  *[_type == "aboutCategory"] | order(order asc) {
+    _id,
+    name,
+    label,
+    color,
+    icon,
+    order
+  }
+`;
+
+// About Item queries
+export const aboutItemsQuery = `
+  *[_type == "aboutItem"] | order(order asc) {
+    _id,
+    "category": category-> {
+      _id,
+      name,
+      label,
+      color,
+      icon,
+      order
+    },
+    title,
+    subtitle,
+    description,
+    date,
+    details,
+    icon,
+    "image": image.asset->url,
+    order
+  }
+`;
+
+export const aboutItemsByCategoryQuery = `
+  *[_type == "aboutItem" && category._ref == $categoryId] | order(order asc) {
+    _id,
+    "category": category-> {
+      _id,
+      name,
+      label,
+      color,
+      icon,
+      order
+    },
+    title,
+    subtitle,
+    description,
+    date,
+    details,
+    icon,
+    "image": image.asset->url,
+    order
+  }
+`;
