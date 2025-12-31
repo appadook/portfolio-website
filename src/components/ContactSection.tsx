@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { Send, Mail, Phone, MapPin, Github, Linkedin, Twitter } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { Send, Mail, Phone, MapPin, Github, Linkedin, ArrowUpRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import AnimatedSection from './AnimatedSection';
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -25,34 +23,34 @@ const ContactSection = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     toast({
       title: "Message sent!",
       description: "Thank you for reaching out. I'll get back to you soon.",
     });
-    
+
     setFormData({ name: '', email: '', message: '' });
     setIsSubmitting(false);
   };
 
   const contactInfo = [
     {
-      icon: <Mail className="w-5 h-5" />,
+      icon: Mail,
       label: 'Email',
       value: 'kurtik.appadoo.2002@outlook.com',
       href: 'mailto:kurtik.appadoo.2002@outlook.com',
     },
     {
-      icon: <Phone className="w-5 h-5" />,
+      icon: Phone,
       label: 'Phone',
       value: '+1 (929) 373-9126',
       href: 'tel:+19293739126',
     },
     {
-      icon: <MapPin className="w-5 h-5" />,
+      icon: MapPin,
       label: 'Location',
       value: 'United States',
       href: '#',
@@ -61,177 +59,278 @@ const ContactSection = () => {
 
   const socialLinks = [
     {
-      icon: <Github className="w-6 h-6" />,
+      icon: Github,
       label: 'GitHub',
       href: 'https://github.com/appadook',
-      color: 'hover:text-white',
     },
     {
-      icon: <Linkedin className="w-6 h-6" />,
+      icon: Linkedin,
       label: 'LinkedIn',
       href: 'https://www.linkedin.com/in/kurtik-appadoo-863019244/',
-      color: 'hover:text-blue-500',
     },
     {
-      icon: <Twitter className="w-6 h-6" />,
-      label: 'Twitter',
-      href: 'https://twitter.com',
-      color: 'hover:text-sky-500',
-    },
-    {
-      icon: <Mail className="w-6 h-6" />,
+      icon: Mail,
       label: 'Email',
       href: 'mailto:kurtik.appadoo.2002@outlook.com',
-      color: 'hover:text-primary',
     },
   ];
 
   return (
-    <section id="contact" className="py-20 relative">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="gradient-text">Get In Touch</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Let's discuss opportunities, collaborations, or just have a chat about technology
-          </p>
-        </div>
+    <AnimatedSection id="contact" className="py-32 relative overflow-hidden">
+      {/* Subtle Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary/2 rounded-full blur-3xl" />
+      </div>
 
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <Card className="glass-effect">
-            <CardHeader>
-              <CardTitle className="text-2xl">Send me a message</CardTitle>
-            </CardHeader>
-            <CardContent>
+      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+        {/* Section Header */}
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          viewport={{ once: true }}
+        >
+          {/* Pre-title */}
+          <motion.div
+            className="flex items-center gap-4 mb-6"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <span className="w-12 h-px bg-primary/50" />
+            <span className="text-sm font-mono text-primary uppercase tracking-widest">
+              Contact
+            </span>
+          </motion.div>
+
+          {/* Main Title */}
+          <motion.h2
+            className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-foreground">Get In </span>
+            <span className="text-primary italic">Touch</span>
+          </motion.h2>
+
+          {/* Description */}
+          <motion.p
+            className="text-lg text-muted-foreground max-w-2xl leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            Let's discuss opportunities, collaborations, or just have a chat about technology.
+          </motion.p>
+        </motion.div>
+
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-12">
+          {/* Contact Form - Takes more space */}
+          <motion.div
+            className="lg:col-span-3"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <div className="card-luxe p-8">
+              <h3 className="font-display text-2xl font-semibold text-foreground mb-6">
+                Send a Message
+              </h3>
+
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <Input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="bg-input/50 border-border focus:border-primary transition-colors"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Your name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 bg-background-subtle border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-300"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-muted-foreground mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="your@email.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 bg-background-subtle border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-300"
+                    />
+                  </div>
                 </div>
+
                 <div>
-                  <Input
-                    type="email"
-                    name="email"
-                    placeholder="your.email@example.com"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="bg-input/50 border-border focus:border-primary transition-colors"
-                  />
-                </div>
-                <div>
-                  <Textarea
+                  <label className="block text-sm font-medium text-muted-foreground mb-2">
+                    Message
+                  </label>
+                  <textarea
                     name="message"
                     placeholder="Tell me about your project or just say hello..."
                     value={formData.message}
                     onChange={handleInputChange}
                     required
                     rows={5}
-                    className="bg-input/50 border-border focus:border-primary transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-background-subtle border border-border/50 rounded-xl text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-300 resize-none"
                   />
                 </div>
-                <Button
+
+                <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white glow-effect transition-all duration-300 hover:scale-105"
+                  className="group w-full px-8 py-4 bg-primary text-primary-foreground rounded-xl font-medium relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                 >
-                  {isSubmitting ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Sending...
-                    </div>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                  {/* Shimmer effect */}
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
 
-          {/* Contact Info */}
-          <div className="space-y-8">
+                  {isSubmitting ? (
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      Sending...
+                    </span>
+                  ) : (
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      <Send className="w-5 h-5" />
+                      Send Message
+                    </span>
+                  )}
+                </motion.button>
+              </form>
+            </div>
+          </motion.div>
+
+          {/* Contact Info & Social */}
+          <motion.div
+            className="lg:col-span-2 space-y-6"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
             {/* Contact Details */}
-            <Card className="glass-effect">
-              <CardHeader>
-                <CardTitle className="text-2xl">Contact Information</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {contactInfo.map((info) => (
-                  <a
-                    key={info.label}
-                    href={info.href}
-                    className="flex items-center p-4 rounded-lg hover:bg-muted/50 transition-colors duration-200 group"
-                  >
-                    <div className="p-2 rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-200 mr-4">
-                      {info.icon}
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">{info.label}</p>
-                      <p className="font-medium group-hover:text-primary transition-colors">
-                        {info.value}
-                      </p>
-                    </div>
-                  </a>
-                ))}
-              </CardContent>
-            </Card>
+            <div className="card-luxe p-6">
+              <h3 className="font-display text-lg font-semibold text-foreground mb-5">
+                Contact Information
+              </h3>
+
+              <div className="space-y-4">
+                {contactInfo.map((info, index) => {
+                  const IconComponent = info.icon;
+                  return (
+                    <motion.a
+                      key={info.label}
+                      href={info.href}
+                      className="flex items-center gap-4 p-3 -mx-3 rounded-xl hover:bg-primary/5 transition-colors duration-300 group"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                      viewport={{ once: true }}
+                    >
+                      <div className="p-2.5 rounded-lg bg-primary/10 border border-primary/20 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                        <IconComponent className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground font-mono uppercase tracking-wide">
+                          {info.label}
+                        </p>
+                        <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                          {info.value}
+                        </p>
+                      </div>
+                    </motion.a>
+                  );
+                })}
+              </div>
+            </div>
 
             {/* Social Links */}
-            <Card className="glass-effect">
-              <CardHeader>
-                <CardTitle className="text-2xl">Connect with me</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  {socialLinks.map((link) => (
-                    <a
+            <div className="card-luxe p-6">
+              <h3 className="font-display text-lg font-semibold text-foreground mb-5">
+                Connect With Me
+              </h3>
+
+              <div className="grid grid-cols-3 gap-3">
+                {socialLinks.map((link, index) => {
+                  const IconComponent = link.icon;
+                  return (
+                    <motion.a
                       key={link.label}
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`flex items-center justify-center p-4 rounded-lg border border-border hover:border-primary transition-all duration-300 hover:scale-105 group ${link.color}`}
+                      className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 group"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -4 }}
                     >
-                      <div className="mr-3 group-hover:scale-110 transition-transform">
-                        {link.icon}
-                      </div>
-                      <span className="font-medium">{link.label}</span>
-                    </a>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                      <IconComponent className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                      <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                        {link.label}
+                      </span>
+                    </motion.a>
+                  );
+                })}
+              </div>
+            </div>
 
-            {/* Availability */}
-            <Card className="glass-effect">
-              <CardContent className="p-6">
-                <div className="text-center">
-                  <div className="inline-flex items-center px-4 py-2 rounded-full bg-green-500/20 text-green-400 mb-4">
-                    <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-                    Available for new opportunities
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Currently open to full-time positions, consulting projects, and interesting collaborations.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+            {/* Availability Status */}
+            <motion.div
+              className="card-luxe p-6"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500" />
+                </span>
+                <span className="text-sm font-medium text-foreground">
+                  Available for opportunities
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Currently open to full-time positions and interesting collaborations.
+              </p>
+            </motion.div>
+          </motion.div>
         </div>
+
+        {/* Footer note */}
+        <motion.div
+          className="mt-20 text-center"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          viewport={{ once: true }}
+        >
+          <p className="text-sm text-muted-foreground font-mono">
+            Built with passion in {new Date().getFullYear()}
+          </p>
+        </motion.div>
       </div>
-    </section>
+    </AnimatedSection>
   );
 };
 

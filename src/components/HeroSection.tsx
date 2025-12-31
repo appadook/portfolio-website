@@ -1,20 +1,26 @@
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ChevronDown, Github, Linkedin, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const HeroSection = () => {
   const [displayedText, setDisplayedText] = useState("");
   const { data: siteSettings } = useSiteSettings();
+  const { scrollY } = useScroll();
 
-  // Use Sanity data with fallback to hardcoded values
-  const fullText = siteSettings?.tagline || "Aspiring Software Engineer & Data Scientist";
-  const profileImageSrc = siteSettings?.profileImage?.asset?.url || '/headhsot.jpg';
+  // Parallax effects
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+
+  // Use Sanity data with fallback
+  const fullText = siteSettings?.tagline || "Software Engineer & Data Scientist";
+  const name = siteSettings?.siteName || "Kurtik Appadoo";
+  const firstName = name.split(' ')[0];
+  const lastName = name.split(' ').slice(1).join(' ');
 
   useEffect(() => {
     let currentIndex = 0;
-    setDisplayedText(""); // Reset displayed text when fullText changes
+    setDisplayedText("");
     const interval = setInterval(() => {
       if (currentIndex <= fullText.length) {
         setDisplayedText(fullText.slice(0, currentIndex));
@@ -22,10 +28,10 @@ const HeroSection = () => {
       } else {
         clearInterval(interval);
       }
-    }, 100);
+    }, 80);
 
     return () => clearInterval(interval);
-  }, [fullText]); // Re-run when fullText changes (when Sanity data loads)
+  }, [fullText]);
 
   const scrollToProjects = () => {
     document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" });
@@ -35,64 +41,74 @@ const HeroSection = () => {
     document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const socialLinks = [
+    { href: "https://github.com/appadook", icon: Github, label: "GitHub" },
+    { href: "https://www.linkedin.com/in/kurtik-appadoo-863019244/", icon: Linkedin, label: "LinkedIn" },
+    { href: "mailto:kurtik.appadoo.2002@outlook.com", icon: Mail, label: "Email" }
+  ];
+
   return (
     <motion.section
       id="home"
-      className="min-h-screen flex items-center justify-center relative overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      style={{ opacity }}
     >
-      {/* Background Animation */}
-      <div className="absolute inset-0 opacity-30">
-        <motion.div 
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
-          animate={{ 
-            y: [0, -20, 0],
-            scale: [1, 1.1, 1],
+      {/* Subtle Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Gradient orbs */}
+        <motion.div
+          className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
           }}
           transition={{
-            duration: 6,
+            duration: 8,
             repeat: Infinity,
             ease: "easeInOut"
           }}
         />
         <motion.div
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/20 rounded-full blur-3xl"
-          animate={{ 
-            y: [0, 20, 0],
-            scale: [1, 0.9, 1],
+          className="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-primary/3 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.2, 0.4, 0.2],
           }}
           transition={{
-            duration: 8,
+            duration: 10,
             repeat: Infinity,
             ease: "easeInOut",
             delay: 2
           }}
         />
-        <motion.div 
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-electric-blue/10 rounded-full blur-2xl"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.6, 0.3]
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut"
+
+        {/* Subtle grid pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px),
+                              linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
           }}
         />
+
+        {/* Noise texture */}
+        <div className="absolute inset-0 noise-overlay opacity-50" />
       </div>
 
-      <div className="container mx-auto px-4 text-center relative z-10">
-        <div className="max-w-4xl mx-auto">
+      {/* Main Content */}
+      <motion.div
+        className="container mx-auto px-6 lg:px-8 relative z-10"
+        style={{ y }}
+      >
+        <div className="max-w-5xl mx-auto">
           {/* Profile Picture */}
-          <motion.div 
+          <motion.div
             className="mb-8"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ 
-              duration: 1,
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              duration: 0.8,
               delay: 0.2,
               type: "spring",
               stiffness: 200,
@@ -100,198 +116,185 @@ const HeroSection = () => {
             }}
           >
             <div className="relative inline-block">
-              <motion.div 
-                className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary to-accent p-1 glow-effect"
-                whileHover={{ 
-                  scale: 1.05,
-                  rotate: 5,
-                  transition: { duration: 0.3 }
-                }}
+              <motion.div
+                className="w-28 h-28 md:w-36 md:h-36 rounded-full p-[2px] bg-gradient-to-br from-primary to-primary-light"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-muted to-card flex items-center justify-center overflow-hidden">
+                <div className="w-full h-full rounded-full bg-background p-1">
                   <img
-                    src={profileImageSrc}
-                    alt="Kurtik Appadoo - Profile Picture"
+                    src="/headhsot.jpg"
+                    alt="Kurtik Appadoo"
                     className="w-full h-full object-cover rounded-full"
                   />
                 </div>
               </motion.div>
-              <motion.div 
-                className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-background"
-                animate={{ 
-                  scale: [1, 1.2, 1],
-                  opacity: [1, 0.7, 1]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
+              {/* Status indicator */}
+              <motion.div
+                className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 rounded-full border-4 border-background"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
             </div>
           </motion.div>
 
-          {/* Main Heading */}
-          <motion.h1
-            className="hero-text mb-6"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 0.8,
-              delay: 0.5,
-              ease: [0.25, 0.25, 0.25, 0.75]
-            }}
-          >
-            Kurtik Appadoo
-          </motion.h1>
-
-          {/* Typing Animation Subtitle */}
+          {/* Pre-title */}
           <motion.div
-            className="text-xl md:text-2xl text-muted-foreground mb-8 h-8"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 0.8
-            }}
+            className="mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <span className="font-mono">
-              {displayedText}
-              <motion.span 
-                animate={{ opacity: [1, 0, 1] }}
-                transition={{ 
-                  duration: 1,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                |
-              </motion.span>
+            <span className="inline-flex items-center gap-3 text-sm font-mono text-muted-foreground">
+              <span className="w-12 h-px bg-primary/50" />
+              Available for opportunities
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+              </span>
             </span>
+          </motion.div>
+
+          {/* Main Heading - Large Serif Typography */}
+          <div className="mb-8">
+            <motion.h1
+              className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.85]"
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <span className="block text-foreground">{firstName}</span>
+              <span className="block">
+                <span className="text-foreground">{lastName.split(' ')[0]}</span>
+                {lastName.split(' ').length > 1 && (
+                  <span className="text-primary italic"> {lastName.split(' ').slice(1).join(' ')}</span>
+                )}
+              </span>
+            </motion.h1>
+          </div>
+
+          {/* Typing Subtitle */}
+          <motion.div
+            className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+          >
+            <div className="flex items-center gap-4">
+              <span className="w-8 h-px bg-primary" />
+              <span className="font-mono text-lg md:text-xl text-primary">
+                {displayedText}
+                <motion.span
+                  className="inline-block w-0.5 h-5 bg-primary ml-1"
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                />
+              </span>
+            </div>
           </motion.div>
 
           {/* Description */}
           <motion.p
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
+            className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed mb-12"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 0.8,
-              delay: 1.2
-            }}
+            transition={{ duration: 0.8, delay: 1 }}
           >
-            Passionate about building innovative solutions at the intersection
-            of technology and finance. Creating impactful software and
-            data-driven insights.
+            Crafting elegant solutions at the intersection of technology and innovation.
+            Specializing in scalable systems, data-driven insights, and exceptional user experiences.
           </motion.p>
 
           {/* CTA Buttons */}
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-16"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 1.5,
-              type: "spring",
-              stiffness: 200
-            }}
+            className="flex flex-wrap gap-4 mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
           >
-            <motion.div
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+            <motion.button
+              onClick={scrollToProjects}
+              className="group relative px-8 py-4 bg-primary text-primary-foreground font-medium rounded-full overflow-hidden"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Button
-                size="lg"
-                onClick={scrollToProjects}
-                className="bg-gradient-to-r from-primary to-accent hover:from-primary/80 hover:to-accent/80 text-white px-8 py-3 text-lg glow-effect transition-all duration-300"
-              >
-                View Projects
-              </Button>
-            </motion.div>
-            <motion.div
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+              {/* Shimmer effect */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <span className="relative flex items-center gap-2">
+                View My Work
+                <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
+              </span>
+            </motion.button>
+
+            <motion.button
+              onClick={scrollToContact}
+              className="px-8 py-4 font-medium rounded-full border border-border hover:border-primary/50 text-foreground hover:text-primary transition-all duration-300"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={scrollToContact}
-                className="border-2 border-primary/50 hover:border-primary text-primary hover:bg-primary/10 px-8 py-3 text-lg transition-all duration-300"
-              >
-                Contact Me
-              </Button>
-            </motion.div>
+              Get in Touch
+            </motion.button>
           </motion.div>
 
           {/* Social Links */}
           <motion.div
-            className="flex justify-center space-x-6 mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 0.6,
-              delay: 1.8
-            }}
+            className="flex items-center gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.4 }}
           >
-            {[
-              { href: "https://github.com/appadook", icon: Github, label: "GitHub" },
-              { href: "https://www.linkedin.com/in/kurtik-appadoo-863019244/", icon: Linkedin, label: "LinkedIn" },
-              { href: "mailto:kurtik.appadoo.2002@outlook.com", icon: Mail, label: "Email" }
-            ].map((social, index) => (
+            {socialLinks.map((social, index) => (
               <motion.a
                 key={social.label}
                 href={social.href}
                 target={social.href.startsWith('mailto') ? undefined : "_blank"}
                 rel={social.href.startsWith('mailto') ? undefined : "noopener noreferrer"}
-                className="p-3 rounded-full border border-border hover:border-primary transition-all duration-300 group"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  duration: 0.4,
-                  delay: 2 + (index * 0.1),
-                  type: "spring",
-                  stiffness: 200
-                }}
-                whileHover={{ 
-                  scale: 1.1,
-                  y: -3,
-                  transition: { duration: 0.2 }
-                }}
-                whileTap={{ scale: 0.95 }}
+                className="group p-3 rounded-full border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1.5 + (index * 0.1) }}
+                whileHover={{ y: -3 }}
               >
-                <social.icon className="w-6 h-6 text-muted-foreground group-hover:text-primary transition-colors" />
+                <social.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
               </motion.a>
             ))}
           </motion.div>
-
-          {/* Scroll Indicator */}
-          <motion.div 
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ 
-              opacity: 1, 
-              y: 0,
-            }}
-            transition={{ 
-              duration: 0.6,
-              delay: 2.5
-            }}
-          >
-            <motion.div
-              animate={{ 
-                y: [0, 10, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            >
-              <ChevronDown className="w-8 h-8 text-muted-foreground" />
-            </motion.div>
-          </motion.div>
         </div>
+      </motion.div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 2 }}
+      >
+        <motion.button
+          onClick={scrollToProjects}
+          className="flex flex-col items-center gap-3 text-muted-foreground hover:text-primary transition-colors group"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <span className="text-xs font-mono uppercase tracking-widest">Scroll</span>
+          <div className="w-px h-12 bg-gradient-to-b from-primary/50 to-transparent" />
+        </motion.button>
+      </motion.div>
+
+      {/* Decorative corner elements */}
+      <div className="absolute top-32 right-12 hidden lg:block">
+        <motion.div
+          className="w-24 h-24 border border-primary/20 rounded-full"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1, delay: 1.8 }}
+        />
+      </div>
+      <div className="absolute bottom-32 left-12 hidden lg:block">
+        <motion.div
+          className="w-16 h-16 border border-primary/10"
+          initial={{ scale: 0, opacity: 0, rotate: 0 }}
+          animate={{ scale: 1, opacity: 1, rotate: 45 }}
+          transition={{ duration: 1, delay: 2 }}
+        />
       </div>
     </motion.section>
   );

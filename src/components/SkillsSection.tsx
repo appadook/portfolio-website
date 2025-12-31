@@ -1,34 +1,7 @@
-import { Code2, Star } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { Code2 } from 'lucide-react';
 import { useProgrammingLanguages } from '@/hooks/useSanityData';
-
-const getSkillVariant = (level: string) => {
-  switch (level) {
-    case 'expert':
-      return 'default';
-    case 'advanced':
-      return 'secondary';
-    case 'intermediate':
-      return 'outline';
-    default:
-      return 'outline';
-  }
-};
-
-const getSkillStars = (level: string) => {
-  const starCount = level === 'expert' ? 3 : level === 'advanced' ? 2 : 1;
-  return Array.from({ length: 3 }, (_, i) => (
-    <Star
-      key={i}
-      className={`w-3 h-3 ${
-        i < starCount
-          ? 'text-yellow-400 fill-yellow-400'
-          : 'text-muted-foreground'
-      }`}
-    />
-  ));
-};
+import AnimatedSection from './AnimatedSection';
 
 // Icon mapping for programming languages
 const languageIcons: Record<string, string> = {
@@ -44,119 +17,202 @@ const languageIcons: Record<string, string> = {
   Rust: '🦀',
 };
 
+const getLevelColor = (level: string) => {
+  switch (level) {
+    case 'expert':
+      return 'bg-primary text-primary-foreground';
+    case 'advanced':
+      return 'bg-primary/20 text-primary border border-primary/30';
+    default:
+      return 'bg-muted text-muted-foreground';
+  }
+};
+
+const getLevelWidth = (level: string) => {
+  switch (level) {
+    case 'expert':
+      return '100%';
+    case 'advanced':
+      return '75%';
+    default:
+      return '50%';
+  }
+};
+
 const SkillsSection = () => {
   const { data: programmingLanguages, isLoading, error } = useProgrammingLanguages();
 
   return (
-    <section id="skills" className="py-20 relative">
-      <div className="container mx-auto px-4">
+    <AnimatedSection id="skills" className="py-32 relative overflow-hidden">
+      {/* Subtle Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/3 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-primary/2 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            <span className="gradient-text">Programming Languages</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            The programming languages I use to build solutions
-          </p>
-        </div>
+        <motion.div
+          className="mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          viewport={{ once: true }}
+        >
+          {/* Pre-title */}
+          <motion.div
+            className="flex items-center gap-4 mb-6"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <span className="w-12 h-px bg-primary/50" />
+            <span className="text-sm font-mono text-primary uppercase tracking-widest">
+              Core Skills
+            </span>
+          </motion.div>
+
+          {/* Main Title */}
+          <motion.h2
+            className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-foreground">Programming </span>
+            <span className="text-primary italic">Languages</span>
+          </motion.h2>
+
+          {/* Description */}
+          <motion.p
+            className="text-lg text-muted-foreground max-w-2xl leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            The programming languages I use to build solutions and bring ideas to life.
+          </motion.p>
+        </motion.div>
 
         {/* Loading State */}
         {isLoading && (
-          <div className="text-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
-            <p className="mt-4 text-muted-foreground">Loading skills...</p>
+          <div className="flex items-center justify-center py-20">
+            <motion.div
+              className="flex flex-col items-center gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+              <p className="text-muted-foreground font-mono text-sm">Loading skills...</p>
+            </motion.div>
           </div>
         )}
 
         {/* Error State */}
         {error && (
-          <div className="text-center py-12">
-            <p className="text-destructive">Failed to load skills. Please try again later.</p>
+          <div className="text-center py-20">
+            <p className="text-muted-foreground">Failed to load skills. Please try again later.</p>
           </div>
         )}
 
-        {/* Programming Languages Card */}
+        {/* Programming Languages Grid */}
         {programmingLanguages && programmingLanguages.length > 0 && (
-          <div className="max-w-4xl mx-auto">
-            <Card className="glass-effect hover:scale-105 transition-all duration-500 animate-fade-in">
-              <CardHeader>
-                <CardTitle className="flex items-center text-2xl justify-center">
-                  <div className="p-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 mr-4 text-white">
-                    <Code2 className="w-6 h-6" />
-                  </div>
-                  Core Programming Languages
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {programmingLanguages.map((language, index) => (
-                  <div
+          <motion.div
+            className="max-w-5xl mx-auto"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <div className="card-luxe p-8">
+              {/* Header */}
+              <div className="flex items-center gap-4 mb-8 pb-6 border-b border-border/50">
+                <div className="p-3 rounded-xl bg-primary/10 border border-primary/20">
+                  <Code2 className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-display text-xl font-semibold text-foreground">
+                    Core Languages
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {programmingLanguages.length} languages in my toolkit
+                  </p>
+                </div>
+              </div>
+
+              {/* Languages Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {programmingLanguages.map((language, index) => (
+                  <motion.div
                     key={language.name}
-                    className="p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-all duration-300 group animate-fade-in"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className="group p-5 rounded-xl bg-background-subtle/50 border border-border/30 hover:border-primary/30 transition-all duration-300"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 * index }}
+                    viewport={{ once: true }}
+                    whileHover={{ y: -4 }}
                   >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl group-hover:scale-110 transition-transform duration-300">
                           {languageIcons[language.name] || '💻'}
                         </span>
-                        <div>
-                          <h4 className="font-medium text-foreground group-hover:text-primary transition-colors">
-                            {language.name}
-                          </h4>
-                        </div>
+                        <h4 className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">
+                          {language.name}
+                        </h4>
                       </div>
-                      <div className="flex space-x-1">
-                        {getSkillStars(language.level)}
-                      </div>
+                      <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${getLevelColor(language.level)}`}>
+                        {language.level.charAt(0).toUpperCase() + language.level.slice(1)}
+                      </span>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">
+
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                       {language.description}
                     </p>
-                    <Badge 
-                      variant={getSkillVariant(language.level)}
-                      className="text-xs"
-                    >
-                      {language.level.charAt(0).toUpperCase() + language.level.slice(1)}
-                    </Badge>
-                  </div>
+
+                    {/* Progress bar */}
+                    <div className="h-1 bg-border/50 rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full"
+                        initial={{ width: 0 }}
+                        whileInView={{ width: getLevelWidth(language.level) }}
+                        transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
+                        viewport={{ once: true }}
+                      />
+                    </div>
+                  </motion.div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-          </div>
-        )}
+            </div>
 
-        {/* Proficiency Legend */}
-        {programmingLanguages && programmingLanguages.length > 0 && (
-          <div className="mt-12 text-center">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">
-            Proficiency Levels
-          </h3>
-          <div className="flex flex-wrap justify-center gap-6 text-sm">
-            <div className="flex items-center space-x-2">
-              <div className="flex space-x-1">
-                {getSkillStars('expert')}
+            {/* Proficiency Legend */}
+            <motion.div
+              className="mt-8 flex flex-wrap justify-center gap-6 text-sm"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-primary" />
+                <span className="text-muted-foreground font-mono text-xs">Expert</span>
               </div>
-              <span className="text-muted-foreground">Expert (3+ years, production experience)</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="flex space-x-1">
-                {getSkillStars('advanced')}
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-primary/50" />
+                <span className="text-muted-foreground font-mono text-xs">Advanced</span>
               </div>
-              <span className="text-muted-foreground">Advanced (1-3 years, project experience)</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="flex space-x-1">
-                {getSkillStars('intermediate')}
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-muted-foreground/50" />
+                <span className="text-muted-foreground font-mono text-xs">Intermediate</span>
               </div>
-              <span className="text-muted-foreground">Intermediate (Learning, basic projects)</span>
-            </div>
-          </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
       </div>
-    </section>
+    </AnimatedSection>
   );
 };
 

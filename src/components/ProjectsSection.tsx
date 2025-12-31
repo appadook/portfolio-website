@@ -1,15 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Github, ExternalLink, Filter, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Github, ExternalLink, ArrowUpRight } from "lucide-react";
 import ProjectModal from "./ProjectModal";
 import { useProjects } from "@/hooks/useSanityData";
 import type { Project } from "@/lib/sanity.types";
@@ -51,298 +42,275 @@ const ProjectsSection = () => {
   };
 
   return (
-    <AnimatedSection id="projects" className="py-20 relative">
-      <div className="container mx-auto px-4">
+    <AnimatedSection id="projects" className="py-32 relative overflow-hidden">
+      {/* Subtle Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/3 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-primary/2 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <motion.div 
-          className="text-center mb-16"
+        <motion.div
+          className="mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          viewport={{ once: true }}
         >
-          <motion.h2 
-            className="text-4xl md:text-5xl font-bold mb-6"
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+          {/* Pre-title */}
+          <motion.div
+            className="flex items-center gap-4 mb-6"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <span className="gradient-text">Featured Projects</span>
-          </motion.h2>
-          <motion.p 
-            className="text-xl text-muted-foreground max-w-2xl mx-auto"
+            <span className="w-12 h-px bg-primary/50" />
+            <span className="text-sm font-mono text-primary uppercase tracking-widest">
+              Portfolio
+            </span>
+          </motion.div>
+
+          {/* Main Title */}
+          <motion.h2
+            className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-foreground">Featured </span>
+            <span className="text-primary italic">Work</span>
+          </motion.h2>
+
+          {/* Description */}
+          <motion.p
+            className="text-lg text-muted-foreground max-w-2xl leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
           >
             A showcase of my work spanning software engineering, machine
-            learning, and quantitative research
+            learning, and quantitative research.
           </motion.p>
         </motion.div>
 
         {/* Category Filter */}
-        <motion.div 
-          className="flex flex-wrap justify-center gap-2 mb-12"
+        <motion.div
+          className="flex flex-wrap gap-3 mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
         >
           {categories.map((category, index) => (
-            <motion.div
+            <motion.button
               key={category}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                duration: 0.4, 
-                delay: 0.1 * index,
-                type: "spring",
-                stiffness: 200
-              }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                selectedCategory === category
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"
+              }`}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 + index * 0.05 }}
               viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Button
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className={`transition-all duration-300 ${
-                  selectedCategory === category
-                    ? "bg-gradient-to-r from-primary to-accent text-white glow-effect"
-                    : "hover:border-primary hover:text-primary"
-                }`}
-              >
-                <Filter className="w-4 h-4 mr-2" />
-                {category}
-              </Button>
-            </motion.div>
+              {category}
+            </motion.button>
           ))}
         </motion.div>
 
         {/* Loading State */}
         {isLoading && (
-          <div className="text-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
-            <p className="mt-4 text-muted-foreground">Loading projects...</p>
+          <div className="flex items-center justify-center py-20">
+            <motion.div
+              className="flex flex-col items-center gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+              <p className="text-muted-foreground font-mono text-sm">Loading projects...</p>
+            </motion.div>
           </div>
         )}
 
         {/* Error State */}
         {error && (
-          <div className="text-center py-12">
-            <p className="text-destructive">Failed to load projects. Please try again later.</p>
+          <div className="text-center py-20">
+            <p className="text-muted-foreground">Failed to load projects. Please try again later.</p>
           </div>
         )}
 
-        {/* Projects Grid - Smaller Cards */}
+        {/* Projects Grid */}
         {!isLoading && !error && (
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true, amount: 0.1 }}
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout">
               {filteredProjects.map((project, index) => (
                 <motion.div
                   key={project._id}
-                layout
-                initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                whileInView={{ 
-                  opacity: 1, 
-                  y: 0, 
-                  scale: 1,
-                  transition: {
-                    duration: 0.5,
-                    delay: index * 0.1,
-                    ease: [0.25, 0.25, 0.25, 0.75]
-                  }
-                }}
-                exit={{ 
-                  opacity: 0, 
-                  scale: 0.8,
-                  transition: { duration: 0.3 }
-                }}
-                whileHover={{ 
-                  y: -8,
-                  scale: 1.02,
-                  transition: { duration: 0.2, ease: "easeOut" }
-                }}
-                viewport={{ once: true, amount: 0.2 }}
-              >
-                <Card
-                  className="group glass-effect cursor-pointer h-full"
-                  onClick={() => openProjectModal(project)}
+                  layout
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.6,
+                      delay: index * 0.1,
+                      ease: [0.4, 0, 0.2, 1],
+                    },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.95,
+                    transition: { duration: 0.3 },
+                  }}
+                  viewport={{ once: true, amount: 0.2 }}
                 >
-                  {/* Project Image */}
-                  <div className="h-32 relative overflow-hidden rounded-t-lg">
-                    {project.image ? (
-                      <motion.img
-                        src={project.image}
-                        alt={`${project.title} screenshot`}
-                        className="w-full h-full object-cover"
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    ) : (
-                      <motion.div 
-                        className="h-full bg-gradient-to-br from-primary/20 to-accent/20"
-                        whileHover={{ 
-                          background: "linear-gradient(135deg, rgba(var(--primary), 0.3), rgba(var(--accent), 0.3))"
-                        }}
-                        transition={{ duration: 0.3 }}
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <motion.div 
-                      className="absolute top-2 left-2 flex flex-wrap gap-1"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: 0.3 }}
-                    >
-                      <Badge variant="secondary" className="text-xs">
-                        {project.categories[0]}
-                      </Badge>
-                      {project.categories.length > 1 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{project.categories.length - 1}
-                        </Badge>
+                  <motion.div
+                    className="card-luxe h-full cursor-pointer group overflow-hidden"
+                    onClick={() => openProjectModal(project)}
+                    whileHover={{ y: -8 }}
+                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                  >
+                    {/* Project Image */}
+                    <div className="relative h-36 overflow-hidden">
+                      {project.image ? (
+                        <>
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                          {/* Gradient overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+                          {/* Gold shimmer on hover */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        </>
+                      ) : (
+                        <div className="h-full bg-gradient-to-br from-card-hover to-card flex items-center justify-center">
+                          <span className="text-4xl font-display text-primary/20">
+                            {project.title.charAt(0)}
+                          </span>
+                        </div>
                       )}
-                    </motion.div>
-                    
-                    <motion.div 
-                      className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100"
-                      initial={{ scale: 0 }}
-                      whileHover={{ scale: 1 }}
-                      transition={{ duration: 0.2, type: "spring", stiffness: 200 }}
-                    >
-                      <div className="p-2 rounded-full bg-primary/20 backdrop-blur-sm">
-                        <Eye className="w-4 h-4 text-white" />
+
+                      {/* Category Badge */}
+                      <div className="absolute top-4 left-4">
+                        <span className="tag-luxe text-xs">
+                          {project.categories[0]}
+                        </span>
                       </div>
-                    </motion.div>
-                  </div>
 
-                  <CardContent className="p-4">
-                    {/* Compact Title */}
-                    <motion.h3 
-                      className="font-semibold text-sm mb-2 group-hover:text-primary transition-colors line-clamp-2"
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: 0.2 }}
-                    >
-                      {project.title}
-                    </motion.h3>
+                      {/* View indicator on hover */}
+                      <motion.div
+                        className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        initial={{ scale: 0.8 }}
+                        whileHover={{ scale: 1 }}
+                      >
+                        <div className="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center backdrop-blur-sm">
+                          <ArrowUpRight className="w-5 h-5 text-primary-foreground" />
+                        </div>
+                      </motion.div>
+                    </div>
 
-                    {/* Short Description */}
-                    <motion.p 
-                      className="text-xs text-muted-foreground mb-3 line-clamp-2"
-                      initial={{ opacity: 0 }}
-                      whileInView={{ opacity: 1 }}
-                      transition={{ duration: 0.4, delay: 0.3 }}
-                    >
-                      {project.description}
-                    </motion.p>
+                    {/* Content */}
+                    <div className="p-4">
+                      {/* Title */}
+                      <h3 className="font-display text-base font-semibold mb-1.5 text-foreground group-hover:text-primary transition-colors duration-300 line-clamp-1">
+                        {project.title}
+                      </h3>
 
-                    {/* Compact Tech Stack - Show only first 3 */}
-                    <motion.div 
-                      className="flex flex-wrap gap-1 mb-3"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.4 }}
-                    >
-                      {project.techStack.slice(0, 3).map((tech, techIndex) => (
-                        <motion.div
-                          key={tech}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ 
-                            duration: 0.3, 
-                            delay: 0.5 + (techIndex * 0.1) 
-                          }}
-                        >
-                          <Badge
-                            variant="outline"
-                            className="text-xs px-2 py-0.5"
+                      {/* Description */}
+                      <p className="text-xs text-muted-foreground leading-relaxed mb-3 line-clamp-2">
+                        {project.description}
+                      </p>
+
+                      {/* Tech Stack */}
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {project.techStack.slice(0, 3).map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-2 py-0.5 text-[10px] font-mono text-muted-foreground bg-background-subtle rounded border border-border/50"
                           >
                             {tech}
-                          </Badge>
-                        </motion.div>
-                      ))}
-                      {project.techStack.length > 3 && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.3, delay: 0.8 }}
-                        >
-                          <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                          </span>
+                        ))}
+                        {project.techStack.length > 3 && (
+                          <span className="px-2 py-0.5 text-[10px] font-mono text-primary bg-primary/10 rounded">
                             +{project.techStack.length - 3}
-                          </Badge>
-                        </motion.div>
-                      )}
-                    </motion.div>
-
-                    {/* Quick Actions */}
-                    <motion.div 
-                      className="flex items-center justify-between text-xs"
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.5 }}
-                    >
-                      <div className="flex items-center space-x-2">
-                        {project.githubUrl && (
-                          <motion.div
-                            whileHover={{ scale: 1.2, rotate: 5 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <Github className="w-4 h-4 text-muted-foreground" />
-                          </motion.div>
-                        )}
-                        {project.liveUrl && (
-                          <motion.div
-                            whileHover={{ scale: 1.2, rotate: -5 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                          </motion.div>
+                          </span>
                         )}
                       </div>
-                      <span className="text-muted-foreground hover:text-primary transition-colors">
-                        View Details
-                      </span>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+
+                      {/* Footer with links */}
+                      <div className="flex items-center justify-between pt-3 border-t border-border/50">
+                        <div className="flex items-center gap-2">
+                          {project.githubUrl && (
+                            <motion.a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="p-1.5 rounded-full border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all duration-300"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <Github className="w-3.5 h-3.5" />
+                            </motion.a>
+                          )}
+                          {project.liveUrl && (
+                            <motion.a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="p-1.5 rounded-full border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all duration-300"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <ExternalLink className="w-3.5 h-3.5" />
+                            </motion.a>
+                          )}
+                        </div>
+
+                        <span className="text-[10px] text-muted-foreground font-mono group-hover:text-primary transition-colors">
+                          Details
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </motion.div>
         )}
 
-        {/* Show More Button */}
-        <motion.div 
-          className="text-center mt-12"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
+        {/* Results count */}
+        {!isLoading && !error && (
           <motion.div
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
+            className="mt-12 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            viewport={{ once: true }}
           >
-            <Button
-              variant="outline"
-              size="lg"
-              className="hover:border-primary hover:text-primary transition-all duration-300"
-            >
-              View All Projects
-            </Button>
+            <p className="text-sm text-muted-foreground font-mono">
+              Showing {filteredProjects.length} of {projects?.length || 0} projects
+            </p>
           </motion.div>
-        </motion.div>
+        )}
 
         {/* Project Modal */}
         <ProjectModal

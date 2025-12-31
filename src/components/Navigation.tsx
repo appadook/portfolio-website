@@ -1,17 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Settings } from 'lucide-react';
 import { useSiteSettings } from '@/hooks/useSiteSettings';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const { data: siteSettings } = useSiteSettings();
-
-  // Use Sanity logo if available, fallback to public folder
-  const logoSrc = siteSettings?.logo?.asset?.url || '/Ka Logo.jpg';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,11 +18,23 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   const navItems = [
     { href: '#home', label: 'Home' },
-    { href: '#projects', label: 'Projects' },
+    { href: '#about', label: 'About' },
+    { href: '#projects', label: 'Work' },
     { href: '#experience', label: 'Experience' },
-    { href: '#skills', label: 'Skills' },
     { href: '#contact', label: 'Contact' },
   ];
 
@@ -40,90 +48,207 @@ const Navigation = () => {
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      <motion.nav
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? 'glass-effect shadow-lg'
-            : 'bg-transparent'
+            ? 'py-4 bg-background/80 backdrop-blur-xl border-b border-border/50'
+            : 'py-6 bg-transparent'
         }`}
       >
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center">
-              <img
-                src={logoSrc}
-                alt={siteSettings?.siteName || "Ka Logo"}
-                className="h-10 w-auto rounded-md"
-              />
-            </div>
+            {/* Logo / Name */}
+            <motion.button
+              onClick={() => scrollToSection('#home')}
+              className="relative group"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="font-display text-2xl font-semibold tracking-tight text-foreground">
+                {siteSettings?.siteName?.split(' ')[0] || 'Kurtik'}
+                <span className="text-primary">.</span>
+              </span>
+            </motion.button>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              {navItems.map((item) => (
-                <button
+            <div className="hidden md:flex items-center gap-12">
+              {navItems.map((item, index) => (
+                <motion.button
                   key={item.href}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-muted-foreground hover:text-foreground transition-colors duration-200 relative group"
+                  className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-300 group"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 * index }}
                 >
                   {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-accent transition-all duration-300 group-hover:w-full"></span>
-                </button>
+                  {/* Gold underline on hover */}
+                  <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gradient-to-r from-primary to-primary-light transition-all duration-300 group-hover:w-full" />
+                </motion.button>
               ))}
-              <Button
-                onClick={() => navigate('/admin/login')}
-                variant="outline"
-                size="sm"
-                className="ml-4 gap-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover:border-primary/40 hover:from-primary/20 hover:to-accent/20 transition-all duration-300"
+            </div>
+
+            {/* Desktop Right Side Buttons */}
+            <div className="hidden md:flex items-center gap-4">
+              {/* Admin Portal Link */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
               >
-                <Shield className="h-4 w-4" />
-                Admin Portal
-              </Button>
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors duration-300"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>Admin</span>
+                </Link>
+              </motion.div>
+
+              {/* CTA Button */}
+              <motion.button
+                onClick={() => scrollToSection('#contact')}
+                className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full border border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span>Let's Talk</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              </motion.button>
             </div>
 
             {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
+            <motion.button
+              className="md:hidden relative z-50 w-10 h-10 flex items-center justify-center"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              whileTap={{ scale: 0.95 }}
             >
-              {isMobileMenuOpen ? <X /> : <Menu />}
-            </Button>
+              <AnimatePresence mode="wait">
+                {isMobileMenuOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X className="w-6 h-6 text-foreground" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Menu className="w-6 h-6 text-foreground" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.button>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          <div className="fixed inset-0 bg-background/80 backdrop-blur-lg" />
-          <div className="fixed top-20 left-4 right-4 glass-effect rounded-lg p-6">
-            <div className="flex flex-col space-y-4">
-              {navItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => scrollToSection(item.href)}
-                  className="text-left py-2 text-lg text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  {item.label}
-                </button>
-              ))}
-              <Button
-                onClick={() => {
-                  navigate('/admin/login');
-                  setIsMobileMenuOpen(false);
-                }}
-                variant="outline"
-                className="w-full gap-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 hover:border-primary/40 hover:from-primary/20 hover:to-accent/20 transition-all duration-300 mt-4"
+      {/* Mobile Menu - Full Screen Overlay */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            className="fixed inset-0 z-40 md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Backdrop */}
+            <motion.div
+              className="absolute inset-0 bg-background"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            {/* Menu Content */}
+            <div className="relative h-full flex flex-col justify-center items-center px-8">
+              <nav className="flex flex-col items-center gap-8">
+                {navItems.map((item, index) => (
+                  <motion.button
+                    key={item.href}
+                    onClick={() => scrollToSection(item.href)}
+                    className="relative group"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{
+                      duration: 0.4,
+                      delay: 0.1 * index,
+                      ease: [0.4, 0, 0.2, 1]
+                    }}
+                  >
+                    <span className="font-display text-4xl md:text-5xl font-medium text-foreground hover:text-primary transition-colors duration-300">
+                      {item.label}
+                    </span>
+                    {/* Underline effect */}
+                    <motion.span
+                      className="absolute -bottom-2 left-0 h-[2px] bg-primary"
+                      initial={{ width: 0 }}
+                      whileHover={{ width: '100%' }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.button>
+                ))}
+              </nav>
+
+              {/* Contact CTA */}
+              <motion.button
+                onClick={() => scrollToSection('#contact')}
+                className="mt-12 px-8 py-4 rounded-full bg-gradient-to-r from-primary to-primary-light text-primary-foreground font-medium text-lg"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <Shield className="h-4 w-4" />
-                Admin Portal
-              </Button>
+                Get in Touch
+              </motion.button>
+
+              {/* Admin Portal Link - Mobile */}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.4, delay: 0.6 }}
+              >
+                <Link
+                  to="/admin"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="mt-6 flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span className="text-sm font-medium">Admin Portal</span>
+                </Link>
+              </motion.div>
+
+              {/* Decorative Elements */}
+              <motion.div
+                className="absolute bottom-12 left-8 text-muted-foreground text-sm font-mono"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+              >
+                Portfolio {new Date().getFullYear()}
+              </motion.div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };
