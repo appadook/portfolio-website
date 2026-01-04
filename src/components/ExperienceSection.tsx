@@ -1,10 +1,71 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { Briefcase, Calendar, MapPin, ArrowRight } from "lucide-react";
+import { Briefcase, Calendar, MapPin, ChevronRight, Sparkles, TrendingUp } from "lucide-react";
 import { useExperiences } from "@/hooks/useSanityData";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import AnimatedSection from "./AnimatedSection";
-import { useRef } from "react";
+import { useRef, useMemo, useState } from "react";
+import type { Experience } from "@/lib/sanity.types";
 
+// ===== TYPES =====
+interface ExperienceGroup {
+  id: string;
+  company: string;
+  logo?: string;
+  location: string;
+  experiences: Experience[];
+  side: 'left' | 'right';
+}
+
+// Group consecutive experiences by company into unified groups
+function createExperienceGroups(experiences: Experience[]): ExperienceGroup[] {
+  if (!experiences || experiences.length === 0) return [];
+
+  const groups: ExperienceGroup[] = [];
+  let currentGroup: Experience[] = [];
+  let currentCompany = '';
+
+  const normalizeCompany = (company: string) => company?.trim().toLowerCase();
+
+  experiences.forEach((exp, index) => {
+    const expCompany = normalizeCompany(exp.company);
+
+    if (index === 0) {
+      currentCompany = expCompany;
+      currentGroup = [exp];
+    } else if (expCompany === currentCompany) {
+      currentGroup.push(exp);
+    } else {
+      // Save previous group
+      groups.push({
+        id: currentGroup[0]._id,
+        company: currentGroup[0].company,
+        logo: currentGroup[0].logo,
+        location: currentGroup[0].location,
+        experiences: currentGroup,
+        side: (groups.length % 2 === 0 ? 'left' : 'right') as 'left' | 'right',
+      });
+      // Start new group
+      currentCompany = expCompany;
+      currentGroup = [exp];
+    }
+  });
+
+  // Don't forget the last group
+  if (currentGroup.length > 0) {
+    groups.push({
+      id: currentGroup[0]._id,
+      company: currentGroup[0].company,
+      logo: currentGroup[0].logo,
+      location: currentGroup[0].location,
+      experiences: currentGroup,
+      side: (groups.length % 2 === 0 ? 'left' : 'right') as 'left' | 'right',
+    });
+  }
+
+  return groups;
+}
+
+// ===== MAIN SECTION COMPONENT =====
 const ExperienceSection = () => {
   const { data: experiences, isLoading, error } = useExperiences();
   const { data: siteSettings } = useSiteSettings();
@@ -15,77 +76,129 @@ const ExperienceSection = () => {
     offset: ["start end", "end start"]
   });
 
-  const lineHeight = useTransform(scrollYProgress, [0, 0.5], ["0%", "100%"]);
-
-  // Use Sanity resume if available, fallback to public folder
+  const lineProgress = useTransform(scrollYProgress, [0.1, 0.6], [0, 1]);
   const resumeUrl = siteSettings?.resume?.asset?.url || '/Kurtik Resume.pdf';
+
+  const experienceGroups = useMemo(() => {
+    if (!experiences) return [];
+    return createExperienceGroups(experiences);
+  }, [experiences]);
 
   return (
     <div ref={sectionRef}>
-      <AnimatedSection id="experience" className="py-32 relative overflow-hidden">
-        {/* Subtle Background Elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-primary/3 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-primary/2 rounded-full blur-3xl" />
+      <AnimatedSection id="experience" className="py-24 md:py-32 relative overflow-hidden">
+        {/* ===== SUBTLE BACKGROUND ===== */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[800px]">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/[0.04] via-transparent to-transparent" />
+          </div>
+          <div
+            className="absolute inset-0 opacity-[0.008]"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, hsl(43 74% 49%) 1px, transparent 1px),
+                linear-gradient(to bottom, hsl(43 74% 49%) 1px, transparent 1px)
+              `,
+              backgroundSize: '100px 100px',
+            }}
+          />
         </div>
 
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
-          {/* Section Header */}
+          {/* ===== SECTION HEADER ===== */}
           <motion.div
-            className="mb-20"
-            initial={{ opacity: 0, y: 30 }}
+            className="mb-16 md:mb-24 text-center"
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             viewport={{ once: true }}
           >
-            {/* Pre-title */}
             <motion.div
-              className="flex items-center gap-4 mb-6"
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex items-center justify-center gap-4 mb-8"
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <span className="w-12 h-px bg-primary/50" />
-              <span className="text-sm font-mono text-primary uppercase tracking-widest">
-                Career Journey
-              </span>
+              <motion.span
+                className="w-16 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                viewport={{ once: true }}
+              />
+              <div className="relative">
+                <Sparkles className="w-5 h-5 text-primary" />
+                <motion.div
+                  className="absolute inset-0 blur-sm"
+                  animate={{ opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Sparkles className="w-5 h-5 text-primary" />
+                </motion.div>
+              </div>
+              <motion.span
+                className="w-16 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                viewport={{ once: true }}
+              />
             </motion.div>
 
-            {/* Main Title */}
-            <motion.h2
-              className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            <motion.span
+              className="inline-block text-xs font-mono text-primary/80 uppercase tracking-[0.3em] mb-4"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
             >
-              <span className="text-foreground">Professional </span>
+              Career Chronograph
+            </motion.span>
+
+            <motion.h2
+              className="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tight mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <span className="text-foreground">Professional</span>
+              <br />
               <span className="text-primary italic">Experience</span>
             </motion.h2>
 
-            {/* Description */}
             <motion.p
-              className="text-lg text-muted-foreground max-w-2xl leading-relaxed"
+              className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
               viewport={{ once: true }}
             >
-              Building innovative solutions across technology and finance.
+              Precision-crafted solutions across technology, finance, and research
             </motion.p>
           </motion.div>
 
           {/* Loading State */}
           {isLoading && (
             <div className="flex items-center justify-center py-20">
-              <motion.div
-                className="flex flex-col items-center gap-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                <p className="text-muted-foreground font-mono text-sm">Loading experiences...</p>
+              <motion.div className="relative" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <div className="w-20 h-20 rounded-full border border-primary/20 relative">
+                  <motion.div
+                    className="absolute inset-2 rounded-full border-t-2 border-primary"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                  />
+                  <motion.div
+                    className="absolute inset-4 rounded-full border-t border-primary/50"
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-2 h-2 rounded-full bg-primary" />
+                  </div>
+                </div>
+                <p className="text-muted-foreground font-mono text-xs mt-4 text-center tracking-wider">LOADING</p>
               </motion.div>
             </div>
           )}
@@ -93,30 +206,37 @@ const ExperienceSection = () => {
           {/* Error State */}
           {error && (
             <div className="text-center py-20">
-              <p className="text-muted-foreground">Failed to load experiences. Please try again later.</p>
+              <p className="text-muted-foreground">Failed to load experiences.</p>
             </div>
           )}
 
-          {/* Timeline */}
-          {experiences && experiences.length > 0 && (
+          {/* ===== TIMELINE ===== */}
+          {experienceGroups && experienceGroups.length > 0 && (
             <div className="max-w-6xl mx-auto relative">
-              {/* Vertical Timeline Line */}
-              <div className="absolute left-8 md:left-1/2 -translate-x-1/2 top-0 bottom-0 w-px z-10">
-                {/* Base line */}
-                <div className="absolute inset-0 bg-border/50" />
-                {/* Animated progress line */}
+              {/* Timeline Track - Desktop */}
+              <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px">
+                <div className="absolute inset-0 bg-border/40" />
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-b from-primary via-primary to-primary/50 origin-top"
-                  style={{ scaleY: lineHeight }}
+                  style={{ scaleY: lineProgress }}
                 />
               </div>
 
-              {/* Experience Cards */}
-              <div className="space-y-16 md:space-y-24">
-                {experiences.map((exp, index) => (
-                  <ExperienceCard
-                    key={exp._id}
-                    experience={exp}
+              {/* Mobile Timeline */}
+              <div className="md:hidden absolute left-6 top-0 bottom-0 w-px">
+                <div className="absolute inset-0 bg-border/30" />
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-b from-primary to-primary/40 origin-top"
+                  style={{ scaleY: lineProgress }}
+                />
+              </div>
+
+              {/* Experience Groups */}
+              <div className="flex flex-col">
+                {experienceGroups.map((group, index) => (
+                  <ExperienceGroupCard
+                    key={group.id}
+                    group={group}
                     index={index}
                   />
                 ))}
@@ -124,10 +244,10 @@ const ExperienceSection = () => {
             </div>
           )}
 
-          {/* Resume CTA */}
+          {/* ===== RESUME CTA ===== */}
           <motion.div
-            className="text-center mt-24"
-            initial={{ opacity: 0, y: 30 }}
+            className="text-center mt-20 md:mt-28"
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
@@ -135,15 +255,21 @@ const ExperienceSection = () => {
             <motion.a
               href={resumeUrl}
               download
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium relative overflow-hidden"
+              className="group relative inline-flex items-center gap-3 px-8 py-4 overflow-hidden"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {/* Shimmer effect */}
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-              <Briefcase className="w-5 h-5 relative z-10" />
-              <span className="relative z-10">Download Resume</span>
-              <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+              <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary to-primary/90 rounded-full" />
+              <div className="absolute inset-[1px] bg-gradient-to-r from-primary to-primary/80 rounded-full" />
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent rounded-full"
+                initial={{ x: '-100%' }}
+                whileHover={{ x: '100%' }}
+                transition={{ duration: 0.6 }}
+              />
+              <Briefcase className="w-5 h-5 text-primary-foreground relative z-10" />
+              <span className="text-primary-foreground font-medium relative z-10">Download Resume</span>
+              <ChevronRight className="w-4 h-4 text-primary-foreground relative z-10 group-hover:translate-x-1 transition-transform" />
             </motion.a>
           </motion.div>
         </div>
@@ -152,154 +278,329 @@ const ExperienceSection = () => {
   );
 };
 
-// Individual Experience Card Component
-const ExperienceCard = ({ experience: exp, index }) => {
+// ===== EXPERIENCE GROUP CARD =====
+const ExperienceGroupCard = ({
+  group,
+  index,
+}: {
+  group: ExperienceGroup;
+  index: number;
+}) => {
   const cardRef = useRef(null);
-  const isInView = useInView(cardRef, { once: true, margin: "-100px" });
-  const isLeft = index % 2 === 0;
+  const isInView = useInView(cardRef, { once: true, margin: "-50px" });
+  const isLeft = group.side === 'left';
+  const isGrouped = group.experiences.length > 1;
 
   return (
-    <div ref={cardRef} className="flex items-center">
-      {/* MOBILE: Bubble column */}
-      <div className="md:hidden flex-shrink-0 w-16 flex justify-center relative z-30">
-        <TimelineBubble isInView={isInView} />
+    <div ref={cardRef} className="mb-12 md:mb-20">
+      {/* ===== DESKTOP LAYOUT ===== */}
+      <div className="hidden md:flex items-start">
+        {/* Left Column */}
+        <div className="flex-1 flex justify-end pr-12">
+          {isLeft && (
+            <GroupCardContent
+              group={group}
+              isInView={isInView}
+              isLeft={true}
+              index={index}
+            />
+          )}
+        </div>
+
+        {/* Center Timeline Node */}
+        <div className="flex-shrink-0 w-20 flex flex-col items-center relative z-20">
+          <motion.div
+            className="w-5 h-5 relative"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.1, type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary via-primary to-primary/70 p-[2px]">
+              <div className="w-full h-full rounded-full bg-background" />
+            </div>
+            <motion.div
+              className="absolute inset-[5px] rounded-full bg-primary"
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute -inset-2 rounded-full bg-primary/30 blur-md"
+              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </motion.div>
+        </div>
+
+        {/* Right Column */}
+        <div className="flex-1 flex justify-start pl-12">
+          {!isLeft && (
+            <GroupCardContent
+              group={group}
+              isInView={isInView}
+              isLeft={false}
+              index={index}
+            />
+          )}
+        </div>
       </div>
 
-      {/* DESKTOP: Three-column layout */}
-      <div className="hidden md:flex flex-1 items-center">
-        {/* Left side */}
-        <div className="flex-1 pr-12">
-          {isLeft && <ExperienceCardContent exp={exp} isInView={isInView} isLeft={isLeft} />}
+      {/* ===== MOBILE LAYOUT ===== */}
+      <div className="md:hidden flex items-start">
+        <div className="flex-shrink-0 w-12 flex flex-col items-center relative z-20">
+          <motion.div
+            className="w-4 h-4 relative"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-primary/70 p-[2px]">
+              <div className="w-full h-full rounded-full bg-background" />
+            </div>
+            <div className="absolute inset-[3px] rounded-full bg-primary" />
+          </motion.div>
         </div>
 
-        {/* Center bubble */}
-        <div className="flex-shrink-0 w-16 flex justify-center relative z-30">
-          <TimelineBubble isInView={isInView} />
+        <div className="flex-1 pl-4">
+          <GroupCardContent
+            group={group}
+            isInView={isInView}
+            isLeft={false}
+            index={index}
+            isMobile
+          />
         </div>
-
-        {/* Right side */}
-        <div className="flex-1 pl-12">
-          {!isLeft && <ExperienceCardContent exp={exp} isInView={isInView} isLeft={isLeft} />}
-        </div>
-      </div>
-
-      {/* MOBILE: Card content */}
-      <div className="md:hidden flex-1 pl-4">
-        <ExperienceCardContent exp={exp} isInView={isInView} isLeft={false} />
       </div>
     </div>
   );
 };
 
-// Timeline Bubble
-const TimelineBubble = ({ isInView }) => (
-  <motion.div
-    className="w-4 h-4 relative"
-    initial={{ scale: 0 }}
-    animate={isInView ? { scale: 1 } : { scale: 0 }}
-    transition={{
-      duration: 0.5,
-      delay: 0.2,
-      type: "spring",
-      stiffness: 200,
-    }}
-  >
-    {/* Outer ring */}
-    <div className="absolute inset-0 rounded-full border-2 border-primary bg-background" />
-    {/* Inner dot */}
-    <motion.div
-      className="absolute inset-1 rounded-full bg-primary"
-      initial={{ scale: 0 }}
-      animate={isInView ? { scale: 1 } : { scale: 0 }}
-      transition={{ duration: 0.3, delay: 0.4 }}
-    />
-    {/* Glow effect */}
-    <div className="absolute inset-0 rounded-full bg-primary/30 blur-md -z-10" />
-  </motion.div>
-);
+// ===== GROUP CARD CONTENT =====
+const GroupCardContent = ({
+  group,
+  isInView,
+  isLeft,
+  index,
+  isMobile = false,
+}: {
+  group: ExperienceGroup;
+  isInView: boolean;
+  isLeft: boolean;
+  index: number;
+  isMobile?: boolean;
+}) => {
+  const isGrouped = group.experiences.length > 1;
 
-// Card Content Component
-const ExperienceCardContent = ({ exp, isInView, isLeft }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 40, x: isLeft ? -20 : 20 }}
-    animate={isInView ? { opacity: 1, y: 0, x: 0 } : { opacity: 0, y: 40, x: isLeft ? -20 : 20 }}
-    transition={{
-      duration: 0.7,
-      delay: 0.3,
-      ease: [0.4, 0, 0.2, 1]
-    }}
-  >
+  return (
     <motion.div
-      className="card-luxe p-6 lg:p-8 group"
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.3 }}
+      className={`w-full ${isMobile ? 'max-w-full' : 'max-w-2xl'}`}
+      initial={{ opacity: 0, y: 30, x: isLeft ? -20 : 20 }}
+      animate={isInView ? { opacity: 1, y: 0, x: 0 } : { opacity: 0, y: 30, x: isLeft ? -20 : 20 }}
+      transition={{ duration: 0.7, delay: 0.1 + index * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      {/* Company Logo */}
-      <motion.div
-        className="w-14 h-14 rounded-xl bg-background-subtle border border-border/50 p-2.5 mb-5 flex items-center justify-center overflow-hidden"
-        initial={{ scale: 0 }}
-        animate={isInView ? { scale: 1 } : { scale: 0 }}
-        transition={{ duration: 0.5, delay: 0.5, type: "spring" }}
-      >
-        {exp.logo ? (
-          <img
-            src={exp.logo}
-            alt={`${exp.company} logo`}
-            className="w-full h-full object-contain"
-          />
-        ) : (
-          <Briefcase className="w-6 h-6 text-primary" />
-        )}
-      </motion.div>
-
-      {/* Role & Company */}
-      <div className="mb-4">
-        <h3 className="font-display text-xl lg:text-2xl font-semibold text-foreground group-hover:text-primary transition-colors duration-300 mb-1">
-          {exp.role}
-        </h3>
-        <h4 className="text-primary font-medium">
-          {exp.company}
-        </h4>
-      </div>
-
-      {/* Meta Info */}
-      <div className="flex flex-wrap gap-3 mb-5">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="w-4 h-4 text-primary/70" />
-          <span className="font-mono text-xs">{exp.duration}</span>
+      <div className="relative rounded-2xl bg-card border border-border/50 overflow-hidden transition-all duration-300 hover:border-primary/20 hover:shadow-xl hover:shadow-primary/[0.03]">
+        {/* Subtle corner accents */}
+        <div className="absolute top-0 left-0 w-12 h-12 overflow-hidden">
+          <div className="absolute top-0 left-0 w-[1px] h-8 bg-gradient-to-b from-primary/40 to-transparent" />
+          <div className="absolute top-0 left-0 w-8 h-[1px] bg-gradient-to-r from-primary/40 to-transparent" />
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="w-4 h-4 text-primary/70" />
-          <span className="font-mono text-xs">{exp.location}</span>
+        <div className="absolute top-0 right-0 w-12 h-12 overflow-hidden">
+          <div className="absolute top-0 right-0 w-[1px] h-8 bg-gradient-to-b from-primary/40 to-transparent" />
+          <div className="absolute top-0 right-0 w-8 h-[1px] bg-gradient-to-l from-primary/40 to-transparent" />
         </div>
-      </div>
 
-      {/* Description */}
-      <p className="text-muted-foreground text-sm leading-relaxed mb-5">
-        {exp.description}
-      </p>
+        {/* ===== COMPANY HEADER ===== */}
+        <div className="p-5 md:p-6 border-b border-border/30">
+          <div className="flex items-center gap-4">
+            {/* Logo */}
+            <div className="relative flex-shrink-0">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-background border border-border/50 p-2.5 flex items-center justify-center overflow-hidden">
+                {group.logo ? (
+                  <img
+                    src={group.logo}
+                    alt={`${group.company} logo`}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <Briefcase className="w-6 h-6 text-primary" />
+                )}
+              </div>
+              {/* Subtle glow behind logo */}
+              <div className="absolute inset-0 rounded-xl bg-primary/10 blur-xl -z-10" />
+            </div>
 
-      {/* Technologies */}
-      <div className="flex flex-wrap gap-2">
-        {exp.technologies.slice(0, 5).map((tech, techIndex) => (
-          <motion.span
-            key={tech}
-            className="px-2.5 py-1 text-xs font-mono text-muted-foreground bg-background-subtle rounded-md border border-border/50 hover:border-primary/30 hover:text-primary transition-colors duration-300"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.3, delay: 0.7 + techIndex * 0.05 }}
-          >
-            {tech}
-          </motion.span>
-        ))}
-        {exp.technologies.length > 5 && (
-          <span className="px-2.5 py-1 text-xs font-mono text-primary bg-primary/10 rounded-md">
-            +{exp.technologies.length - 5}
-          </span>
-        )}
+            {/* Company Info */}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-display text-lg md:text-xl font-semibold text-foreground mb-1">
+                {group.company}
+              </h3>
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <MapPin className="w-3.5 h-3.5 text-primary/50" />
+                <span className="text-sm">{group.location}</span>
+              </div>
+            </div>
+
+            {/* Career Progression Badge (for grouped) */}
+            {isGrouped && (
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                <TrendingUp className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-medium text-primary">
+                  {group.experiences.length} Roles
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ===== ROLES SECTION ===== */}
+        <div className="relative">
+          {/* Inner timeline for grouped experiences */}
+          {isGrouped && (
+            <div className="absolute left-7 md:left-8 top-6 bottom-6 w-px bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
+          )}
+
+          {/* Role Cards */}
+          <div className={`${isGrouped ? 'divide-y divide-border/20' : ''}`}>
+            {group.experiences.map((exp, expIndex) => (
+              <RoleCard
+                key={exp._id}
+                experience={exp}
+                isFirst={expIndex === 0}
+                isLast={expIndex === group.experiences.length - 1}
+                isGrouped={isGrouped}
+                expIndex={expIndex}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </motion.div>
-  </motion.div>
-);
+  );
+};
+
+// ===== ROLE CARD (Individual role within a group) =====
+const RoleCard = ({
+  experience: exp,
+  isFirst,
+  isLast,
+  isGrouped,
+  expIndex,
+}: {
+  experience: Experience;
+  isFirst: boolean;
+  isLast: boolean;
+  isGrouped: boolean;
+  expIndex: number;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div
+      className={`
+        relative p-5 md:p-6
+        ${isGrouped ? 'pl-12 md:pl-14' : ''}
+        transition-colors duration-200
+        hover:bg-card-hover/30
+        cursor-pointer
+      `}
+      onClick={() => setIsExpanded(!isExpanded)}
+    >
+      {/* Role node on inner timeline (for grouped) */}
+      {isGrouped && (
+        <div className="absolute left-5 md:left-6 top-7 md:top-8">
+          <div className={`
+            relative rounded-full
+            ${isFirst
+              ? 'w-4 h-4 bg-primary shadow-lg shadow-primary/30'
+              : 'w-3 h-3 bg-primary/50 border border-primary/30'
+            }
+          `}>
+            {isFirst && (
+              <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-30" />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Role Content */}
+      <div className="space-y-3">
+        {/* Role Header */}
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            {/* Role Title */}
+            <div className="flex items-center gap-2 mb-1">
+              <h4 className={`
+                font-display font-semibold leading-tight
+                ${isFirst && isGrouped ? 'text-base md:text-lg text-foreground' : 'text-sm md:text-base text-foreground/90'}
+              `}>
+                {exp.role}
+              </h4>
+              {isFirst && isGrouped && (
+                <span className="px-2 py-0.5 text-[10px] font-mono font-medium text-primary bg-primary/10 rounded-full border border-primary/20">
+                  Current
+                </span>
+              )}
+            </div>
+
+            {/* Duration */}
+            <div className="flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-primary/50" />
+              <span className="text-xs font-mono text-muted-foreground">{exp.duration}</span>
+            </div>
+          </div>
+
+          {/* Expand indicator */}
+          <div className={`
+            flex-shrink-0 w-6 h-6 rounded-full border border-border/50
+            flex items-center justify-center
+            transition-all duration-200
+            ${isExpanded ? 'rotate-90 border-primary/50 bg-primary/10' : ''}
+          `}>
+            <ChevronRight className={`w-3.5 h-3.5 ${isExpanded ? 'text-primary' : 'text-muted-foreground'}`} />
+          </div>
+        </div>
+
+        {/* Tech Tags */}
+        <div className="flex flex-wrap gap-1.5">
+          {exp.technologies.slice(0, isExpanded ? undefined : 4).map((tech) => (
+            <span
+              key={tech}
+              className="px-2 py-0.5 text-[10px] font-mono text-muted-foreground bg-background rounded border border-border/50 transition-colors hover:border-primary/30 hover:text-primary/80"
+            >
+              {tech}
+            </span>
+          ))}
+          {!isExpanded && exp.technologies.length > 4 && (
+            <span className="px-2 py-0.5 text-[10px] font-mono text-primary bg-primary/10 rounded">
+              +{exp.technologies.length - 4}
+            </span>
+          )}
+        </div>
+
+        {/* Expandable Description */}
+        <div
+          className={`
+            grid transition-all duration-300 ease-out
+            ${isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}
+          `}
+        >
+          <div className="overflow-hidden">
+            <div className="pt-3 border-t border-border/20">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {exp.description}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Collapse hint when not expanded */}
+        {!isExpanded && (
+          <p className="text-[10px] font-mono text-muted-foreground/50 uppercase tracking-wider">
+            Click to expand
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default ExperienceSection;
