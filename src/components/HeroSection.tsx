@@ -50,7 +50,7 @@ const HeroSection = () => {
   return (
     <motion.section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-0"
       style={{ opacity }}
     >
       {/* Subtle Background Elements */}
@@ -117,7 +117,7 @@ const HeroSection = () => {
           >
             <div className="relative inline-block">
               <motion.div
-                className="w-28 h-28 md:w-36 md:h-36 rounded-full p-[2px] bg-gradient-to-br from-primary to-primary-light"
+                className="w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-full p-[2px] bg-gradient-to-br from-primary to-primary-light"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               >
@@ -140,13 +140,13 @@ const HeroSection = () => {
 
           {/* Pre-title */}
           <motion.div
-            className="mb-6"
+            className="mb-4 sm:mb-6"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <span className="inline-flex items-center gap-3 text-sm font-mono text-muted-foreground">
-              <span className="w-12 h-px bg-primary/50" />
+            <span className="inline-flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-mono text-muted-foreground">
+              <span className="w-8 sm:w-12 h-px bg-primary/50" />
               Available for opportunities
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
@@ -156,9 +156,9 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Main Heading - Large Serif Typography */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <motion.h1
-              className="font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.85]"
+              className="font-display text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold tracking-tighter leading-[0.9] sm:leading-[0.85]"
               initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
@@ -175,14 +175,14 @@ const HeroSection = () => {
 
           {/* Typing Subtitle */}
           <motion.div
-            className="mb-12"
+            className="mb-8 sm:mb-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
-            <div className="flex items-center gap-4">
-              <span className="w-8 h-px bg-primary" />
-              <span className="font-mono text-lg md:text-xl text-primary">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <span className="w-4 sm:w-8 h-px bg-primary" />
+              <span className="font-mono text-base sm:text-lg md:text-xl text-primary">
                 {displayedText}
                 <motion.span
                   className="inline-block w-0.5 h-5 bg-primary ml-1"
@@ -195,7 +195,7 @@ const HeroSection = () => {
 
           {/* Description */}
           <motion.p
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed mb-12"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed mb-8 sm:mb-12"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1 }}
@@ -206,14 +206,14 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <motion.div
-            className="flex flex-wrap gap-4 mb-16"
+            className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mb-12 sm:mb-16"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.2 }}
           >
             <motion.button
               onClick={scrollToProjects}
-              className="group relative px-8 py-4 bg-primary text-primary-foreground font-medium rounded-full overflow-hidden"
+              className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-primary text-primary-foreground font-medium rounded-full overflow-hidden text-sm sm:text-base"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -227,7 +227,7 @@ const HeroSection = () => {
 
             <motion.button
               onClick={scrollToContact}
-              className="px-8 py-4 font-medium rounded-full border border-border hover:border-primary/50 text-foreground hover:text-primary transition-all duration-300"
+              className="px-6 sm:px-8 py-3 sm:py-4 font-medium rounded-full border border-border hover:border-primary/50 text-foreground hover:text-primary transition-all duration-300 text-sm sm:text-base"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
@@ -261,9 +261,9 @@ const HeroSection = () => {
         </div>
       </motion.div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - hide on very small screens */}
       <motion.div
-        className="absolute bottom-12 left-1/2 -translate-x-1/2"
+        className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 hidden sm:block"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 2 }}

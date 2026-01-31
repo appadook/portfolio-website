@@ -1,10 +1,12 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { Briefcase, Calendar, MapPin, ChevronRight, Sparkles, TrendingUp } from "lucide-react";
+import { Briefcase, Calendar, MapPin, ChevronRight, Sparkles, TrendingUp, ChevronLeft } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
 import { useExperiences } from "@/hooks/useSanityData";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 import AnimatedSection from "./AnimatedSection";
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useCallback, useEffect } from "react";
 import type { Experience } from "@/lib/sanity.types";
+import { useBreakpoint } from "@/hooks/use-mobile";
 
 // ===== TYPES =====
 interface ExperienceGroup {
@@ -65,11 +67,275 @@ function createExperienceGroups(experiences: Experience[]): ExperienceGroup[] {
   return groups;
 }
 
+// ===== MOBILE EXPERIENCE CAROUSEL =====
+const MobileExperienceCarousel = ({ 
+  groups, 
+  resumeUrl 
+}: { 
+  groups: ExperienceGroup[];
+  resumeUrl: string;
+}) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "center",
+    containScroll: false,
+    dragFree: false,
+    loop: false,
+  });
+  
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  
+  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
+  const scrollTo = useCallback((index: number) => emblaApi?.scrollTo(index), [emblaApi]);
+  
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+    setCanScrollPrev(emblaApi.canScrollPrev());
+    setCanScrollNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+  
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  return (
+    <div className="relative">
+      {/* Horizontal Timeline Indicator */}
+      <div className="flex items-center justify-center gap-1 mb-6 px-4">
+        <div className="flex items-center gap-1">
+          {groups.map((group, i) => (
+            <button
+              key={group.id}
+              onClick={() => scrollTo(i)}
+              className="flex items-center gap-1 group"
+            >
+              {/* Timeline dot */}
+              <motion.div
+                className={`rounded-full transition-all duration-300 ${
+                  i === selectedIndex 
+                    ? 'w-3 h-3 bg-primary shadow-lg shadow-primary/30' 
+                    : 'w-2 h-2 bg-border hover:bg-primary/50'
+                }`}
+                animate={{
+                  scale: i === selectedIndex ? 1.2 : 1,
+                }}
+                transition={{ duration: 0.2 }}
+              />
+              {/* Timeline connector line */}
+              {i < groups.length - 1 && (
+                <div className={`w-6 h-0.5 transition-colors duration-300 ${
+                  i < selectedIndex ? 'bg-primary' : 'bg-border/50'
+                }`} />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      {/* Carousel Container */}
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex gap-4 px-4">
+          {groups.map((group, index) => {
+            // Calculate distance from center for dock effect
+            const distance = Math.abs(index - selectedIndex);
+            
+            return (
+              <motion.div
+                key={group.id}
+                className="flex-shrink-0 w-[85%] min-w-0"
+                animate={{
+                  scale: distance === 0 ? 1.05 : distance === 1 ? 0.95 : 0.9,
+                  opacity: distance === 0 ? 1 : distance === 1 ? 0.8 : 0.6,
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <MobileExperienceCard group={group} isActive={index === selectedIndex} />
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+      
+      {/* Navigation Buttons */}
+      <div className="flex justify-center gap-4 mt-6">
+        <motion.button
+          onClick={scrollPrev}
+          disabled={!canScrollPrev}
+          className={`p-2.5 rounded-full border transition-all duration-200 ${
+            canScrollPrev 
+              ? 'border-primary/50 text-primary hover:bg-primary/10' 
+              : 'border-border/30 text-muted-foreground/30'
+          }`}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </motion.button>
+        <motion.button
+          onClick={scrollNext}
+          disabled={!canScrollNext}
+          className={`p-2.5 rounded-full border transition-all duration-200 ${
+            canScrollNext 
+              ? 'border-primary/50 text-primary hover:bg-primary/10' 
+              : 'border-border/30 text-muted-foreground/30'
+          }`}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronRight className="w-5 h-5" />
+        </motion.button>
+      </div>
+      
+      {/* Position indicator */}
+      <div className="text-center mt-4">
+        <span className="text-xs text-muted-foreground font-mono">
+          {selectedIndex + 1} / {groups.length}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+// ===== MOBILE EXPERIENCE CARD =====
+const MobileExperienceCard = ({ 
+  group, 
+  isActive 
+}: { 
+  group: ExperienceGroup;
+  isActive: boolean;
+}) => {
+  const [expandedRoleId, setExpandedRoleId] = useState<string | null>(null);
+  const isGrouped = group.experiences.length > 1;
+  
+  return (
+    <div className={`rounded-2xl bg-card border transition-all duration-300 overflow-hidden ${
+      isActive ? 'border-primary/30 shadow-lg shadow-primary/5' : 'border-border/50'
+    }`}>
+      {/* Company Header */}
+      <div className="p-4 border-b border-border/30">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-background border border-border/50 p-2 flex items-center justify-center overflow-hidden flex-shrink-0">
+            {group.logo ? (
+              <img
+                src={group.logo}
+                alt={`${group.company} logo`}
+                className="w-full h-full object-contain"
+              />
+            ) : (
+              <Briefcase className="w-5 h-5 text-primary" />
+            )}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-display text-base font-semibold text-foreground truncate">
+              {group.company}
+            </h3>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <MapPin className="w-3 h-3 text-primary/50 flex-shrink-0" />
+              <span className="text-xs truncate">{group.location}</span>
+            </div>
+          </div>
+          {isGrouped && (
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-primary/10 border border-primary/20 flex-shrink-0">
+              <TrendingUp className="w-3 h-3 text-primary" />
+              <span className="text-[10px] font-medium text-primary">
+                {group.experiences.length}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+      
+      {/* Roles */}
+      <div className="max-h-[280px] overflow-y-auto">
+        {group.experiences.map((exp, expIndex) => {
+          const isExpanded = expandedRoleId === exp._id;
+          const isFirst = expIndex === 0;
+          
+          return (
+            <div
+              key={exp._id}
+              className={`p-4 transition-colors duration-200 cursor-pointer ${
+                expIndex > 0 ? 'border-t border-border/20' : ''
+              } ${isExpanded ? 'bg-card-hover/30' : ''}`}
+              onClick={() => setExpandedRoleId(isExpanded ? null : exp._id)}
+            >
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className={`font-semibold leading-tight truncate ${
+                      isFirst && isGrouped ? 'text-sm text-foreground' : 'text-xs text-foreground/90'
+                    }`}>
+                      {exp.role}
+                    </h4>
+                    {isFirst && isGrouped && (
+                      <span className="px-1.5 py-0.5 text-[8px] font-mono font-medium text-primary bg-primary/10 rounded-full border border-primary/20 flex-shrink-0">
+                        Current
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="w-3 h-3 text-primary/50 flex-shrink-0" />
+                    <span className="text-[10px] font-mono text-muted-foreground">{exp.duration}</span>
+                  </div>
+                </div>
+                <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
+                  isExpanded ? 'rotate-90 border-primary/50 bg-primary/10' : 'border-border/50'
+                }`}>
+                  <ChevronRight className={`w-3 h-3 ${isExpanded ? 'text-primary' : 'text-muted-foreground'}`} />
+                </div>
+              </div>
+              
+              {/* Tech tags - always visible but fewer on mobile */}
+              <div className="flex flex-wrap gap-1 mb-2">
+                {exp.technologies.slice(0, isExpanded ? 6 : 3).map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-1.5 py-0.5 text-[9px] font-mono text-muted-foreground bg-background rounded border border-border/50"
+                  >
+                    {tech}
+                  </span>
+                ))}
+                {!isExpanded && exp.technologies.length > 3 && (
+                  <span className="px-1.5 py-0.5 text-[9px] font-mono text-primary bg-primary/10 rounded">
+                    +{exp.technologies.length - 3}
+                  </span>
+                )}
+              </div>
+              
+              {/* Expandable description */}
+              <div className={`grid transition-all duration-300 ease-out ${
+                isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+              }`}>
+                <div className="overflow-hidden">
+                  <div className="pt-2 border-t border-border/20">
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {exp.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 // ===== MAIN SECTION COMPONENT =====
 const ExperienceSection = () => {
   const { data: experiences, isLoading, error } = useExperiences();
   const { data: siteSettings } = useSiteSettings();
   const sectionRef = useRef(null);
+  const { isSmall } = useBreakpoint();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -86,7 +352,7 @@ const ExperienceSection = () => {
 
   return (
     <div ref={sectionRef}>
-      <AnimatedSection id="experience" className="py-24 md:py-32 relative overflow-hidden">
+      <AnimatedSection id="experience" className="py-16 sm:py-24 md:py-32 relative overflow-hidden">
         {/* ===== SUBTLE BACKGROUND ===== */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[800px]">
@@ -104,10 +370,10 @@ const ExperienceSection = () => {
           />
         </div>
 
-        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* ===== SECTION HEADER ===== */}
           <motion.div
-            className="mb-16 md:mb-24 text-center"
+            className="mb-12 sm:mb-16 md:mb-24 text-center"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
@@ -157,7 +423,7 @@ const ExperienceSection = () => {
             </motion.span>
 
             <motion.h2
-              className="font-display text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tight mb-6"
+              className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-semibold tracking-tight mb-4 sm:mb-6"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
@@ -212,36 +478,44 @@ const ExperienceSection = () => {
 
           {/* ===== TIMELINE ===== */}
           {experienceGroups && experienceGroups.length > 0 && (
-            <div className="max-w-6xl mx-auto relative">
-              {/* Timeline Track - Desktop */}
-              <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px">
-                <div className="absolute inset-0 bg-border/40" />
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-b from-primary via-primary to-primary/50 origin-top"
-                  style={{ scaleY: lineProgress }}
-                />
-              </div>
+            <>
+              {/* Mobile: Horizontal Carousel with Dock Effect */}
+              {isSmall ? (
+                <MobileExperienceCarousel groups={experienceGroups} resumeUrl={resumeUrl} />
+              ) : (
+                /* Desktop: Vertical Timeline */
+                <div className="max-w-6xl mx-auto relative">
+                  {/* Timeline Track - Desktop */}
+                  <div className="hidden md:block absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px">
+                    <div className="absolute inset-0 bg-border/40" />
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-b from-primary via-primary to-primary/50 origin-top"
+                      style={{ scaleY: lineProgress }}
+                    />
+                  </div>
 
-              {/* Mobile Timeline */}
-              <div className="md:hidden absolute left-6 top-0 bottom-0 w-px">
-                <div className="absolute inset-0 bg-border/30" />
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-b from-primary to-primary/40 origin-top"
-                  style={{ scaleY: lineProgress }}
-                />
-              </div>
+                  {/* Tablet Timeline (md breakpoint) */}
+                  <div className="md:hidden absolute left-6 top-0 bottom-0 w-px">
+                    <div className="absolute inset-0 bg-border/30" />
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-b from-primary to-primary/40 origin-top"
+                      style={{ scaleY: lineProgress }}
+                    />
+                  </div>
 
-              {/* Experience Groups */}
-              <div className="flex flex-col">
-                {experienceGroups.map((group, index) => (
-                  <ExperienceGroupCard
-                    key={group.id}
-                    group={group}
-                    index={index}
-                  />
-                ))}
-              </div>
-            </div>
+                  {/* Experience Groups */}
+                  <div className="flex flex-col">
+                    {experienceGroups.map((group, index) => (
+                      <ExperienceGroupCard
+                        key={group.id}
+                        group={group}
+                        index={index}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {/* ===== RESUME CTA ===== */}
