@@ -205,6 +205,14 @@ const ProjectsSection = () => {
                             className="card-luxe h-full cursor-pointer group overflow-hidden"
                             onClick={() => openProjectModal(project)}
                             whileTap={{ scale: 0.98 }}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                              if (e.code === "Enter" || e.code === "Space") {
+                                if (e.code === "Space") e.preventDefault();
+                                openProjectModal(project);
+                              }
+                            }}
                           >
                             {/* Project Image */}
                             <div className="relative h-28 overflow-hidden">
@@ -332,6 +340,14 @@ const ProjectsSection = () => {
                         onClick={() => openProjectModal(project)}
                         whileHover={{ y: -8 }}
                         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.code === "Enter" || e.code === "Space") {
+                            if (e.code === "Space") e.preventDefault();
+                            openProjectModal(project);
+                          }
+                        }}
                       >
                         {/* Project Image */}
                         <div className="relative h-36 overflow-hidden">
