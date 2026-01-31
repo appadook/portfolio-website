@@ -76,14 +76,14 @@ const ContactSection = () => {
   ];
 
   return (
-    <AnimatedSection id="contact" className="py-32 relative overflow-hidden">
+    <AnimatedSection id="contact" className="py-20 md:py-32 relative overflow-hidden">
       {/* Subtle Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary/2 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           className="mb-16"
@@ -108,7 +108,7 @@ const ContactSection = () => {
 
           {/* Main Title */}
           <motion.h2
-            className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4 sm:mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -120,7 +120,7 @@ const ContactSection = () => {
 
           {/* Description */}
           <motion.p
-            className="text-lg text-muted-foreground max-w-2xl leading-relaxed"
+            className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -130,7 +130,7 @@ const ContactSection = () => {
           </motion.p>
         </motion.div>
 
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Contact Form - Takes more space */}
           <motion.div
             className="lg:col-span-3"
@@ -139,8 +139,8 @@ const ContactSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <div className="card-luxe p-8">
-              <h3 className="font-display text-2xl font-semibold text-foreground mb-6">
+            <div className="card-luxe p-6 sm:p-8">
+              <h3 className="font-display text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6">
                 Send a Message
               </h3>
 

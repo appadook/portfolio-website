@@ -48,8 +48,8 @@ const AboutSection = () => {
   // Loading state
   if (isLoading) {
     return (
-      <AnimatedSection id="about" className="py-32 relative">
-        <div className="container mx-auto px-6 lg:px-8">
+      <AnimatedSection id="about" className="py-20 md:py-32 relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center min-h-[400px]">
             <motion.div
               className="flex flex-col items-center gap-4"
@@ -75,7 +75,7 @@ const AboutSection = () => {
     return (
       <motion.div
         key={item._id}
-        className="embla__slide flex-shrink-0 w-[300px] sm:w-[320px] md:w-[340px]"
+        className="embla__slide flex-shrink-0 w-[280px] sm:w-[300px] md:w-[340px]"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{
           opacity: 1,
@@ -93,7 +93,7 @@ const AboutSection = () => {
           whileHover={{ y: -8 }}
           transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         >
-          <div className="card-luxe h-full flex flex-col min-h-[320px] p-6 group">
+          <div className="card-luxe h-full flex flex-col min-h-[280px] sm:min-h-[320px] p-4 sm:p-6 group">
             {/* Optional Image */}
             {item.image && (
               <motion.div
@@ -214,14 +214,14 @@ const AboutSection = () => {
   };
 
   return (
-    <AnimatedSection id="about" className="py-32 relative overflow-hidden">
+    <AnimatedSection id="about" className="py-20 md:py-32 relative overflow-hidden">
       {/* Subtle Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-primary/3 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-primary/2 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           className="mb-16"
@@ -246,7 +246,7 @@ const AboutSection = () => {
 
           {/* Main Title */}
           <motion.h2
-            className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4 sm:mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -258,7 +258,7 @@ const AboutSection = () => {
 
           {/* Description */}
           <motion.p
-            className="text-lg text-muted-foreground max-w-2xl leading-relaxed"
+            className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -269,9 +269,9 @@ const AboutSection = () => {
           </motion.p>
         </motion.div>
 
-        {/* Category Filter */}
+        {/* Category Filter - horizontally scrollable on mobile */}
         <motion.div
-          className="flex flex-wrap gap-3 mb-10"
+          className="flex gap-2 sm:gap-3 mb-8 sm:mb-10 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap scrollbar-hide"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -279,7 +279,7 @@ const AboutSection = () => {
         >
           <motion.button
             onClick={() => setSelectedCategory("all")}
-            className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+            className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 whitespace-nowrap flex-shrink-0 ${
               selectedCategory === "all"
                 ? "bg-primary text-primary-foreground"
                 : "border border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"
@@ -295,7 +295,7 @@ const AboutSection = () => {
               <motion.button
                 key={category._id}
                 onClick={() => setSelectedCategory(category.name)}
-                className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                className={`px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 flex items-center gap-1.5 sm:gap-2 whitespace-nowrap flex-shrink-0 ${
                   selectedCategory === category.name
                     ? "bg-primary text-primary-foreground"
                     : "border border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"

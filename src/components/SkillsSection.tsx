@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Code2 } from 'lucide-react';
 import { useProgrammingLanguages } from '@/hooks/useSanityData';
 import AnimatedSection from './AnimatedSection';
+import { useBreakpoint } from '@/hooks/use-mobile';
 
 // Icon mapping for programming languages
 const languageIcons: Record<string, string> = {
@@ -41,16 +42,17 @@ const getLevelWidth = (level: string) => {
 
 const SkillsSection = () => {
   const { data: programmingLanguages, isLoading, error } = useProgrammingLanguages();
+  const { isSmall } = useBreakpoint();
 
   return (
-    <AnimatedSection id="skills" className="py-32 relative overflow-hidden">
+    <AnimatedSection id="skills" className="py-20 md:py-32 relative overflow-hidden">
       {/* Subtle Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-primary/3 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-primary/2 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           className="mb-16"
@@ -75,7 +77,7 @@ const SkillsSection = () => {
 
           {/* Main Title */}
           <motion.h2
-            className="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-6"
+            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4 sm:mb-6"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -87,7 +89,7 @@ const SkillsSection = () => {
 
           {/* Description */}
           <motion.p
-            className="text-lg text-muted-foreground max-w-2xl leading-relaxed"
+            className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -127,9 +129,9 @@ const SkillsSection = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <div className="card-luxe p-8">
+            <div className="card-luxe p-4 sm:p-8">
               {/* Header */}
-              <div className="flex items-center gap-4 mb-8 pb-6 border-b border-border/50">
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-border/50">
                 <div className="p-3 rounded-xl bg-primary/10 border border-primary/20">
                   <Code2 className="w-6 h-6 text-primary" />
                 </div>
@@ -143,49 +145,87 @@ const SkillsSection = () => {
                 </div>
               </div>
 
-              {/* Languages Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {programmingLanguages.map((language, index) => (
-                  <motion.div
-                    key={language.name}
-                    className="group p-5 rounded-xl bg-background-subtle/50 border border-border/30 hover:border-primary/30 transition-all duration-300"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 * index }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -4 }}
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl group-hover:scale-110 transition-transform duration-300">
-                          {languageIcons[language.name] || '💻'}
-                        </span>
-                        <h4 className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">
-                          {language.name}
-                        </h4>
-                      </div>
-                      <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${getLevelColor(language.level)}`}>
-                        {language.level.charAt(0).toUpperCase() + language.level.slice(1)}
+              {/* Mobile: Compact 3x3 Icon Grid with Labels */}
+              {isSmall ? (
+                <div className="grid grid-cols-3 gap-3">
+                  {programmingLanguages.map((language, index) => (
+                    <motion.div
+                      key={language.name}
+                      className={`group flex flex-col items-center justify-center p-3 rounded-xl bg-background-subtle/50 border transition-all duration-300 ${
+                        language.level === 'expert' 
+                          ? 'border-primary/40' 
+                          : language.level === 'advanced' 
+                            ? 'border-primary/20' 
+                            : 'border-border/30'
+                      }`}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3, delay: 0.05 * index }}
+                      viewport={{ once: true }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <span className="text-2xl mb-1.5">
+                        {languageIcons[language.name] || '💻'}
                       </span>
-                    </div>
+                      <span className="text-[10px] font-medium text-muted-foreground text-center leading-tight">
+                        {language.name}
+                      </span>
+                      {/* Level indicator dot */}
+                      <div className={`w-1.5 h-1.5 rounded-full mt-1.5 ${
+                        language.level === 'expert' 
+                          ? 'bg-primary' 
+                          : language.level === 'advanced' 
+                            ? 'bg-primary/50' 
+                            : 'bg-muted-foreground/50'
+                      }`} />
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                /* Desktop: Full Cards Grid */
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {programmingLanguages.map((language, index) => (
+                    <motion.div
+                      key={language.name}
+                      className="group p-4 sm:p-5 rounded-xl bg-background-subtle/50 border border-border/30 hover:border-primary/30 transition-all duration-300"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.1 * index }}
+                      viewport={{ once: true }}
+                      whileHover={{ y: -4 }}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl group-hover:scale-110 transition-transform duration-300">
+                            {languageIcons[language.name] || '💻'}
+                          </span>
+                          <h4 className="font-medium text-foreground group-hover:text-primary transition-colors duration-300">
+                            {language.name}
+                          </h4>
+                        </div>
+                        <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${getLevelColor(language.level)}`}>
+                          {language.level.charAt(0).toUpperCase() + language.level.slice(1)}
+                        </span>
+                      </div>
 
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {language.description}
-                    </p>
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                        {language.description}
+                      </p>
 
-                    {/* Progress bar */}
-                    <div className="h-1 bg-border/50 rounded-full overflow-hidden">
-                      <motion.div
-                        className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: getLevelWidth(language.level) }}
-                        transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
-                        viewport={{ once: true }}
-                      />
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+                      {/* Progress bar */}
+                      <div className="h-1 bg-border/50 rounded-full overflow-hidden">
+                        <motion.div
+                          className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full"
+                          initial={{ width: 0 }}
+                          whileInView={{ width: getLevelWidth(language.level) }}
+                          transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
+                          viewport={{ once: true }}
+                        />
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Proficiency Legend */}
