@@ -275,8 +275,10 @@ const ProjectsSection = () => {
                         : 'border-border/30 text-muted-foreground/30'
                     }`}
                     whileTap={{ scale: 0.95 }}
+                    aria-label="Previous project"
+                    aria-disabled={!canScrollPrev}
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-4 h-4" aria-hidden="true" />
                   </motion.button>
                   <motion.button
                     onClick={scrollNext}
@@ -287,8 +289,10 @@ const ProjectsSection = () => {
                         : 'border-border/30 text-muted-foreground/30'
                     }`}
                     whileTap={{ scale: 0.95 }}
+                    aria-label="Next project"
+                    aria-disabled={!canScrollNext}
                   >
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-4 h-4" aria-hidden="true" />
                   </motion.button>
                 </div>
               </div>

@@ -14,6 +14,18 @@ type Breakpoint = 'mobile' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 const MOBILE_BREAKPOINT = BREAKPOINTS.md // 768px
 
 /**
+ * Helper to determine breakpoint from width
+ */
+const getBreakpointFromWidth = (width: number): Breakpoint => {
+  if (width < BREAKPOINTS.sm) return 'mobile'
+  if (width < BREAKPOINTS.md) return 'sm'
+  if (width < BREAKPOINTS.lg) return 'md'
+  if (width < BREAKPOINTS.xl) return 'lg'
+  if (width < BREAKPOINTS['2xl']) return 'xl'
+  return '2xl'
+}
+
+/**
  * Simple hook to check if viewport is mobile (<768px)
  * For backward compatibility
  */
@@ -38,30 +50,22 @@ export function useIsMobile() {
  * Returns current breakpoint and boolean helpers for responsive logic
  */
 export function useBreakpoint() {
-  const [breakpoint, setBreakpoint] = React.useState<Breakpoint>('lg')
-  const [width, setWidth] = React.useState<number>(typeof window !== 'undefined' ? window.innerWidth : 1024)
+  const [width, setWidth] = React.useState<number>(
+    typeof window !== 'undefined' ? window.innerWidth : 1024
+  )
+  const [breakpoint, setBreakpoint] = React.useState<Breakpoint>(
+    typeof window !== 'undefined' ? getBreakpointFromWidth(window.innerWidth) : 'lg'
+  )
 
   React.useEffect(() => {
     const updateBreakpoint = () => {
       const w = window.innerWidth
       setWidth(w)
-      
-      if (w < BREAKPOINTS.sm) {
-        setBreakpoint('mobile')
-      } else if (w < BREAKPOINTS.md) {
-        setBreakpoint('sm')
-      } else if (w < BREAKPOINTS.lg) {
-        setBreakpoint('md')
-      } else if (w < BREAKPOINTS.xl) {
-        setBreakpoint('lg')
-      } else if (w < BREAKPOINTS['2xl']) {
-        setBreakpoint('xl')
-      } else {
-        setBreakpoint('2xl')
-      }
+      setBreakpoint(getBreakpointFromWidth(w))
     }
 
-    updateBreakpoint()
+    // No need to call updateBreakpoint() here as state is initialized correctly
+    // But we still need to listen for resize
     window.addEventListener('resize', updateBreakpoint)
     return () => window.removeEventListener('resize', updateBreakpoint)
   }, [])

@@ -112,12 +112,15 @@ const MobileExperienceCarousel = ({
     <div className="relative">
       {/* Horizontal Timeline Indicator */}
       <div className="flex items-center justify-center gap-1 mb-6 px-4">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1" role="tablist" aria-label="Experience timeline">
           {groups.map((group, i) => (
             <button
               key={group.id}
               onClick={() => scrollTo(i)}
               className="flex items-center gap-1 group"
+              aria-label={`Go to ${group.company} experience, item ${i + 1} of ${groups.length}`}
+              aria-selected={i === selectedIndex}
+              role="tab"
             >
               {/* Timeline dot */}
               <motion.div
@@ -130,12 +133,16 @@ const MobileExperienceCarousel = ({
                   scale: i === selectedIndex ? 1.2 : 1,
                 }}
                 transition={{ duration: 0.2 }}
+                aria-hidden="true"
               />
               {/* Timeline connector line */}
               {i < groups.length - 1 && (
-                <div className={`w-6 h-0.5 transition-colors duration-300 ${
-                  i < selectedIndex ? 'bg-primary' : 'bg-border/50'
-                }`} />
+                <div 
+                  className={`w-6 h-0.5 transition-colors duration-300 ${
+                    i < selectedIndex ? 'bg-primary' : 'bg-border/50'
+                  }`} 
+                  aria-hidden="true"
+                />
               )}
             </button>
           ))}
@@ -143,7 +150,7 @@ const MobileExperienceCarousel = ({
       </div>
       
       {/* Carousel Container */}
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="overflow-hidden" ref={emblaRef} role="tabpanel" aria-label="Experience cards">
         <div className="flex gap-4 px-4">
           {groups.map((group, index) => {
             // Calculate distance from center for dock effect
@@ -158,6 +165,7 @@ const MobileExperienceCarousel = ({
                   opacity: distance === 0 ? 1 : distance === 1 ? 0.8 : 0.6,
                 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
+                aria-hidden={index !== selectedIndex}
               >
                 <MobileExperienceCard group={group} isActive={index === selectedIndex} />
               </motion.div>
@@ -177,8 +185,10 @@ const MobileExperienceCarousel = ({
               : 'border-border/30 text-muted-foreground/30'
           }`}
           whileTap={{ scale: 0.95 }}
+          aria-label="Previous experience"
+          aria-disabled={!canScrollPrev}
         >
-          <ChevronLeft className="w-5 h-5" />
+          <ChevronLeft className="w-5 h-5" aria-hidden="true" />
         </motion.button>
         <motion.button
           onClick={scrollNext}
@@ -189,8 +199,10 @@ const MobileExperienceCarousel = ({
               : 'border-border/30 text-muted-foreground/30'
           }`}
           whileTap={{ scale: 0.95 }}
+          aria-label="Next experience"
+          aria-disabled={!canScrollNext}
         >
-          <ChevronRight className="w-5 h-5" />
+          <ChevronRight className="w-5 h-5" aria-hidden="true" />
         </motion.button>
       </div>
       
@@ -258,63 +270,73 @@ const MobileExperienceCard = ({
         {group.experiences.map((exp, expIndex) => {
           const isExpanded = expandedRoleId === exp._id;
           const isFirst = expIndex === 0;
+          const contentId = `exp-desc-${exp._id}`;
           
           return (
             <div
               key={exp._id}
-              className={`p-4 transition-colors duration-200 cursor-pointer ${
+              className={`transition-colors duration-200 ${
                 expIndex > 0 ? 'border-t border-border/20' : ''
               } ${isExpanded ? 'bg-card-hover/30' : ''}`}
-              onClick={() => setExpandedRoleId(isExpanded ? null : exp._id)}
             >
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className={`font-semibold leading-tight truncate ${
-                      isFirst && isGrouped ? 'text-sm text-foreground' : 'text-xs text-foreground/90'
-                    }`}>
-                      {exp.role}
-                    </h4>
-                    {isFirst && isGrouped && (
-                      <span className="px-1.5 py-0.5 text-[8px] font-mono font-medium text-primary bg-primary/10 rounded-full border border-primary/20 flex-shrink-0">
-                        Current
-                      </span>
-                    )}
+              <button
+                className="w-full text-left p-4 focus:outline-none focus:bg-primary/5 transition-colors"
+                onClick={() => setExpandedRoleId(isExpanded ? null : exp._id)}
+                aria-expanded={isExpanded}
+                aria-controls={contentId}
+              >
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className={`font-semibold leading-tight truncate ${
+                        isFirst && isGrouped ? 'text-sm text-foreground' : 'text-xs text-foreground/90'
+                      }`}>
+                        {exp.role}
+                      </h4>
+                      {isFirst && isGrouped && (
+                        <span className="px-1.5 py-0.5 text-[8px] font-mono font-medium text-primary bg-primary/10 rounded-full border border-primary/20 flex-shrink-0">
+                          Current
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Calendar className="w-3 h-3 text-primary/50 flex-shrink-0" />
+                      <span className="text-[10px] font-mono text-muted-foreground">{exp.duration}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3 h-3 text-primary/50 flex-shrink-0" />
-                    <span className="text-[10px] font-mono text-muted-foreground">{exp.duration}</span>
+                  <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
+                    isExpanded ? 'rotate-90 border-primary/50 bg-primary/10' : 'border-border/50'
+                  }`}>
+                    <ChevronRight className={`w-3 h-3 ${isExpanded ? 'text-primary' : 'text-muted-foreground'}`} />
                   </div>
                 </div>
-                <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
-                  isExpanded ? 'rotate-90 border-primary/50 bg-primary/10' : 'border-border/50'
-                }`}>
-                  <ChevronRight className={`w-3 h-3 ${isExpanded ? 'text-primary' : 'text-muted-foreground'}`} />
+                
+                {/* Tech tags - always visible but fewer on mobile */}
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {exp.technologies.slice(0, isExpanded ? 6 : 3).map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-1.5 py-0.5 text-[9px] font-mono text-muted-foreground bg-background rounded border border-border/50"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                  {!isExpanded && exp.technologies.length > 3 && (
+                    <span className="px-1.5 py-0.5 text-[9px] font-mono text-primary bg-primary/10 rounded">
+                      +{exp.technologies.length - 3}
+                    </span>
+                  )}
                 </div>
-              </div>
-              
-              {/* Tech tags - always visible but fewer on mobile */}
-              <div className="flex flex-wrap gap-1 mb-2">
-                {exp.technologies.slice(0, isExpanded ? 6 : 3).map((tech) => (
-                  <span
-                    key={tech}
-                    className="px-1.5 py-0.5 text-[9px] font-mono text-muted-foreground bg-background rounded border border-border/50"
-                  >
-                    {tech}
-                  </span>
-                ))}
-                {!isExpanded && exp.technologies.length > 3 && (
-                  <span className="px-1.5 py-0.5 text-[9px] font-mono text-primary bg-primary/10 rounded">
-                    +{exp.technologies.length - 3}
-                  </span>
-                )}
-              </div>
+              </button>
               
               {/* Expandable description */}
-              <div className={`grid transition-all duration-300 ease-out ${
-                isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-              }`}>
-                <div className="overflow-hidden">
+              <div 
+                id={contentId}
+                className={`grid transition-all duration-300 ease-out ${
+                  isExpanded ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                }`}
+              >
+                <div className="overflow-hidden px-4 pb-4">
                   <div className="pt-2 border-t border-border/20">
                     <p className="text-xs text-muted-foreground leading-relaxed">
                       {exp.description}

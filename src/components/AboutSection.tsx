@@ -75,7 +75,7 @@ const AboutSection = () => {
     return (
       <motion.div
         key={item._id}
-        className="embla__slide flex-shrink-0 w-[260px] xs:w-[280px] sm:w-[300px] md:w-[340px]"
+        className="embla__slide flex-shrink-0 w-[280px] sm:w-[300px] md:w-[340px]"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{
           opacity: 1,
