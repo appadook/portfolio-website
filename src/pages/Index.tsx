@@ -26,21 +26,13 @@ const Index = () => {
       <AboutSection />
       <ProjectsSection />
       
-      <AnimatedSection className="scroll-section">
-        <ExperienceSection />
-      </AnimatedSection>
+      <ExperienceSection />
       
-      <AnimatedSection className="scroll-section" delay={0.2}>
-        <SkillsSection />
-      </AnimatedSection>
+      <SkillsSection />
       
-      <AnimatedSection className="scroll-section" delay={0.1}>
-        <TechnologiesSectionV2 />
-      </AnimatedSection>
+      <TechnologiesSectionV2 />
       
-      <AnimatedSection className="scroll-section" delay={0.3}>
-        <ContactSection />
-      </AnimatedSection>
+      <ContactSection />
       
       {/* Footer */}
       <AnimatedSection>
