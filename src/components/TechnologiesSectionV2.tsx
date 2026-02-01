@@ -5,7 +5,6 @@ import CertificateModal from './CertificateModal';
 import CertificateItem from './CertificateItem';
 import { useTechnologies, useCloudProvidersWithCertificates } from '@/hooks/useSanityData';
 import type { Technology, CloudProvider, Certificate } from '@/lib/sanity.types';
-import AnimatedSection from './AnimatedSection';
 import { useBreakpoint } from '@/hooks/use-mobile';
 import {
   categoryIcons,
@@ -155,7 +154,7 @@ const TechnologiesSectionV2 = () => {
 
   if (techLoading || cloudLoading) {
     return (
-      <AnimatedSection id="technologies" className="py-20 md:py-32 relative overflow-hidden">
+      <section id="technologies" className="py-20 md:py-32 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-center py-20">
             <motion.div
@@ -168,24 +167,24 @@ const TechnologiesSectionV2 = () => {
             </motion.div>
           </div>
         </div>
-      </AnimatedSection>
+      </section>
     );
   }
 
   if (techError || cloudError) {
     return (
-      <AnimatedSection id="technologies" className="py-20 md:py-32 relative overflow-hidden">
+      <section id="technologies" className="py-20 md:py-32 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-20">
             <p className="text-muted-foreground">Failed to load technologies. Please try again later.</p>
           </div>
         </div>
-      </AnimatedSection>
+      </section>
     );
   }
 
   return (
-    <AnimatedSection id="technologies" className="py-20 md:py-32 relative overflow-hidden">
+    <section id="technologies" className="py-20 md:py-32 relative overflow-hidden">
       {/* Subtle Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-0 w-[600px] h-[600px] bg-primary/3 rounded-full blur-3xl" />
@@ -197,17 +196,15 @@ const TechnologiesSectionV2 = () => {
         <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-          viewport={{ once: true }}
         >
           {/* Pre-title */}
           <motion.div
             className="flex items-center gap-4 mb-6"
             initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
           >
             <span className="w-12 h-px bg-primary/50" />
             <span className="text-sm font-mono text-primary uppercase tracking-widest">
@@ -219,9 +216,8 @@ const TechnologiesSectionV2 = () => {
           <motion.h2
             className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4 sm:mb-6"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            viewport={{ once: true }}
           >
             <span className="text-foreground">Technology </span>
             <span className="text-primary italic">Stack</span>
@@ -231,9 +227,8 @@ const TechnologiesSectionV2 = () => {
           <motion.p
             className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
           >
             A comprehensive overview of my technical expertise across modern development tools,
             frameworks, and cloud platforms.
@@ -253,9 +248,8 @@ const TechnologiesSectionV2 = () => {
                     key={category.title}
                     className="card-luxe p-4 sm:p-6"
                     initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
-                    viewport={{ once: true }}
                   >
                     <div className="flex items-center gap-3 mb-4 sm:mb-5">
                       <div className="p-2 sm:p-2.5 rounded-xl bg-primary/10 border border-primary/20">
@@ -278,9 +272,8 @@ const TechnologiesSectionV2 = () => {
                           <motion.div
                             key={tech._id}
                             initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.2, delay: 0.1 + techIndex * 0.02 }}
-                            viewport={{ once: true }}
                           >
                             <TechnologyIconBadge tech={tech} />
                           </motion.div>
@@ -292,9 +285,8 @@ const TechnologiesSectionV2 = () => {
                           <motion.div
                             key={tech._id}
                             initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.3, delay: 0.2 + techIndex * 0.03 }}
-                            viewport={{ once: true }}
                           >
                             <TechnologyBadge tech={tech} />
                           </motion.div>
@@ -312,9 +304,8 @@ const TechnologiesSectionV2 = () => {
             <motion.div
               className="card-luxe p-4 sm:p-6 h-full"
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
             >
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
@@ -335,9 +326,8 @@ const TechnologiesSectionV2 = () => {
                   <motion.div
                     key={provider._id}
                     initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                    viewport={{ once: true }}
                   >
                     <CloudProviderCard provider={provider} />
                   </motion.div>
@@ -351,16 +341,15 @@ const TechnologiesSectionV2 = () => {
         <motion.div
           className="mt-12 text-center"
           initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
         >
           <p className="text-sm text-muted-foreground font-mono">
             {technologies?.length || 0} technologies across {techCategories.length} categories
           </p>
         </motion.div>
       </div>
-    </AnimatedSection>
+    </section>
   );
 };
 
