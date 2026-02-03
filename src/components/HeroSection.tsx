@@ -53,18 +53,8 @@ const HeroSection = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-0"
       style={{ opacity }}
     >
-      {/* Spline Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <spline-viewer
-          url="https://prod.spline.design/sNkJzu-kXV3wiOi9/scene.splinecode"
-          events-target="global"
-          className="w-full h-full"
-          aria-hidden="true"
-        />
-      </div>
-
       {/* Subtle Background Elements */}
-      <div className="absolute inset-0 overflow-hidden z-[1] pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden">
         {/* Gradient orbs */}
         <motion.div
           className="absolute top-1/4 -left-32 w-96 h-96 bg-primary/5 rounded-full blur-3xl"
@@ -141,7 +131,7 @@ const HeroSection = () => {
               </motion.div>
               {/* Status indicator */}
               <motion.div
-                className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 rounded-full border-4 border-background"
+                className="absolute bottom-1 right-1 w-5 h-5 bg-success rounded-full border-4 border-background"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />

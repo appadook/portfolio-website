@@ -73,7 +73,7 @@ const AdminLoginPage = () => {
         className="relative z-10 w-full max-w-lg px-6"
       >
         {/* Glassmorphic Card */}
-        <div className="relative glass-effect rounded-2xl p-10 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] border border-border/50">
+        <div className="relative glass-effect rounded-2xl p-10 shadow-[0_8px_32px_0_hsl(var(--shadow-color)/0.8)] border border-border/50">
           {/* Glow Effect */}
           <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl blur-xl opacity-50" />
 
@@ -121,7 +121,7 @@ const AdminLoginPage = () => {
                     formFieldRow: 'w-full',
                     formFieldInput: 'bg-input/50 border border-border/70 text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 w-full h-12 px-4 rounded-lg text-base font-normal',
                     formFieldLabel: 'text-foreground font-medium text-base mb-2 block',
-                    formButtonPrimary: 'bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white font-semibold text-base shadow-[0_0_20px_rgba(139,92,246,0.3)] hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all duration-300 hover:scale-[1.02] w-full h-12 rounded-lg mt-2',
+                    formButtonPrimary: 'bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-semibold text-base shadow-[0_0_20px_hsl(var(--primary)/0.3)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)] transition-all duration-300 hover:scale-[1.02] w-full h-12 rounded-lg mt-2',
                     formFieldAction: 'mt-2 text-right',
                     formFieldActionLink: 'text-primary hover:text-primary-glow text-sm transition-colors font-medium',
                     footerAction: 'text-center mt-8',

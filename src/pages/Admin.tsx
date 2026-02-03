@@ -43,10 +43,10 @@ const AdminPage = () => {
               appearance={{
                 elements: {
                   userButtonAvatarBox: 'w-9 h-9',
-                  userButtonPopoverCard: 'bg-white border-gray-200',
-                  userButtonPopoverActionButton: 'text-gray-900 hover:bg-gray-100',
-                  userButtonPopoverActionButtonText: 'text-gray-900',
-                  userButtonPopoverActionButtonIcon: 'text-gray-700',
+                  userButtonPopoverCard: 'bg-background border-border',
+                  userButtonPopoverActionButton: 'text-foreground hover:bg-muted',
+                  userButtonPopoverActionButtonText: 'text-foreground',
+                  userButtonPopoverActionButtonIcon: 'text-muted-foreground',
                   userButtonPopoverFooter: 'hidden',
                 }
               }}

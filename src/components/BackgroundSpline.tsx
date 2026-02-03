@@ -1,0 +1,14 @@
+const BackgroundSpline = () => {
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none">
+      <spline-viewer
+        url="https://prod.spline.design/shkwkPFMXQSo6skr/scene.splinecode"
+        events-target="global"
+        className="w-full h-full"
+        aria-hidden="true"
+      />
+    </div>
+  );
+};
+
+export default BackgroundSpline;

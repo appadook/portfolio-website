@@ -384,8 +384,8 @@ const ExperienceSection = () => {
             className="absolute inset-0 opacity-[0.008]"
             style={{
               backgroundImage: `
-                linear-gradient(to right, hsl(43 74% 49%) 1px, transparent 1px),
-                linear-gradient(to bottom, hsl(43 74% 49%) 1px, transparent 1px)
+                linear-gradient(to right, hsl(var(--primary)) 1px, transparent 1px),
+                linear-gradient(to bottom, hsl(var(--primary)) 1px, transparent 1px)
               `,
               backgroundSize: '100px 100px',
             }}

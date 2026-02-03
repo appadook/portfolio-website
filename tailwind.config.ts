@@ -28,6 +28,7 @@ export default {
 				'border-subtle': 'hsl(var(--border-subtle))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
+				overlay: 'hsl(var(--overlay))',
 				background: 'hsl(var(--background))',
 				'background-subtle': 'hsl(var(--background-subtle))',
 				foreground: 'hsl(var(--foreground))',
@@ -87,9 +88,9 @@ export default {
 				},
 				// Midnight Luxe specific
 				gold: {
-					DEFAULT: 'hsl(43 74% 49%)',
-					light: 'hsl(45 80% 58%)',
-					dark: 'hsl(43 74% 40%)',
+					DEFAULT: 'hsl(var(--primary))',
+					light: 'hsl(var(--primary-light))',
+					dark: 'hsl(var(--primary))',
 				}
 			},
 			backgroundImage: {
