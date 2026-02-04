@@ -116,7 +116,7 @@ const AboutSection = () => {
                 className="p-3 rounded-xl bg-primary/10 border border-primary/20 text-primary"
                 whileHover={{
                   scale: 1.1,
-                  boxShadow: '0 0 20px hsl(43 74% 49% / 0.3)',
+                  boxShadow: '0 0 20px hsl(var(--primary) / 0.3)',
                 }}
                 transition={{ duration: 0.3 }}
               >

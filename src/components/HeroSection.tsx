@@ -131,7 +131,7 @@ const HeroSection = () => {
               </motion.div>
               {/* Status indicator */}
               <motion.div
-                className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 rounded-full border-4 border-background"
+                className="absolute bottom-1 right-1 w-5 h-5 bg-success rounded-full border-4 border-background"
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />

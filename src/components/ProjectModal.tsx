@@ -149,13 +149,13 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
               {project.outcomes && project.outcomes.length > 0 && (
                 <div className="p-5 bg-background-subtle/50 rounded-xl border border-border/30">
                   <div className="flex items-center gap-2 mb-3">
-                    <Target className="w-4 h-4 text-green-500" />
+                    <Target className="w-4 h-4 text-success" />
                     <h4 className="font-display text-base font-semibold text-foreground">Outcomes</h4>
                   </div>
                   <ul className="space-y-2">
                     {project.outcomes.map((outcome, index) => (
                       <li key={index} className="flex items-start gap-3">
-                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full mt-1.5 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-success rounded-full mt-1.5 flex-shrink-0" />
                         <span className="text-xs text-muted-foreground">{outcome}</span>
                       </li>
                     ))}
