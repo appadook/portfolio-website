@@ -1,0 +1,16 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold15" x1="210" y1="170" x2="945" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F9E7AE"/>
+      <stop offset="0.42" stop-color="#FFF7DD"/>
+      <stop offset="1" stop-color="#B07D21"/>
+    </linearGradient>
+  </defs>
+
+  <text x="208" y="530" fill="url(#gold15)" font-family="Didot, Bodoni MT, Georgia, serif" font-size="430" font-weight="700" letter-spacing="10">KA</text>
+
+  <path d="M182 438C312 506 495 512 652 442C768 390 876 382 968 430"
+        stroke="url(#gold15)" stroke-width="15" stroke-linecap="round"/>
+
+  <circle cx="963" cy="430" r="9" fill="url(#gold15)"/>
+</svg>

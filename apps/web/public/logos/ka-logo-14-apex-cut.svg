@@ -1,0 +1,16 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold14" x1="225" y1="160" x2="935" y2="625" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F3D88F"/>
+      <stop offset="0.48" stop-color="#FFF0C8"/>
+      <stop offset="1" stop-color="#A8741A"/>
+    </linearGradient>
+  </defs>
+
+  <text x="208" y="530" fill="url(#gold14)" font-family="Times New Roman, Georgia, serif" font-size="430" font-weight="700" letter-spacing="8">KA</text>
+
+  <path d="M194 442C330 458 455 462 612 430C760 400 870 404 968 444"
+        stroke="url(#gold14)" stroke-width="18" stroke-linecap="round"/>
+
+  <path d="M683 470L748 402L769 423L704 492Z" fill="url(#gold14)" opacity="0.95"/>
+</svg>
