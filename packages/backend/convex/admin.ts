@@ -18,6 +18,7 @@ const projectFields = {
   longDescription: v.optional(v.string()),
   categories: v.array(v.string()),
   techStack: v.array(v.string()),
+  status: v.optional(v.union(v.literal('active'), v.literal('deprecated'))),
   githubUrl: v.optional(v.string()),
   liveUrl: v.optional(v.string()),
   image: v.optional(v.string()),
@@ -208,6 +209,73 @@ export const deleteProject = mutation({
   args: { id: v.id('projects') },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
+  },
+});
+
+export const reorderProjects = mutation({
+  args: {
+    items: v.array(
+      v.object({
+        id: v.id('projects'),
+        order: v.number(),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    const payload = args.items;
+
+    if (payload.length === 0) {
+      const existingProjects = await ctx.db.query('projects').take(1);
+      if (existingProjects.length > 0) {
+        throw new Error('Reorder payload must include all existing projects.');
+      }
+      return { updatedCount: 0, updatedAt: now };
+    }
+
+    const ids = new Set<string>();
+    const orders = new Set<number>();
+
+    for (const item of payload) {
+      if (ids.has(item.id)) {
+        throw new Error(`Duplicate project id in reorder payload: ${item.id}`);
+      }
+      ids.add(item.id);
+
+      if (!Number.isInteger(item.order) || item.order < 1) {
+        throw new Error(`Invalid project order in reorder payload: ${item.order}`);
+      }
+      if (orders.has(item.order)) {
+        throw new Error(`Duplicate project order in reorder payload: ${item.order}`);
+      }
+      orders.add(item.order);
+    }
+
+    const existingProjects = await ctx.db.query('projects').collect();
+    if (existingProjects.length !== payload.length) {
+      throw new Error('Reorder payload must include every project exactly once.');
+    }
+
+    const existingIds = new Set(existingProjects.map((project) => project._id));
+    for (const item of payload) {
+      if (!existingIds.has(item.id)) {
+        throw new Error(`Unknown project id in reorder payload: ${item.id}`);
+      }
+    }
+
+    const sortedOrders = [...orders].sort((a, b) => a - b);
+    for (let index = 0; index < sortedOrders.length; index += 1) {
+      const expected = index + 1;
+      if (sortedOrders[index] !== expected) {
+        throw new Error('Project orders must be contiguous integers starting at 1.');
+      }
+    }
+
+    for (const item of payload) {
+      await ctx.db.patch(item.id, { order: item.order });
+    }
+
+    return { updatedCount: payload.length, updatedAt: now };
   },
 });
 

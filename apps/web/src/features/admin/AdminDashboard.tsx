@@ -5,13 +5,33 @@ import { useMutation, useQuery } from 'convex/react';
 import type { FunctionReference } from 'convex/server';
 import { useRouter } from 'next/navigation';
 import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  closestCenter,
+  type DragEndEvent,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  rectSortingStrategy,
+  sortableKeyboardCoordinates,
+  useSortable,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import {
   AlertTriangle,
   FileText,
+  GripVertical,
   Image as ImageIcon,
   Loader2,
   LogOut,
   Pencil,
   Plus,
+  RotateCcw,
   Save,
   Trash2,
   Upload,
@@ -21,6 +41,7 @@ import type { Id } from '@portfolio/backend/convex/_generated/dataModel';
 import { api } from '@portfolio/backend/convex/_generated/api';
 import { logout as logoutRequest } from '@/lib/auth/client';
 import { useBreakpoint } from '@/hooks/use-mobile';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -78,6 +99,13 @@ type EntitySectionId =
   | 'about-items';
 
 type SectionId = 'site-settings' | EntitySectionId;
+
+type ReorderItem = {
+  id: string;
+  order: number;
+};
+
+type ProjectDraftOrder = string[] | null;
 
 type UploadFieldKind = 'image' | 'logo' | 'resumePdf';
 
@@ -170,6 +198,11 @@ const LANGUAGE_LEVEL_OPTIONS: SelectOption[] = [
   { label: 'Intermediate', value: 'intermediate' },
 ];
 
+const PROJECT_STATUS_OPTIONS: SelectOption[] = [
+  { label: 'Active', value: 'active' },
+  { label: 'Deprecated', value: 'deprecated' },
+];
+
 const DEFAULT_BOOTSTRAP: BootstrapData = {
   siteSettings: null,
   experiences: [],
@@ -235,6 +268,49 @@ function parseFormValue(raw: string, type: FieldType): unknown {
   }
 
   return raw.trim() === '' ? undefined : raw.trim();
+}
+
+function sortByOrder(items: AdminEntity[]): AdminEntity[] {
+  return [...items].sort((a, b) => {
+    const left = Number(a.order ?? 0);
+    const right = Number(b.order ?? 0);
+    return left - right;
+  });
+}
+
+function areSameIdOrder(left: string[], right: string[]): boolean {
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  for (let index = 0; index < left.length; index += 1) {
+    if (left[index] !== right[index]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function reconcileProjectDraftOrder(
+  draftIds: string[] | null,
+  canonicalIds: string[],
+): ProjectDraftOrder {
+  if (!draftIds) {
+    return null;
+  }
+
+  const canonicalSet = new Set(canonicalIds);
+  const filtered = draftIds.filter((id) => canonicalSet.has(id));
+  const filteredSet = new Set(filtered);
+
+  for (const id of canonicalIds) {
+    if (!filteredSet.has(id)) {
+      filtered.push(id);
+    }
+  }
+
+  return filtered;
 }
 
 function getNextOrder(items: AdminEntity[]): number {
@@ -633,13 +709,25 @@ type SectionCardProps = {
   item: AdminEntity;
   context: LookupContext;
   isSelected: boolean;
+  orderLabel?: string;
+  dragHandle?: ReactNode;
   onOpen: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
 };
 
 const SectionCard = memo(
-  function SectionCard({ sectionId, item, context, isSelected, onOpen, onEdit, onDelete }: SectionCardProps) {
+  function SectionCard({
+    sectionId,
+    item,
+    context,
+    isSelected,
+    orderLabel,
+    dragHandle,
+    onOpen,
+    onEdit,
+    onDelete,
+  }: SectionCardProps) {
     const itemId = asId(item._id);
     const category = context.aboutCategoryMap.get(asText(item.categoryId));
     const provider = context.providerMap.get(asText(item.providerId));
@@ -669,31 +757,39 @@ const SectionCard = memo(
             <p className="mt-1 text-sm text-muted-foreground">{getCardSubtitle(sectionId, item, context)}</p>
           </div>
 
-          <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={(event) => {
-                event.stopPropagation();
-                onEdit(itemId);
-              }}
-            >
-              <Pencil className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 border-destructive/60 text-destructive hover:bg-destructive/10"
-              onClick={(event) => {
-                event.stopPropagation();
-                onDelete(itemId);
-              }}
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </Button>
+          <div className="flex items-center gap-2">
+            {orderLabel ? (
+              <Badge variant="outline" className="font-mono text-[10px]">
+                #{orderLabel}
+              </Badge>
+            ) : null}
+            {dragHandle}
+            <div className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="h-8 w-8"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onEdit(itemId);
+                }}
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 border-destructive/60 text-destructive hover:bg-destructive/10"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onDelete(itemId);
+                }}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -739,7 +835,8 @@ const SectionCard = memo(
     prev.sectionId === next.sectionId &&
     prev.item === next.item &&
     prev.context === next.context &&
-    prev.isSelected === next.isSelected,
+    prev.isSelected === next.isSelected &&
+    prev.orderLabel === next.orderLabel,
 );
 
 type SectionCardGridProps = {
@@ -782,6 +879,177 @@ function SectionCardGrid({
         />
       ))}
     </div>
+  );
+}
+
+type ProjectOrderToolbarProps = {
+  hasChanges: boolean;
+  isSaving: boolean;
+  onSave: () => void;
+  onReset: () => void;
+};
+
+function ProjectOrderToolbar({ hasChanges, isSaving, onSave, onReset }: ProjectOrderToolbarProps) {
+  return (
+    <div className="rounded-2xl border border-border/60 bg-background-subtle/30 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-foreground">Project order</p>
+          <p className="text-xs text-muted-foreground">
+            Drag cards by the handle to reorder. Save when you are ready to publish this order.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {hasChanges ? <Badge variant="outline">Unsaved order changes</Badge> : null}
+          <Button type="button" variant="outline" onClick={onReset} disabled={isSaving || !hasChanges}>
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Reset
+          </Button>
+          <Button type="button" onClick={onSave} disabled={isSaving || !hasChanges}>
+            {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+            {isSaving ? 'Saving order...' : 'Save Order'}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type SortableProjectCardProps = {
+  item: AdminEntity;
+  position: number;
+  context: LookupContext;
+  isSelected: boolean;
+  onOpen: (id: string) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+};
+
+function SortableProjectCard({
+  item,
+  position,
+  context,
+  isSelected,
+  onOpen,
+  onEdit,
+  onDelete,
+}: SortableProjectCardProps) {
+  const itemId = asId(item._id);
+  const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
+    id: itemId,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn('touch-manipulation', isDragging ? 'z-20 opacity-80' : undefined)}
+    >
+      <SectionCard
+        sectionId="projects"
+        item={item}
+        context={context}
+        isSelected={isSelected}
+        orderLabel={String(position)}
+        dragHandle={
+          <button
+            ref={setActivatorNodeRef}
+            type="button"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border/70 text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={(event) => event.stopPropagation()}
+            aria-label={`Reorder ${asText(item.title, 'project')}`}
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical className="h-3.5 w-3.5" />
+          </button>
+        }
+        onOpen={onOpen}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
+    </div>
+  );
+}
+
+type SortableProjectGridProps = {
+  items: AdminEntity[];
+  selectedItemId: string | null;
+  context: LookupContext;
+  onOpen: (id: string) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+  onReorder: (nextIds: string[]) => void;
+};
+
+function SortableProjectGrid({
+  items,
+  selectedItemId,
+  context,
+  onOpen,
+  onEdit,
+  onDelete,
+  onReorder,
+}: SortableProjectGridProps) {
+  const ids = useMemo(() => items.map((item) => asId(item._id)), [items]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 8 },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: { delay: 180, tolerance: 6 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const onDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (!over || active.id === over.id) {
+        return;
+      }
+
+      const oldIndex = ids.indexOf(String(active.id));
+      const newIndex = ids.indexOf(String(over.id));
+
+      if (oldIndex < 0 || newIndex < 0) {
+        return;
+      }
+
+      onReorder(arrayMove(ids, oldIndex, newIndex));
+    },
+    [ids, onReorder],
+  );
+
+  return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+      <SortableContext items={ids} strategy={rectSortingStrategy}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {items.map((item, index) => (
+            <SortableProjectCard
+              key={asId(item._id)}
+              item={item}
+              position={index + 1}
+              context={context}
+              isSelected={selectedItemId === asId(item._id)}
+              onOpen={onOpen}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
+          ))}
+        </div>
+      </SortableContext>
+    </DndContext>
   );
 }
 
@@ -1486,15 +1754,19 @@ function AdminWorkspaceShell({
 
 export default function AdminDashboard({ user }: { user: AdminUser }) {
   const { isDesktop } = useBreakpoint();
+  const { toast } = useToast();
 
   const bootstrap = useQuery(api.admin.getAdminBootstrap) as BootstrapData | undefined;
   const generateUploadUrl = useMutation(api.admin.generateUploadUrl);
   const resolveStorageUrl = useMutation(api.admin.resolveStorageUrl);
+  const reorderProjects = useMutation(api.admin.reorderProjects);
 
   const [activeSectionId, setActiveSectionId] = useState<SectionId>('site-settings');
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [panelMode, setPanelMode] = useState<InspectorMode>('view');
   const [mobileInspectorOpen, setMobileInspectorOpen] = useState(false);
+  const [projectDraftOrderIds, setProjectDraftOrderIds] = useState<ProjectDraftOrder>(null);
+  const [isSavingProjectOrder, setIsSavingProjectOrder] = useState(false);
 
   useEffect(() => {
     setSelectedItemId(null);
@@ -1509,6 +1781,57 @@ export default function AdminDashboard({ user }: { user: AdminUser }) {
   }, [isDesktop]);
 
   const data = bootstrap ?? DEFAULT_BOOTSTRAP;
+  const sortedProjects = useMemo(() => sortByOrder(data.projects), [data.projects]);
+  const canonicalProjectOrderIds = useMemo(
+    () => sortedProjects.map((item) => asId(item._id)),
+    [sortedProjects],
+  );
+  const projectsById = useMemo(
+    () => new Map(sortedProjects.map((item) => [asId(item._id), item])),
+    [sortedProjects],
+  );
+
+  useEffect(() => {
+    setProjectDraftOrderIds((current) => {
+      const reconciled = reconcileProjectDraftOrder(current, canonicalProjectOrderIds);
+      if (reconciled === null) {
+        return null;
+      }
+      if (current && areSameIdOrder(current, reconciled)) {
+        return current;
+      }
+      return areSameIdOrder(reconciled, canonicalProjectOrderIds) ? null : reconciled;
+    });
+  }, [canonicalProjectOrderIds]);
+
+  const hasProjectOrderChanges = useMemo(() => {
+    if (!projectDraftOrderIds) {
+      return false;
+    }
+    return !areSameIdOrder(projectDraftOrderIds, canonicalProjectOrderIds);
+  }, [projectDraftOrderIds, canonicalProjectOrderIds]);
+
+  const effectiveProjectItems = useMemo(() => {
+    if (!projectDraftOrderIds || projectDraftOrderIds.length === 0) {
+      return sortedProjects;
+    }
+
+    const ordered = projectDraftOrderIds
+      .map((id) => projectsById.get(id))
+      .filter((item): item is AdminEntity => Boolean(item));
+
+    if (ordered.length !== sortedProjects.length) {
+      const orderedIdSet = new Set(ordered.map((item) => asId(item._id)));
+      for (const item of sortedProjects) {
+        const id = asId(item._id);
+        if (!orderedIdSet.has(id)) {
+          ordered.push(item);
+        }
+      }
+    }
+
+    return ordered;
+  }, [projectDraftOrderIds, projectsById, sortedProjects]);
 
   const aboutCategoryMap = useMemo(
     () => new Map((data.aboutCategories ?? []).map((category) => [asId(category._id), category])),
@@ -1606,6 +1929,7 @@ export default function AdminDashboard({ user }: { user: AdminUser }) {
           { key: 'outcomes', label: 'Outcomes (one per line)', type: 'list' },
           { key: 'timeline', label: 'Timeline', type: 'text' },
           { key: 'teamSize', label: 'Team Size', type: 'text' },
+          { key: 'status', label: 'Status', type: 'select', options: PROJECT_STATUS_OPTIONS },
           { key: 'githubUrl', label: 'GitHub URL', type: 'text' },
           { key: 'liveUrl', label: 'Live URL', type: 'text' },
           { key: 'order', label: 'Display Order', type: 'number', required: true },
@@ -1752,18 +2076,18 @@ export default function AdminDashboard({ user }: { user: AdminUser }) {
   );
 
   const sortedItems = useMemo(
-    () =>
-      [...activeItems].sort((a, b) => {
-        const left = Number(a.order ?? 0);
-        const right = Number(b.order ?? 0);
-        return left - right;
-      }),
+    () => sortByOrder(activeItems),
     [activeItems],
   );
 
+  const displayItems = useMemo(
+    () => (activeSectionId === 'projects' ? effectiveProjectItems : sortedItems),
+    [activeSectionId, effectiveProjectItems, sortedItems],
+  );
+
   const selectedItem = useMemo(
-    () => sortedItems.find((item) => asId(item._id) === selectedItemId) ?? null,
-    [selectedItemId, sortedItems],
+    () => displayItems.find((item) => asId(item._id) === selectedItemId) ?? null,
+    [displayItems, selectedItemId],
   );
 
   const sectionTitle = activeSectionId === 'site-settings' ? 'Site Settings' : activeEntityConfig?.title ?? 'Section';
@@ -1818,6 +2142,46 @@ export default function AdminDashboard({ user }: { user: AdminUser }) {
     },
     [isDesktop],
   );
+
+  const handleProjectReorder = useCallback((nextIds: string[]) => {
+    setProjectDraftOrderIds(nextIds);
+  }, []);
+
+  const resetProjectOrderDraft = useCallback(() => {
+    setProjectDraftOrderIds(null);
+  }, []);
+
+  const saveProjectOrder = useCallback(async () => {
+    if (!hasProjectOrderChanges || !projectDraftOrderIds) {
+      return;
+    }
+
+    setIsSavingProjectOrder(true);
+    try {
+      const payload: ReorderItem[] = projectDraftOrderIds.map((id, index) => ({
+        id,
+        order: index + 1,
+      }));
+
+      const result = await reorderProjects({
+        items: payload.map((item) => ({ id: item.id as Id<'projects'>, order: item.order })),
+      });
+
+      setProjectDraftOrderIds(null);
+      toast({
+        title: 'Project order saved',
+        description: `Updated ${result.updatedCount} projects.`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Unable to save project order',
+        description: error instanceof Error ? error.message : 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSavingProjectOrder(false);
+    }
+  }, [hasProjectOrderChanges, projectDraftOrderIds, reorderProjects, toast]);
 
   const isSiteSettingsSection = activeSectionId === 'site-settings';
   const desktopInspectorOpen = useMemo(
@@ -1897,16 +2261,47 @@ export default function AdminDashboard({ user }: { user: AdminUser }) {
       />
     )
   ) : activeEntityConfig ? (
-    <SectionCardGrid
-      config={activeEntityConfig}
-      items={sortedItems}
-      selectedItemId={selectedItemId}
-      context={lookupContext}
-      onCreate={openCreate}
-      onOpen={openView}
-      onEdit={openEdit}
-      onDelete={openDelete}
-    />
+    activeEntityConfig.id === 'projects' ? (
+      displayItems.length === 0 ? (
+        <EmptyState
+          title={activeEntityConfig.emptyTitle}
+          description={activeEntityConfig.emptyDescription}
+          onCreate={openCreate}
+        />
+      ) : (
+        <div className="space-y-4">
+          <ProjectOrderToolbar
+            hasChanges={hasProjectOrderChanges}
+            isSaving={isSavingProjectOrder}
+            onReset={resetProjectOrderDraft}
+            onSave={() => {
+              void saveProjectOrder();
+            }}
+          />
+
+          <SortableProjectGrid
+            items={displayItems}
+            selectedItemId={selectedItemId}
+            context={lookupContext}
+            onOpen={openView}
+            onEdit={openEdit}
+            onDelete={openDelete}
+            onReorder={handleProjectReorder}
+          />
+        </div>
+      )
+    ) : (
+      <SectionCardGrid
+        config={activeEntityConfig}
+        items={displayItems}
+        selectedItemId={selectedItemId}
+        context={lookupContext}
+        onCreate={openCreate}
+        onOpen={openView}
+        onEdit={openEdit}
+        onDelete={openDelete}
+      />
+    )
   ) : null;
 
   return (

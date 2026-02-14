@@ -5,8 +5,10 @@ import useEmblaCarousel from "embla-carousel-react";
 import ProjectModal from "./ProjectModal";
 import { useProjects } from "@/hooks/usePortfolioData";
 import type { Project } from "@/lib/portfolio.types";
+import { getProjectCardMeta } from "@/lib/projectCardMeta";
 import AnimatedSection from "./AnimatedSection";
 import { useBreakpoint } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 const categories = [
   "All",
@@ -17,6 +19,61 @@ const categories = [
   "Quantitative Dev",
   "Research",
 ];
+
+const badgeToneClassNames = {
+  danger: "border-destructive/50 bg-destructive/10 text-destructive",
+  success: "border-success/40 bg-success/10 text-success",
+  brand: "border-primary/40 bg-primary/10 text-primary",
+  neutral: "border-border/70 bg-background-subtle/50 text-muted-foreground",
+} as const;
+
+function ProjectCardMeta({ project, compact = false }: { project: Project; compact?: boolean }) {
+  const { badges, links } = useMemo(() => getProjectCardMeta(project), [project]);
+
+  if (badges.length === 0 && links.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className={cn("space-y-2", compact ? "mt-2" : "mt-3 pt-3 border-t border-border/50")}>
+      {badges.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-1.5">
+          {badges.map((badge) => (
+            <span
+              key={badge.key}
+              className={cn(
+                "inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+                badgeToneClassNames[badge.tone],
+              )}
+            >
+              {badge.label}
+            </span>
+          ))}
+        </div>
+      ) : null}
+
+      {links.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-2">
+          {links.map((link) => (
+            <motion.a
+              key={link.key}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(event) => event.stopPropagation()}
+              className="inline-flex items-center gap-1 rounded-full border border-border/60 px-2 py-1 text-[10px] font-mono uppercase tracking-wide text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              {link.key === "github" ? <Github className="h-3 w-3" /> : <ExternalLink className="h-3 w-3" />}
+              {link.label}
+            </motion.a>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
 
 const ProjectsSection = () => {
   const { data: projects, isLoading, error } = useProjects();
@@ -264,6 +321,7 @@ const ProjectsSection = () => {
                                   </span>
                                 )}
                               </div>
+                              <ProjectCardMeta project={project} compact />
                             </div>
                           </motion.div>
                         </motion.div>
@@ -419,37 +477,9 @@ const ProjectsSection = () => {
                             )}
                           </div>
 
-                          {/* Footer with links */}
-                          <div className="flex items-center justify-between pt-3 border-t border-border/50">
-                            <div className="flex items-center gap-2">
-                              {project.githubUrl && (
-                                <motion.a
-                                  href={project.githubUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="p-1.5 rounded-full border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all duration-300"
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.95 }}
-                                >
-                                  <Github className="w-3.5 h-3.5" />
-                                </motion.a>
-                              )}
-                              {project.liveUrl && (
-                                <motion.a
-                                  href={project.liveUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  className="p-1.5 rounded-full border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary transition-all duration-300"
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.95 }}
-                                >
-                                  <ExternalLink className="w-3.5 h-3.5" />
-                                </motion.a>
-                              )}
-                            </div>
+                          <ProjectCardMeta project={project} />
 
+                          <div className="mt-2 flex items-center justify-end">
                             <span className="text-[10px] text-muted-foreground font-mono group-hover:text-primary transition-colors">
                               Details
                             </span>

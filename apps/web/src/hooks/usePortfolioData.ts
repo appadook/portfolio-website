@@ -42,11 +42,13 @@ type ExperiencePayload = {
 
 type ProjectPayload = {
   _id: string;
+  _creationTime?: number;
   title: string;
   description: string;
   longDescription?: string;
   categories: string[];
   techStack: string[];
+  status?: 'active' | 'deprecated';
   githubUrl?: string;
   liveUrl?: string;
   image?: string;
@@ -159,11 +161,13 @@ const mapExperience = (item: ExperiencePayload): Experience => ({
 
 const mapProject = (item: ProjectPayload): Project => ({
   _id: String(item._id),
+  _creationTime: item._creationTime,
   title: item.title,
   description: item.description,
   longDescription: item.longDescription,
   categories: item.categories || [],
   techStack: item.techStack || [],
+  status: item.status,
   githubUrl: item.githubUrl,
   liveUrl: item.liveUrl,
   image: item.image,

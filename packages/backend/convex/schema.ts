@@ -29,6 +29,7 @@ export default defineSchema({
     longDescription: v.optional(v.string()),
     categories: v.array(v.string()),
     techStack: v.array(v.string()),
+    status: v.optional(v.union(v.literal('active'), v.literal('deprecated'))),
     githubUrl: v.optional(v.string()),
     liveUrl: v.optional(v.string()),
     image: v.optional(v.string()),

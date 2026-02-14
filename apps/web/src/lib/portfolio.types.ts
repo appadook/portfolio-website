@@ -12,11 +12,13 @@ export interface Experience {
 
 export interface Project {
   _id: string;
+  _creationTime?: number;
   title: string;
   description: string;
   longDescription?: string;
   categories: string[];
   techStack: string[];
+  status?: 'active' | 'deprecated';
   githubUrl?: string;
   liveUrl?: string;
   image?: string;
