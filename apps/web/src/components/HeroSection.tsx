@@ -12,7 +12,7 @@ const HeroSection = () => {
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
 
-  // Use Convex data with fallback
+  // Use Convex-backed site settings data
   const fullText = siteSettings?.tagline || "Software Engineer & Data Scientist";
   const name = siteSettings?.siteName || "Kurtik Appadoo";
   const firstName = name.split(' ')[0];

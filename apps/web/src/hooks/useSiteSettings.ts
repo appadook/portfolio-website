@@ -2,7 +2,6 @@
 
 import { useQuery } from 'convex/react';
 import { api } from '@portfolio/backend/convex/_generated/api';
-import { fallbackSiteSettings } from '@/lib/contentFallback';
 import type { SiteSettings } from '@/lib/portfolio.types';
 
 type QueryState<T> = {
@@ -20,7 +19,6 @@ type SiteSettingsPayload = {
   resumeUrl?: string;
 };
 
-const fallbackEnabled = process.env.NEXT_PUBLIC_ENABLE_CONTENT_FALLBACK === 'true';
 const hasConvexUrl = Boolean(process.env.NEXT_PUBLIC_CONVEX_URL);
 
 const mapSiteSettings = (raw: SiteSettingsPayload): SiteSettings => ({
@@ -70,7 +68,7 @@ export const useSiteSettings = (): QueryState<SiteSettings> => {
   }
 
   return {
-    data: fallbackEnabled ? fallbackSiteSettings : emptyState,
+    data: emptyState,
     isLoading: false,
     error: null,
   };

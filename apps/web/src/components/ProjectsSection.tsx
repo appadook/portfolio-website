@@ -20,57 +20,75 @@ const categories = [
   "Research",
 ];
 
-const badgeToneClassNames = {
-  danger: "border-destructive/50 bg-destructive/10 text-destructive",
-  success: "border-success/40 bg-success/10 text-success",
-  brand: "border-primary/40 bg-primary/10 text-primary",
-  neutral: "border-border/70 bg-background-subtle/50 text-muted-foreground",
+const statusRibbonToneClassNames = {
+  danger: "bg-destructive/90 text-destructive-foreground",
+  success: "bg-emerald-500/90 text-emerald-950",
+  brand: "bg-primary/90 text-primary-foreground",
+  neutral: "bg-muted/90 text-foreground",
 } as const;
 
-function ProjectCardMeta({ project, compact = false }: { project: Project; compact?: boolean }) {
-  const { badges, links } = useMemo(() => getProjectCardMeta(project), [project]);
+const actionToneClassNames = {
+  github:
+    "border-violet-500/40 bg-violet-500/10 text-violet-200 hover:border-violet-400/70 hover:bg-violet-500/20",
+  live: "border-orange-500/40 bg-orange-500/10 text-orange-200 hover:border-orange-400/70 hover:bg-orange-500/20",
+} as const;
 
-  if (badges.length === 0 && links.length === 0) {
+function ProjectStatusRibbon({ project }: { project: Project }) {
+  const { badges } = getProjectCardMeta(project);
+  const statusBadge = badges.find((badge) => badge.key === "new" || badge.key === "deprecated");
+
+  if (!statusBadge) {
     return null;
   }
 
   return (
-    <div className={cn("space-y-2", compact ? "mt-2" : "mt-3 pt-3 border-t border-border/50")}>
-      {badges.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-1.5">
-          {badges.map((badge) => (
-            <span
-              key={badge.key}
-              className={cn(
-                "inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
-                badgeToneClassNames[badge.tone],
-              )}
-            >
-              {badge.label}
-            </span>
-          ))}
-        </div>
-      ) : null}
+    <div className="pointer-events-none absolute right-0 top-0 z-20 h-24 w-24 overflow-hidden">
+      <span
+        className={cn(
+          "absolute right-[-32px] top-[14px] w-[124px] rotate-45 py-1 text-center text-[10px] font-semibold uppercase tracking-[0.18em] shadow-lg backdrop-blur-sm",
+          statusRibbonToneClassNames[statusBadge.tone],
+        )}
+      >
+        {statusBadge.label}
+      </span>
+    </div>
+  );
+}
 
-      {links.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-2">
-          {links.map((link) => (
-            <motion.a
-              key={link.key}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(event) => event.stopPropagation()}
-              className="inline-flex items-center gap-1 rounded-full border border-border/60 px-2 py-1 text-[10px] font-mono uppercase tracking-wide text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {link.key === "github" ? <Github className="h-3 w-3" /> : <ExternalLink className="h-3 w-3" />}
-              {link.label}
-            </motion.a>
-          ))}
-        </div>
-      ) : null}
+function ProjectCardActions({ project, compact = false }: { project: Project; compact?: boolean }) {
+  const { links } = getProjectCardMeta(project);
+
+  return (
+    <div className={cn("mt-3 flex items-center justify-between gap-2 border-t border-border/50 pt-3", compact && "mt-2 pt-2")}>
+      <div className="flex items-center gap-1.5">
+        {links.map((link) => (
+          <motion.a
+            key={link.key}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(event) => event.stopPropagation()}
+            className={cn(
+              "inline-flex items-center gap-1 rounded-full border font-mono uppercase tracking-wide transition-all duration-300",
+              compact ? "px-1.5 py-0.5 text-[9px]" : "px-2 py-1 text-[10px]",
+              actionToneClassNames[link.key],
+            )}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {link.key === "github" ? <Github className="h-3 w-3" /> : <ExternalLink className="h-3 w-3" />}
+            {link.key === "github" ? "GitHub" : "Live"}
+          </motion.a>
+        ))}
+      </div>
+      <span
+        className={cn(
+          "font-mono text-muted-foreground transition-colors duration-300 group-hover:text-primary",
+          compact ? "text-[10px]" : "text-[11px]",
+        )}
+      >
+        Details
+      </span>
     </div>
   );
 }
@@ -259,7 +277,7 @@ const ProjectsSection = () => {
                           transition={{ duration: 0.3, delay: index * 0.05 }}
                         >
                           <motion.div
-                            className="card-luxe h-full cursor-pointer group overflow-hidden"
+                            className="card-luxe h-full cursor-pointer group overflow-hidden border border-border/60 shadow-[0_14px_36px_rgba(0,0,0,0.32)] transition-shadow duration-300 hover:shadow-[0_20px_44px_rgba(0,0,0,0.42)]"
                             onClick={() => openProjectModal(project)}
                             whileTap={{ scale: 0.98 }}
                             role="button"
@@ -295,6 +313,8 @@ const ProjectsSection = () => {
                                   {project.categories[0]}
                                 </span>
                               </div>
+
+                              <ProjectStatusRibbon project={project} />
                             </div>
 
                             {/* Content */}
@@ -321,7 +341,7 @@ const ProjectsSection = () => {
                                   </span>
                                 )}
                               </div>
-                              <ProjectCardMeta project={project} compact />
+                              <ProjectCardActions project={project} compact />
                             </div>
                           </motion.div>
                         </motion.div>
@@ -394,7 +414,7 @@ const ProjectsSection = () => {
                       viewport={{ once: true, amount: 0.2 }}
                     >
                       <motion.div
-                        className="card-luxe h-full cursor-pointer group overflow-hidden"
+                        className="card-luxe h-full cursor-pointer group overflow-hidden border border-border/60 shadow-[0_18px_40px_rgba(0,0,0,0.36)] transition-shadow duration-300 hover:shadow-[0_28px_56px_rgba(0,0,0,0.46)]"
                         onClick={() => openProjectModal(project)}
                         whileHover={{ y: -8 }}
                         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
@@ -435,6 +455,8 @@ const ProjectsSection = () => {
                               {project.categories[0]}
                             </span>
                           </div>
+
+                          <ProjectStatusRibbon project={project} />
 
                           {/* View indicator on hover */}
                           <motion.div
@@ -477,13 +499,7 @@ const ProjectsSection = () => {
                             )}
                           </div>
 
-                          <ProjectCardMeta project={project} />
-
-                          <div className="mt-2 flex items-center justify-end">
-                            <span className="text-[10px] text-muted-foreground font-mono group-hover:text-primary transition-colors">
-                              Details
-                            </span>
-                          </div>
+                          <ProjectCardActions project={project} />
                         </div>
                       </motion.div>
                     </motion.div>

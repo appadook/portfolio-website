@@ -3,15 +3,6 @@
 import { useQuery } from 'convex/react';
 import { api } from '@portfolio/backend/convex/_generated/api';
 import type { Id } from '@portfolio/backend/convex/_generated/dataModel';
-import {
-  fallbackAboutCategoriesData,
-  fallbackAboutItemsData,
-  fallbackCloudProviders,
-  fallbackExperiences,
-  fallbackProgrammingLanguages,
-  fallbackProjects,
-  fallbackTechnologies,
-} from '@/lib/contentFallback';
 import type {
   AboutCategory,
   AboutItem,
@@ -120,10 +111,9 @@ type AboutItemPayload = {
   category: AboutCategoryPayload;
 };
 
-const fallbackEnabled = process.env.NEXT_PUBLIC_ENABLE_CONTENT_FALLBACK === 'true';
 const hasConvexUrl = Boolean(process.env.NEXT_PUBLIC_CONVEX_URL);
 
-function withListState<T>(raw: T[] | undefined, fallback: T[]): QueryState<T[]> {
+function withListState<T>(raw: T[] | undefined): QueryState<T[]> {
   if (raw !== undefined) {
     return {
       data: raw,
@@ -141,7 +131,7 @@ function withListState<T>(raw: T[] | undefined, fallback: T[]): QueryState<T[]> 
   }
 
   return {
-    data: fallbackEnabled ? fallback : [],
+    data: [],
     isLoading: false,
     error: null,
   };
@@ -243,59 +233,52 @@ function isPresent<T>(value: T | null | undefined): value is T {
 
 export function useExperiences(): QueryState<Experience[]> {
   const raw = useQuery(api.portfolio.getExperiences);
-  return withListState(raw?.map(mapExperience), fallbackExperiences);
+  return withListState(raw?.map(mapExperience));
 }
 
 export function useProjects(): QueryState<Project[]> {
   const raw = useQuery(api.portfolio.getProjects);
-  return withListState(raw?.map(mapProject), fallbackProjects);
+  return withListState(raw?.map(mapProject));
 }
 
 export function useProjectsByCategory(category: string): QueryState<Project[]> {
   const raw = useQuery(api.portfolio.getProjectsByCategory, { category });
-  const fallback =
-    category === 'All'
-      ? fallbackProjects
-      : fallbackProjects.filter((project) => project.categories.includes(category));
-
-  return withListState(raw?.map(mapProject), fallback);
+  return withListState(raw?.map(mapProject));
 }
 
 export function useProgrammingLanguages(): QueryState<ProgrammingLanguage[]> {
   const raw = useQuery(api.portfolio.getProgrammingLanguages);
-  return withListState(raw?.map(mapProgrammingLanguage), fallbackProgrammingLanguages);
+  return withListState(raw?.map(mapProgrammingLanguage));
 }
 
 export function useTechnologies(): QueryState<Technology[]> {
   const raw = useQuery(api.portfolio.getTechnologies);
-  return withListState(raw?.map(mapTechnology), fallbackTechnologies);
+  return withListState(raw?.map(mapTechnology));
 }
 
 export function useTechnologiesByCategory(category: string): QueryState<Technology[]> {
   const raw = useQuery(api.portfolio.getTechnologiesByCategory, { category });
-  const fallback = fallbackTechnologies.filter((technology) => technology.category === category);
-  return withListState(raw?.map(mapTechnology), fallback);
+  return withListState(raw?.map(mapTechnology));
 }
 
 export function useCloudProvidersWithCertificates(): QueryState<CloudProvider[]> {
   const raw = useQuery(api.portfolio.getCloudProvidersWithCertificates);
-  return withListState(raw?.map(mapCloudProvider), fallbackCloudProviders);
+  return withListState(raw?.map(mapCloudProvider));
 }
 
 export function useAboutCategories(): QueryState<AboutCategory[]> {
   const raw = useQuery(api.portfolio.getAboutCategories);
-  return withListState(raw?.map(mapAboutCategory), fallbackAboutCategoriesData);
+  return withListState(raw?.map(mapAboutCategory));
 }
 
 export function useAboutItems(): QueryState<AboutItem[]> {
   const raw = useQuery(api.portfolio.getAboutItems);
-  return withListState(raw?.filter(isPresent).map(mapAboutItem), fallbackAboutItemsData);
+  return withListState(raw?.filter(isPresent).map(mapAboutItem));
 }
 
 export function useAboutItemsByCategory(categoryId: string): QueryState<AboutItem[]> {
   const raw = useQuery(api.portfolio.getAboutItemsByCategory, {
     categoryId: categoryId as Id<'aboutCategories'>,
   });
-  const fallback = fallbackAboutItemsData.filter((item) => item.category._id === categoryId);
-  return withListState(raw?.map(mapAboutItem), fallback);
+  return withListState(raw?.map(mapAboutItem));
 }
