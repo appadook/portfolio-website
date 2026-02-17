@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown, Github, Linkedin, Mail } from "lucide-react";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
+import type { SiteSettings } from "@/lib/portfolio.types";
 
-const HeroSection = () => {
+const HeroSection = ({ siteSettings }: { siteSettings: SiteSettings }) => {
   const [displayedText, setDisplayedText] = useState("");
-  const { data: siteSettings } = useSiteSettings();
   const { scrollY } = useScroll();
 
   // Parallax effects
@@ -124,11 +124,15 @@ const HeroSection = () => {
               >
                 <div className="w-full h-full rounded-full bg-background p-1">
                   {profileImageUrl ? (
-                    <img
-                      src={profileImageUrl}
-                      alt={name}
-                      className="w-full h-full object-cover rounded-full"
-                    />
+                    <div className="relative h-full w-full overflow-hidden rounded-full">
+                      <Image
+                        src={profileImageUrl}
+                        alt={name}
+                        fill
+                        sizes="(max-width: 640px) 80px, (max-width: 768px) 112px, 144px"
+                        className="object-cover"
+                      />
+                    </div>
                   ) : (
                     <div className="w-full h-full rounded-full bg-background-subtle flex items-center justify-center">
                       <span className="font-display text-xl text-primary/70">

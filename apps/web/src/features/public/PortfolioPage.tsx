@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import Navigation from '@/components/Navigation';
 import HeroSection from '@/components/HeroSection';
@@ -10,11 +11,13 @@ import SkillsSection from '@/components/SkillsSection';
 import TechnologiesSectionV2 from '@/components/TechnologiesSectionV2';
 import ContactSection from '@/components/ContactSection';
 import AnimatedSection from '@/components/AnimatedSection';
-import BackgroundSpline from '@/components/BackgroundSpline';
-import { useSmoothScroll } from '@/hooks/useSmoothScroll';
+import type { PortfolioSnapshot } from '@/lib/portfolio.types';
 
-const PortfolioPage = () => {
-  useSmoothScroll();
+const BackgroundSpline = dynamic(() => import('@/components/BackgroundSpline'), {
+  ssr: false,
+});
+
+const PortfolioPage = ({ snapshot }: { snapshot: PortfolioSnapshot }) => {
 
   return (
     <motion.div
@@ -25,13 +28,22 @@ const PortfolioPage = () => {
     >
       <BackgroundSpline />
       <div className="relative z-10">
-        <Navigation />
-        <HeroSection />
-        <AboutSection />
-        <ProjectsSection />
-        <ExperienceSection />
-        <SkillsSection />
-        <TechnologiesSectionV2 />
+        <Navigation siteSettings={snapshot.siteSettings} />
+        <HeroSection siteSettings={snapshot.siteSettings} />
+        <AboutSection
+          categories={snapshot.aboutCategories}
+          items={snapshot.aboutItems}
+        />
+        <ProjectsSection projects={snapshot.projects} />
+        <ExperienceSection
+          experiences={snapshot.experiences}
+          siteSettings={snapshot.siteSettings}
+        />
+        <SkillsSection programmingLanguages={snapshot.programmingLanguages} />
+        <TechnologiesSectionV2
+          technologies={snapshot.technologies}
+          cloudProviders={snapshot.cloudProviders}
+        />
         <ContactSection />
 
         <AnimatedSection>

@@ -3,6 +3,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import type { FunctionReference } from 'convex/server';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
   DndContext,
@@ -617,7 +618,15 @@ function MediaUploadField({
         ) : (
           <div className="mb-3">
             {value ? (
-              <img src={value} alt={label} className="h-28 w-full rounded-lg border border-border/60 object-cover" />
+              <div className="relative h-28 w-full overflow-hidden rounded-lg border border-border/60">
+                <Image
+                  src={value}
+                  alt={label}
+                  fill
+                  sizes="(max-width: 1280px) 100vw, 420px"
+                  className="object-cover"
+                />
+              </div>
             ) : (
               <div className="flex h-28 w-full items-center justify-center rounded-lg border border-dashed border-border/70 text-muted-foreground">
                 <ImageIcon className="h-5 w-5" />
@@ -795,18 +804,25 @@ const SectionCard = memo(
 
         {sectionId === 'projects' || sectionId === 'certificates' || sectionId === 'about-items' ? (
           asText(item.image) ? (
-            <img
-              src={asText(item.image)}
-              alt={getCardTitle(sectionId, item, context)}
-              className="mb-3 h-28 w-full rounded-lg border border-border/50 object-cover"
-            />
+            <div className="relative mb-3 h-28 w-full overflow-hidden rounded-lg border border-border/50">
+              <Image
+                src={asText(item.image)}
+                alt={getCardTitle(sectionId, item, context)}
+                fill
+                sizes="(max-width: 1280px) 100vw, 420px"
+                className="object-cover"
+              />
+            </div>
           ) : null
         ) : null}
 
         {sectionId === 'experiences' && asText(item.logo) ? (
-          <img
+          <Image
             src={asText(item.logo)}
             alt={`${asText(item.company)} logo`}
+            width={56}
+            height={56}
+            sizes="56px"
             className="mb-3 h-14 w-14 rounded-lg border border-border/50 bg-background p-2 object-contain"
           />
         ) : null}
@@ -1311,18 +1327,25 @@ function EntityInspector({
 
         {config.id === 'projects' || config.id === 'certificates' || config.id === 'about-items' ? (
           asText(selectedItem.image) ? (
-            <img
-              src={asText(selectedItem.image)}
-              alt={getCardTitle(config.id, selectedItem, context)}
-              className="h-44 w-full rounded-lg border border-border/60 object-cover"
-            />
+            <div className="relative h-44 w-full overflow-hidden rounded-lg border border-border/60">
+              <Image
+                src={asText(selectedItem.image)}
+                alt={getCardTitle(config.id, selectedItem, context)}
+                fill
+                sizes="(max-width: 1280px) 100vw, 420px"
+                className="object-cover"
+              />
+            </div>
           ) : null
         ) : null}
 
         {config.id === 'experiences' && asText(selectedItem.logo) ? (
-          <img
+          <Image
             src={asText(selectedItem.logo)}
             alt={`${asText(selectedItem.company)} logo`}
+            width={80}
+            height={80}
+            sizes="80px"
             className="h-20 w-20 rounded-lg border border-border/60 bg-background p-2 object-contain"
           />
         ) : null}
@@ -1551,7 +1574,14 @@ function SiteSettingsInspector({
         <div className="rounded-lg border border-border/60 bg-background-subtle/40 p-3">
           <p className="mb-2 text-xs font-mono uppercase tracking-wider text-muted-foreground">Logo</p>
           {settings.logoUrl ? (
-            <img src={settings.logoUrl} alt="Site logo" className="h-20 w-20 rounded-md border border-border/60 object-contain" />
+            <Image
+              src={settings.logoUrl}
+              alt="Site logo"
+              width={80}
+              height={80}
+              sizes="80px"
+              className="h-20 w-20 rounded-md border border-border/60 object-contain"
+            />
           ) : (
             <p className="text-sm text-muted-foreground">No logo uploaded</p>
           )}
@@ -1560,9 +1590,12 @@ function SiteSettingsInspector({
         <div className="rounded-lg border border-border/60 bg-background-subtle/40 p-3">
           <p className="mb-2 text-xs font-mono uppercase tracking-wider text-muted-foreground">Profile Image</p>
           {settings.profileImageUrl ? (
-            <img
+            <Image
               src={settings.profileImageUrl}
               alt="Profile"
+              width={80}
+              height={80}
+              sizes="80px"
               className="h-20 w-20 rounded-md border border-border/60 object-cover"
             />
           ) : (

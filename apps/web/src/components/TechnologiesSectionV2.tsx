@@ -3,7 +3,6 @@ import { Cloud } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
 import CertificateModal from './CertificateModal';
 import CertificateItem from './CertificateItem';
-import { useTechnologies, useCloudProvidersWithCertificates } from '@/hooks/usePortfolioData';
 import type { Technology, CloudProvider, Certificate } from '@/lib/portfolio.types';
 import { useBreakpoint } from '@/hooks/use-mobile';
 import {
@@ -128,13 +127,17 @@ const CloudProviderCard = ({ provider }: { provider: CloudProvider }) => {
   );
 };
 
-const TechnologiesSectionV2 = () => {
-  const { data: technologies, isLoading: techLoading, error: techError } = useTechnologies();
-  const { data: cloudProviders, isLoading: cloudLoading, error: cloudError } = useCloudProvidersWithCertificates();
+const TechnologiesSectionV2 = ({
+  technologies,
+  cloudProviders,
+}: {
+  technologies: Technology[];
+  cloudProviders: CloudProvider[];
+}) => {
   const { isSmall } = useBreakpoint();
 
   const techCategories: TechCategory[] = useMemo(() => {
-    if (!technologies) return [];
+    if (!technologies.length) return [];
 
     return techCategoryConfig.map(config => {
       const categoryTechs = technologies
@@ -152,31 +155,12 @@ const TechnologiesSectionV2 = () => {
     }).filter(category => category.technologies.length > 0);
   }, [technologies]);
 
-  if (techLoading || cloudLoading) {
-    return (
-      <section id="technologies" className="py-20 md:py-32 relative overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center py-20">
-            <motion.div
-              className="flex flex-col items-center gap-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-              <p className="text-muted-foreground font-mono text-sm">Loading technologies...</p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (techError || cloudError) {
+  if (technologies.length === 0 && cloudProviders.length === 0) {
     return (
       <section id="technologies" className="py-20 md:py-32 relative overflow-hidden">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-20">
-            <p className="text-muted-foreground">Failed to load technologies. Please try again later.</p>
+            <p className="text-muted-foreground">No technologies available yet.</p>
           </div>
         </div>
       </section>
@@ -322,7 +306,7 @@ const TechnologiesSectionV2 = () => {
               </div>
 
               <div className="space-y-4">
-                {cloudProviders && cloudProviders.map((provider, index) => (
+                {cloudProviders.map((provider, index) => (
                   <motion.div
                     key={provider._id}
                     initial={{ opacity: 0, x: 20 }}
@@ -345,7 +329,7 @@ const TechnologiesSectionV2 = () => {
           transition={{ duration: 0.6, delay: 0.5 }}
         >
           <p className="text-sm text-muted-foreground font-mono">
-            {technologies?.length || 0} technologies across {techCategories.length} categories
+            {technologies.length} technologies across {techCategories.length} categories
           </p>
         </motion.div>
       </div>

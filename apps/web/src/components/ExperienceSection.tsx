@@ -1,11 +1,10 @@
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
 import { Briefcase, Calendar, MapPin, ChevronRight, Sparkles, TrendingUp, ChevronLeft } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
-import { useExperiences } from "@/hooks/usePortfolioData";
-import { useSiteSettings } from "@/hooks/useSiteSettings";
 import AnimatedSection from "./AnimatedSection";
 import { useRef, useMemo, useState, useCallback, useEffect } from "react";
-import type { Experience } from "@/lib/portfolio.types";
+import type { Experience, SiteSettings } from "@/lib/portfolio.types";
 import { useBreakpoint } from "@/hooks/use-mobile";
 
 // ===== TYPES =====
@@ -232,16 +231,19 @@ const MobileExperienceCard = ({
       {/* Company Header */}
       <div className="p-4 border-b border-border/30">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-background border border-border/50 p-2 flex items-center justify-center overflow-hidden flex-shrink-0">
-            {group.logo ? (
-              <img
-                src={group.logo}
-                alt={`${group.company} logo`}
-                className="w-full h-full object-contain"
-              />
-            ) : (
-              <Briefcase className="w-5 h-5 text-primary" />
-            )}
+            <div className="w-12 h-12 rounded-xl bg-background border border-border/50 p-2 flex items-center justify-center overflow-hidden flex-shrink-0">
+              {group.logo ? (
+                <Image
+                  src={group.logo}
+                  alt={`${group.company} logo`}
+                  width={48}
+                  height={48}
+                  sizes="48px"
+                  className="h-full w-full object-contain"
+                />
+              ) : (
+                <Briefcase className="w-5 h-5 text-primary" />
+              )}
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-display text-base font-semibold text-foreground truncate">
@@ -351,9 +353,13 @@ const MobileExperienceCard = ({
 };
 
 // ===== MAIN SECTION COMPONENT =====
-const ExperienceSection = () => {
-  const { data: experiences, isLoading, error } = useExperiences();
-  const { data: siteSettings } = useSiteSettings();
+const ExperienceSection = ({
+  experiences,
+  siteSettings,
+}: {
+  experiences: Experience[];
+  siteSettings: SiteSettings;
+}) => {
   const sectionRef = useRef(null);
   const { isSmall } = useBreakpoint();
 
@@ -464,37 +470,6 @@ const ExperienceSection = () => {
               Precision-crafted solutions across technology, finance, and research
             </motion.p>
           </motion.div>
-
-          {/* Loading State */}
-          {isLoading && (
-            <div className="flex items-center justify-center py-20">
-              <motion.div className="relative" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <div className="w-20 h-20 rounded-full border border-primary/20 relative">
-                  <motion.div
-                    className="absolute inset-2 rounded-full border-t-2 border-primary"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                  />
-                  <motion.div
-                    className="absolute inset-4 rounded-full border-t border-primary/50"
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-primary" />
-                  </div>
-                </div>
-                <p className="text-muted-foreground font-mono text-xs mt-4 text-center tracking-wider">LOADING</p>
-              </motion.div>
-            </div>
-          )}
-
-          {/* Error State */}
-          {error && (
-            <div className="text-center py-20">
-              <p className="text-muted-foreground">Failed to load experiences.</p>
-            </div>
-          )}
 
           {/* ===== TIMELINE ===== */}
           {experienceGroups && experienceGroups.length > 0 && (
@@ -710,9 +685,12 @@ const GroupCardContent = ({
             <div className="relative flex-shrink-0">
               <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl bg-background border border-border/50 p-2.5 flex items-center justify-center overflow-hidden">
                 {group.logo ? (
-                  <img
+                  <Image
                     src={group.logo}
                     alt={`${group.company} logo`}
+                    width={64}
+                    height={64}
+                    sizes="64px"
                     className="w-full h-full object-contain"
                   />
                 ) : (

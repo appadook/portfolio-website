@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { Code2 } from 'lucide-react';
-import { useProgrammingLanguages } from '@/hooks/usePortfolioData';
 import AnimatedSection from './AnimatedSection';
 import { useBreakpoint } from '@/hooks/use-mobile';
+import type { ProgrammingLanguage } from '@/lib/portfolio.types';
 
 // Icon mapping for programming languages
 const languageIcons: Record<string, string> = {
@@ -40,8 +40,11 @@ const getLevelWidth = (level: string) => {
   }
 };
 
-const SkillsSection = () => {
-  const { data: programmingLanguages, isLoading, error } = useProgrammingLanguages();
+const SkillsSection = ({
+  programmingLanguages,
+}: {
+  programmingLanguages: ProgrammingLanguage[];
+}) => {
   const { isSmall } = useBreakpoint();
 
   return (
@@ -99,29 +102,8 @@ const SkillsSection = () => {
           </motion.p>
         </motion.div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="flex items-center justify-center py-20">
-            <motion.div
-              className="flex flex-col items-center gap-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-              <p className="text-muted-foreground font-mono text-sm">Loading skills...</p>
-            </motion.div>
-          </div>
-        )}
-
-        {/* Error State */}
-        {error && (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground">Failed to load skills. Please try again later.</p>
-          </div>
-        )}
-
         {/* Programming Languages Grid */}
-        {programmingLanguages && programmingLanguages.length > 0 && (
+        {programmingLanguages.length > 0 ? (
           <motion.div
             className="max-w-5xl mx-auto"
             initial={{ opacity: 0 }}
@@ -250,6 +232,10 @@ const SkillsSection = () => {
               </div>
             </motion.div>
           </motion.div>
+        ) : (
+          <div className="py-20 text-center">
+            <p className="text-muted-foreground">No programming languages available yet.</p>
+          </div>
         )}
       </div>
     </AnimatedSection>

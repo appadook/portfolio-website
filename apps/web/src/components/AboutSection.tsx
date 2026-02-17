@@ -1,13 +1,18 @@
 import { useState } from "react";
+import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 import AnimatedSection from "./AnimatedSection";
-import { useAboutCategories, useAboutItems } from "@/hooks/usePortfolioData";
 import { getAboutIcon } from "@/data/aboutIcons";
-import type { AboutItem as AboutItemType } from "@/lib/portfolio.types";
+import type { AboutCategory, AboutItem as AboutItemType } from "@/lib/portfolio.types";
 
-const AboutSection = () => {
+type AboutSectionProps = {
+  categories: AboutCategory[];
+  items: AboutItemType[];
+};
+
+const AboutSection = ({ categories, items }: AboutSectionProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "trimSnaps",
@@ -16,17 +21,11 @@ const AboutSection = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
-  // Fetch data from Convex
-  const { data: categories, isLoading: categoriesLoading } = useAboutCategories();
-  const { data: items, isLoading: itemsLoading } = useAboutItems();
-
-  const isLoading = categoriesLoading || itemsLoading;
-
   // Filter items by selected category
   const filteredData =
     selectedCategory === "all"
-      ? items || []
-      : items?.filter((item) => item.category.name === selectedCategory) || [];
+      ? items
+      : items.filter((item) => item.category.name === selectedCategory);
 
   const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
   const scrollNext = () => emblaApi && emblaApi.scrollNext();
@@ -43,26 +42,6 @@ const AboutSection = () => {
       return newSet;
     });
   };
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <AnimatedSection id="about" className="py-20 md:py-32 relative">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <motion.div
-              className="flex flex-col items-center gap-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-              <p className="text-muted-foreground font-mono text-sm">Loading...</p>
-            </motion.div>
-          </div>
-        </div>
-      </AnimatedSection>
-    );
-  }
 
   // Render card with luxe styling
   const renderCard = (item: AboutItemType, index: number) => {
@@ -96,13 +75,15 @@ const AboutSection = () => {
             {/* Optional Image */}
             {item.image && (
               <motion.div
-                className="w-full aspect-video overflow-hidden rounded-xl mb-6 -mt-2 -mx-2"
+                className="relative w-full aspect-video overflow-hidden rounded-xl mb-6 -mt-2 -mx-2"
                 style={{ width: 'calc(100% + 1rem)' }}
               >
-                <img
+                <Image
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  fill
+                  sizes="(max-width: 640px) 280px, (max-width: 768px) 300px, 340px"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 {/* Gold overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

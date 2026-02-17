@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { AppProviders } from '@/components/providers/AppProviders';
 
+const metadataBaseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(metadataBaseUrl),
   title: 'Kurtik Appadoo - Portfolio',
   description: 'Kurtik Appadoo portfolio with projects, experience, and contact.',
   icons: {

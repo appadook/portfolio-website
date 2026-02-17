@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Settings } from 'lucide-react';
-import { useSiteSettings } from '@/hooks/useSiteSettings';
+import type { SiteSettings } from '@/lib/portfolio.types';
 
-const Navigation = () => {
+type NavigationProps = {
+  siteSettings: SiteSettings;
+};
+
+const Navigation = ({ siteSettings }: NavigationProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { data: siteSettings } = useSiteSettings();
 
   useEffect(() => {
     const handleScroll = () => {

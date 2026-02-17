@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { X, Github, ExternalLink, Calendar, User, Code, Sparkles, Target } from 'lucide-react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type { Project } from '@/lib/portfolio.types';
@@ -17,10 +18,12 @@ const ProjectModal = ({ project, isOpen, onClose }: ProjectModalProps) => {
         {/* Hero Image */}
         <div className="relative h-56 md:h-72 overflow-hidden">
           {project.image ? (
-            <img
+            <Image
               src={project.image}
               alt={project.title}
-              className="w-full h-full object-cover"
+              fill
+              sizes="(max-width: 768px) 100vw, 896px"
+              className="object-cover"
             />
           ) : (
             <div className="w-full h-full bg-gradient-to-br from-card-hover to-card flex items-center justify-center">

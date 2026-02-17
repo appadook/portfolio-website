@@ -1,9 +1,9 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, ExternalLink, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import ProjectModal from "./ProjectModal";
-import { useProjects } from "@/hooks/usePortfolioData";
 import type { Project } from "@/lib/portfolio.types";
 import { getProjectCardMeta } from "@/lib/projectCardMeta";
 import AnimatedSection from "./AnimatedSection";
@@ -93,8 +93,7 @@ function ProjectCardActions({ project, compact = false }: { project: Project; co
   );
 }
 
-const ProjectsSection = () => {
-  const { data: projects, isLoading, error } = useProjects();
+const ProjectsSection = ({ projects }: { projects: Project[] }) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -236,29 +235,8 @@ const ProjectsSection = () => {
           ))}
         </motion.div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="flex items-center justify-center py-20">
-            <motion.div
-              className="flex flex-col items-center gap-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <div className="w-12 h-12 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-              <p className="text-muted-foreground font-mono text-sm">Loading projects...</p>
-            </motion.div>
-          </div>
-        )}
-
-        {/* Error State */}
-        {error && (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground">Failed to load projects. Please try again later.</p>
-          </div>
-        )}
-
         {/* Projects - Mobile Carousel / Desktop Grid */}
-        {!isLoading && !error && (
+        {projects.length > 0 ? (
           <>
             {/* Mobile Carousel */}
             {isSmall ? (
@@ -293,10 +271,12 @@ const ProjectsSection = () => {
                             <div className="relative h-28 overflow-hidden">
                               {project.image ? (
                                 <>
-                                  <img
+                                  <Image
                                     src={project.image}
                                     alt={project.title}
-                                    className="w-full h-full object-cover"
+                                    fill
+                                    sizes="(max-width: 768px) 50vw, 280px"
+                                    className="object-cover"
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
                                 </>
@@ -431,10 +411,12 @@ const ProjectsSection = () => {
                         <div className="relative h-36 overflow-hidden">
                           {project.image ? (
                             <>
-                              <img
+                              <Image
                                 src={project.image}
                                 alt={project.title}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                fill
+                                sizes="(max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                                className="object-cover transition-transform duration-700 group-hover:scale-110"
                               />
                               {/* Gradient overlay */}
                               <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
@@ -508,10 +490,14 @@ const ProjectsSection = () => {
               </motion.div>
             )}
           </>
+        ) : (
+          <div className="py-20 text-center">
+            <p className="text-muted-foreground">No projects available yet.</p>
+          </div>
         )}
 
         {/* Results count */}
-        {!isLoading && !error && (
+        {projects.length > 0 && (
           <motion.div
             className="mt-8 sm:mt-12 text-center"
             initial={{ opacity: 0 }}

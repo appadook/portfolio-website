@@ -120,3 +120,14 @@ export interface AboutItem {
   image?: string;
   order: number;
 }
+
+export interface PortfolioSnapshot {
+  siteSettings: SiteSettings;
+  experiences: Experience[];
+  projects: Project[];
+  programmingLanguages: ProgrammingLanguage[];
+  technologies: Technology[];
+  cloudProviders: CloudProvider[];
+  aboutCategories: AboutCategory[];
+  aboutItems: AboutItem[];
+}

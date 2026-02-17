@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
@@ -42,15 +43,14 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
           {/* Certificate Image */}
           <div className="flex justify-center">
             <Card className="p-6 bg-gradient-card border-0 shadow-card">
-              <div className="relative">
-                <img
+              <div className="relative w-[300px] max-w-full">
+                <Image
                   src={certificate.image}
                   alt={`${certificate.name} Certificate`}
-                  className="max-w-full h-auto rounded-lg shadow-lg"
-                  onError={(e) => {
-                    // Fallback to a placeholder if image fails to load
-                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' fill='%23e5e7eb'%3E%3Crect width='100%25' height='100%25'/%3E%3Ctext x='50%25' y='50%25' font-family='Arial' font-size='16' fill='%236b7280' text-anchor='middle' dy='.3em'%3ECertificate Badge%3C/text%3E%3C/svg%3E";
-                  }}
+                  width={300}
+                  height={200}
+                  sizes="(max-width: 768px) 100vw, 300px"
+                  className="h-auto w-full rounded-lg shadow-lg"
                 />
                 <div className="absolute -top-2 -right-2">
                   <Badge variant="secondary" className="bg-gradient-primary text-primary-foreground">
