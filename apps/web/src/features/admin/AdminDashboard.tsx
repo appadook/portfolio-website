@@ -38,7 +38,7 @@ import {
   Upload,
   X,
 } from 'lucide-react';
-import type { Id } from '@portfolio/backend/convex/_generated/dataModel';
+import type { Doc, Id } from '@portfolio/backend/convex/_generated/dataModel';
 import { api } from '@portfolio/backend/convex/_generated/api';
 import { logout as logoutRequest } from '@/lib/auth/client';
 import { useBreakpoint } from '@/hooks/use-mobile';
@@ -199,10 +199,14 @@ const LANGUAGE_LEVEL_OPTIONS: SelectOption[] = [
   { label: 'Intermediate', value: 'intermediate' },
 ];
 
-const PROJECT_STATUS_OPTIONS: SelectOption[] = [
-  { label: 'Active', value: 'active' },
-  { label: 'Deprecated', value: 'deprecated' },
-];
+type ProjectStatus = NonNullable<Doc<'projects'>['status']>;
+
+const PROJECT_STATUS_VALUES = ['new', 'active', 'deprecated'] as const satisfies readonly ProjectStatus[];
+
+const PROJECT_STATUS_OPTIONS: SelectOption[] = PROJECT_STATUS_VALUES.map((status) => ({
+  value: status,
+  label: status.charAt(0).toUpperCase() + status.slice(1),
+}));
 
 const DEFAULT_BOOTSTRAP: BootstrapData = {
   siteSettings: null,
@@ -827,6 +831,17 @@ const SectionCard = memo(
           />
         ) : null}
 
+        {sectionId === 'languages' && asText(item.logoUrl) ? (
+          <Image
+            src={asText(item.logoUrl)}
+            alt={`${asText(item.name)} logo`}
+            width={56}
+            height={56}
+            sizes="56px"
+            className="mb-3 h-14 w-14 rounded-lg border border-border/50 bg-background p-2 object-contain"
+          />
+        ) : null}
+
         <p className="line-clamp-3 text-sm text-muted-foreground">{getCardBody(sectionId, item, context)}</p>
 
         <div className="mt-3 flex flex-wrap gap-2">
@@ -1139,6 +1154,13 @@ function EntityInspector({
           if (field.required && field.type !== 'number' && raw.trim() === '') {
             throw new Error(`${field.label} is required.`);
           }
+          if (field.type === 'select') {
+            const selected = raw.trim();
+            const allowedValues = (field.options ?? []).map((option) => option.value);
+            if (selected !== '' && !allowedValues.includes(selected)) {
+              throw new Error(`${field.label} must be one of: ${allowedValues.join(', ')}`);
+            }
+          }
           payload[field.key] = parseFormValue(raw, field.type);
         }
 
@@ -1347,6 +1369,17 @@ function EntityInspector({
             height={80}
             sizes="80px"
             className="h-20 w-20 rounded-lg border border-border/60 bg-background p-2 object-contain"
+          />
+        ) : null}
+
+        {config.id === 'languages' && asText(selectedItem.logoUrl) ? (
+          <Image
+            src={asText(selectedItem.logoUrl)}
+            alt={`${asText(selectedItem.name)} logo`}
+            width={96}
+            height={96}
+            sizes="96px"
+            className="h-24 w-24 rounded-lg border border-border/60 bg-background p-2 object-contain"
           />
         ) : null}
 
@@ -1972,7 +2005,7 @@ export default function AdminDashboard({ user }: { user: AdminUser }) {
       languages: {
         id: 'languages',
         title: 'Programming Languages',
-        description: 'Manage skill cards with level and description.',
+        description: 'Manage language metadata and upload logos used in the public skills banner.',
         emptyTitle: 'No language entries yet',
         emptyDescription: 'Add languages to populate the skills section.',
         items: data.programmingLanguages,
@@ -1985,7 +2018,7 @@ export default function AdminDashboard({ user }: { user: AdminUser }) {
           { key: 'description', label: 'Description', type: 'textarea', required: true },
           { key: 'order', label: 'Display Order', type: 'number', required: true },
         ],
-        mediaFields: [],
+        mediaFields: [{ key: 'logoUrl', label: 'Language Logo', kind: 'logo' }],
       },
       technologies: {
         id: 'technologies',

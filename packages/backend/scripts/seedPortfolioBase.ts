@@ -38,6 +38,7 @@ type SeedProgrammingLanguage = {
   name: string;
   level: 'expert' | 'advanced' | 'intermediate';
   description: string;
+  logoUrl?: string;
   order: number;
 };
 

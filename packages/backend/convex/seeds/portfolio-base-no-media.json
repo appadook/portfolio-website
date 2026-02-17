@@ -667,61 +667,71 @@
       "name": "Python",
       "level": "expert",
       "description": "Data science, ML, backend APIs",
-      "order": 0
+      "order": 0,
+      "logoUrl": "/logos/languages/python-logo.png"
     },
     {
       "name": "JavaScript",
       "level": "expert",
       "description": "Frontend, backend, full-stack",
-      "order": 1
+      "order": 1,
+      "logoUrl": "/logos/languages/javascript-logo.png"
     },
     {
       "name": "TypeScript",
       "level": "expert",
       "description": "Type-safe development",
-      "order": 2
+      "order": 2,
+      "logoUrl": "/logos/languages/typescript-logo.png"
     },
     {
       "name": "Java",
       "level": "advanced",
       "description": "Enterprise applications",
-      "order": 3
+      "order": 3,
+      "logoUrl": "/logos/languages/java-logo.png"
     },
     {
       "name": "R",
       "level": "advanced",
       "description": "Statistical analysis & modeling",
-      "order": 4
+      "order": 4,
+      "logoUrl": "/logos/languages/r-logo.png"
     },
     {
       "name": "SQL",
       "level": "advanced",
       "description": "Database queries & optimization",
-      "order": 5
+      "order": 5,
+      "logoUrl": "/logos/languages/sql-logo.png"
     },
     {
       "name": "C++",
       "level": "intermediate",
       "description": "Performance-critical applications",
-      "order": 6
+      "order": 6,
+      "logoUrl": "/logos/languages/cpp-logo.png"
     },
     {
       "name": "C",
       "level": "intermediate",
       "description": "Systems programming",
-      "order": 7
+      "order": 7,
+      "logoUrl": "/logos/languages/c-logo.png"
     },
     {
       "name": "OCaml",
       "level": "advanced",
       "description": "Functional programming",
-      "order": 8
+      "order": 8,
+      "logoUrl": "/logos/languages/ocaml-logo.png"
     },
     {
       "name": "Assembly",
       "level": "intermediate",
       "description": "Low-level programming",
-      "order": 9
+      "order": 9,
+      "logoUrl": "/logos/languages/assembly-logo.png"
     }
   ],
   "technologies": [

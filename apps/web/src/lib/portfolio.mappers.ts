@@ -29,7 +29,7 @@ export type ProjectPayload = {
   longDescription?: string;
   categories: string[];
   techStack: string[];
-  status?: 'active' | 'deprecated';
+  status?: 'new' | 'active' | 'deprecated';
   githubUrl?: string;
   liveUrl?: string;
   image?: string;
@@ -46,6 +46,7 @@ export type ProgrammingLanguagePayload = {
   name: string;
   level: ProgrammingLanguage['level'];
   description: string;
+  logoUrl?: string;
   order: number;
 };
 
@@ -149,6 +150,7 @@ export const mapProgrammingLanguage = (
   name: item.name,
   level: item.level,
   description: item.description,
+  logoUrl: item.logoUrl,
   order: item.order ?? 0,
 });
 

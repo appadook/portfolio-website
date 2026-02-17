@@ -18,7 +18,7 @@ export interface Project {
   longDescription?: string;
   categories: string[];
   techStack: string[];
-  status?: 'active' | 'deprecated';
+  status?: 'new' | 'active' | 'deprecated';
   githubUrl?: string;
   liveUrl?: string;
   image?: string;
@@ -35,6 +35,7 @@ export interface ProgrammingLanguage {
   name: string;
   level: 'expert' | 'advanced' | 'intermediate';
   description: string;
+  logoUrl?: string;
   order: number;
 }
 

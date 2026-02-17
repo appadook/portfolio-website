@@ -18,7 +18,9 @@ const projectFields = {
   longDescription: v.optional(v.string()),
   categories: v.array(v.string()),
   techStack: v.array(v.string()),
-  status: v.optional(v.union(v.literal('active'), v.literal('deprecated'))),
+  status: v.optional(
+    v.union(v.literal('new'), v.literal('active'), v.literal('deprecated')),
+  ),
   githubUrl: v.optional(v.string()),
   liveUrl: v.optional(v.string()),
   image: v.optional(v.string()),
@@ -34,6 +36,7 @@ const programmingLanguageFields = {
   name: v.string(),
   level: v.union(v.literal('expert'), v.literal('advanced'), v.literal('intermediate')),
   description: v.string(),
+  logoUrl: v.optional(v.string()),
   order: v.number(),
 };
 
