@@ -4,12 +4,14 @@ This repository has been migrated to a Turborepo monorepo with:
 
 - Next.js App Router frontend (`apps/web`)
 - Convex backend package (`packages/backend`)
+- Localized WAY Auth SDK workspace package (`packages/way-auth-sdk`)
 - WAY Auth SDK-based admin authentication (client + server + middleware)
 
 ## Repository Structure
 
 - `apps/web`: Public portfolio site and in-app admin CMS UI.
 - `packages/backend`: App-agnostic Convex schema and function modules.
+- `packages/way-auth-sdk`: Internal workspace copy of `@way/auth-sdk` used by the web app.
 
 ## Tech Stack
 

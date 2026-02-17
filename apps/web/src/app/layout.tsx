@@ -9,15 +9,15 @@ export const metadata: Metadata = {
   title: 'Kurtik Appadoo - Portfolio',
   description: 'Kurtik Appadoo portfolio with projects, experience, and contact.',
   icons: {
-    icon: '/logos/ka-logo-final.svg',
-    shortcut: '/logos/ka-logo-final.svg',
-    apple: '/logos/ka-logo-final.svg',
+    icon: '/ka-logo-final.svg',
+    shortcut: '/ka-logo-final.svg',
+    apple: '/ka-logo-final.svg',
   },
   openGraph: {
-    images: ['/logos/ka-logo-final.svg'],
+    images: ['/ka-logo-final.svg'],
   },
   twitter: {
-    images: ['/logos/ka-logo-final.svg'],
+    images: ['/ka-logo-final.svg'],
   },
 };
 
